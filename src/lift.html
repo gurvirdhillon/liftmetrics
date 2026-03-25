@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<head>
+    <title></title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <h1 class="page-title">LiftMetrics</h1>
+    <p>Record your workout session.</p>
+
+    <button id="workout-history">Workout History</button>
+    <div class="form_container">
+    <form id="workoutForm">
+        <div class="form_rec">
+            <div class="section_title">
+                <img src="img/dumbbell_icon.png" class="icon_img">
+                <p>Exercise Information</p>
+            </div>
+            <label>Date:</label>
+            <input type="date" id="DateInput" required>
+            <label>Session Duration: </label>
+        <div class="duration_input">
+            <input type="number" name="session_duration_hr" min="0" required>
+            <select name="duration_metric">
+                <option>mins</option>
+                <option>hours</option>
+            </select>
+        </div>
+            <div class="exercise_row">
+                <div class="input_group">
+                    <label>Exercise</label>
+                    <select name="exercise" required>
+                        <option value="">Select Exercise</option>
+                        <option>Bench Press</option>
+                        <option>Squat</option>
+                        <option>Deadlift</option>
+                        <option>Overhead Press</option>
+                        <option>Barbell Row</option>
+                        <option>Pull Ups</option>
+                        <option>Lat Pulldown</option>
+                        <option>Bicep Curl</option> 
+                        <option>Tricep Extension</option> 
+                        <option>Leg Press</option> 
+                        <option>Leg Curl</option> 
+                        <option>Leg Extension</option> 
+                        <option>Calf Raise</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+                <div class="input_group">
+                    <label>Workout Type</label>
+                    <select name="workout_type">
+                        <option>Strength</option>
+                        <option>Cardio</option>
+                        <option>HIIT</option>
+                        <option>Mobility</option>
+                        <option>Sports</option>
+                        <option>Recovery</option>
+                    </select>
+                </div>
+            </div>
+            <p></p>
+            <label>How did you feel?</label>
+            <p></p>
+            <div style="display:flex; justify-content:space-between;"> 
+                <span>0<br>Super easy</span> 
+                <span>5<br>Moderate</span> 
+                <span>10<br>Super hard</span> 
+            </div> <input id="feelingRange" type="range" min="0" max="10" value="5" step="1">
+        </div>
+        <div class="form_rec">
+            <div class="input_group">
+            <div class="section_title">
+                <img src="img/dumbbell_icon.png" class="icon_img">
+                <label>Performance</label>
+            </div>
+                <p>Sets:</p>
+                <input type="number" min="1" required name="sets">
+                <p>Reps:</p>
+                <input type="number" min="1" required name="reps">
+                <div class="input_group">
+                    <label>Weight</label>
+                    <div class="weight_row">
+                        <input type="number" min="0" max="500" step="0.5" name="weight">
+                        <select name="weight_metric">
+                            <option>kg</option>
+                            <option>lbs</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+    </div>
+        <div class="form_rec">
+            <div class="input_group">
+            <div class="section_title">
+                <img src="img/physiology.jpeg" class="icon_img">
+                <label>Physiology</label>
+            </div>
+            <p>Avg BPM:</p>
+            <input type="number" min="1" name="avg_bpm">
+            <p>Max BPM:</p>
+            <input type="number" min="1" name="max_bpm">
+            <p>Water intake(L):</p>
+            <input type="number" name="water_intake">
+
+        </div>
+        <input type="submit">
+    </div>
+        </form>
+
+    <nav class="navbar">
+        <a href="index.html"><img src="img/home_icon.png" class="icon_img"></a>
+        <a href="lift.html"><img src="img/plus_icon.png" class="icon_img"></a>
+        <a href="http://localhost:8501" target="_blank"><img src="img/workout_insights.jpg" class="icon_img"></a>
+        <a href="http://localhost:8501" target="_blank"><img src="img/heart_icon.png" class="icon_img"></a>
+        <a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img"></a>
+    </nav>
+
+<script src="lift.js"></script>
+
+
+</body>

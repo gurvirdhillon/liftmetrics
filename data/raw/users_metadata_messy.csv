@@ -1,0 +1,1237 @@
+user_id,age,gender,height_m,weight_kg,experience_level,workout_frequency_days_week,fat_percentage
+U0001,47,Male,1.72,75.8,Advanced,2,21.3
+U0002,34, Female ,1.42,78.7,Advanced,5,20.0
+U0003,40,Male,1.71,75.2,Advanced,5,27.8
+U0004,23,Female,1.98,83.1, Beginner ,4,15.6
+U0005,39,Male,1.49,78.1,Advanced,2,21.5
+ U0006 ,30,Female,,46.0,mid,3,
+U0007,25,Female,1.69,91.9,Intermediate,4,22.5
+U0008,26,Male,1.54,66.4,B,3,31.8
+ U0009 ,53,female,1.62,73.0,Beginner,2,14.6
+ U0010 ,37,Male,1.77,92.1,Intermediate,4,15.3
+U0011,51,Female,1.82,80.8,Beginner,4,14.1
+U0012,35,Female,1.89,70.4,Beginner,4,21.6
+U0013,35,Female,1.79,78.9, Advanced ,2,24.5
+U0014,18,Male,1.78,72.5, Advanced ,3,8.6
+U0015,30,Male,,90.3,Beginner,5,22.3
+U0016,50,Male,1.7,87.5,beginner,4,11.3
+U0017,18,Female,1.68,94.0,Intermediate,5,24.7
+U0018,31,Male,1.62,68.7,Intermediate,2,19.0
+U0019,42,Female,1.71,65.5,Beginner,3,
+U0020,54,Male,1.67,56.7, beginner ,2,19.6
+U0021,45,Female,1.94,62.4,ADV,2,15.5
+U0022,53,Female,1.66,66.0,Intermediate,2,24.1
+U0023,19,Female,1.79,101.4,Beginner,3,30.8
+U0024,21,Male,1.63,62.1,INT,4,10.9
+U0025,32,Female,1.68,81.3,Beginner,5,17.6
+U0026,55,Male,1.82,70.5,Advanced,4,20.5
+U0027,32,Female,1.87,88.6,Beginner,5,24.6
+ U0028 ,47,MALE,1.7,79.5, Intermediate ,5,23.6
+U0029,24,Male,1.71,95.1,advanced,3,10.3
+U0030,53,Female,1.88,77.2,Advanced,4,16.2
+U0031,21,Male,1.81,81.8,Beginner,3,18.1
+U0032,51,Male,1.73,63.6,Intermediate,5,21.8
+U0033,46,Male,1.66,56.0,Intermediate,5,10.9
+U0034,21,Female,1.61,79.1,Beginner,4,25.9
+U0035,45, Female ,1.86,76.5,expert,2,14.8
+U0036,33,female,1.68,76.2,Advanced,5,14.3
+U0037,42,Female,1.69,58.1,Intermediate,2,17.7
+U0038,23,Female,1.77,52.5,Intermediate,4,24.3
+U0039,28,Male,,66.1,Advanced,2,32.4
+U0040,19,Male,1.75,80.5, Advanced ,4,19.3
+U0041,57, FEMALE ,1.68,,Intermediate,4,28.5
+U0042,51,Male,1.77,74.2,Advanced,3,37.3
+U0043,47,M,1.65,66.7,Advanced,2,17.1
+ U0044 ,20,Female,1.67,65.3,Intermediate,3,33.9
+U0045,35,Female,1.69,90.0,Advanced,3,32.5
+U0046,32,Male,1.58,70.2,Intermediate,5,
+U0047,43, Male ,1.89,68.6,Beginner,3,23.0
+ U0048 ,46,MALE,1.62,69.8,Beginner,4,26.5
+U0049,43,Male,1.63,93.8,ADV,4,25.1
+U0050,31,Male,1.76,61.0,Intermediate,4,57.0
+U0051,28,Male,1.78,82.7,Beginner,3,19.2
+U0052,33,Male,1.64,76.5,Beginner,3,17.5
+U0053,48,Male,,65.5,Beginner,4,16.0
+U0054,45, Female ,1.61,84.5,Intermediate,3,9.5
+U0055,57,Male,1.58,67.6,Advanced,3,20.6
+U0056,19,Female,1.85,63.9,Beginner,2,20.5
+U0057,56, Female ,1.74,74.5, Advanced ,3,18.2
+ U0058 ,26, Male ,1.78,94.1,Advanced,3,22.5
+ U0059 ,50,Male,1.59,78.5,Beginner,3,22.3
+U0060,47,Female,1.82,,Intermediate,4,25.6
+U0061,35,Female,1.66,61.0,Advanced,4,24.1
+U0062,56,Male,1.66,72.8,Advanced,3,
+U0063,34,Male,1.78,58.7,Beginner,5,24.8
+U0064,18,Male,1.72,68.4,Intermediate,4,
+ U0065 ,43,Male,1.76,78.7,Intermediate,3,23.6
+U0066,55, Female ,1.79,67.5,Beginner,5,14.9
+U0067,26,Female,1.88,67.8,Advanced,2,48.0
+U0068,29,female,1.68,75.7,Beginner,4,15.6
+U0069,24,female,1.87,55.0,Advanced,5,19.7
+U0070,58, Male ,1.58,85.1,Intermediate,2,22.9
+U0071,18,Female,1.63,96.7,Advanced,3,13.9
+U0072,25,Female,1.59,60.6,Beginner,4,13.2
+U0073,53,FEMALE,1.73,69.6,Advanced,4,19.1
+U0074,55, Female ,1.7,98.9,intermediate,3,18.7
+U0075,49,Female,1.75,68.3,Intermediate,2,27.9
+U0076,18,Male,1.52,66.7,Advanced,4,23.1
+U0077,41,Male,1.93,92.3,Intermediate,3,26.1
+U0078,29,Female,1.87,81.7,Advanced,4,23.6
+U0079,26,Female,1.7,80.0,Intermediate,4,19.8
+U0080,19,Male,1.76,90.7,Advanced,3,10.0
+U0081,37,Female,1.65,86.7,Intermediate,3,28.0
+U0082,50,Male,1.73,62.0,Intermediate,3,
+U0083,25,Male,1.84,71.4,Advanced,5,26.9
+ U0084 ,58,male,1.8,,Advanced,5,18.9
+U0085,36,Female,1.8,76.4,Beginner,5,8.1
+U0086,56,Male,1.9,70.2,Beginner,5,19.5
+ U0087 ,21,Male,1.68,58.9,Advanced,4,63.0
+U0088,45,Male,1.8,90.5,Beginner,2,25.4
+U0089,46,female,1.63,55.4,Advanced,2,21.7
+U0090,48,Male,1.67,88.2,Advanced,4,16.6
+ U0091 ,30,male,1.74,74.2,Advanced,2,27.4
+U0092,58,M,1.89,75.3,intermediate,5,27.9
+U0093,34,Male,1.73,65.2,Intermediate,3,19.9
+U0094,45,Male,1.65,47.8,Advanced,4,57.0
+U0095,56,Male,1.75,79.2,Beginner,5,7.5
+U0096,33,Female,2.3618582305785036,92.0,INT,2,18.7
+U0097,34,Female,1.66,70.2,Advanced,3,8.8
+U0098,59,FEMALE,1.7,71.3,Beginner,5,21.4
+ U0099 ,45,Female,1.83,69.9,Intermediate,3,
+U0100,32,Female,1.79,,Intermediate,3,29.6
+U0101,39,Male,1.7,50.0,Advanced,4,11.9
+U0102,50,Female,1.78,85.8,Beginer,4,14.3
+U0103,52,Female,1.81,63.6, Advanced ,2,26.9
+U0104,29,Female,1.91,72.6,Intermediate,2,36.0
+U0105,51,male,1.85,63.2,Advanced,2,17.6
+U0106,40,Male,1.76,64.5, Intermediate ,3,16.8
+U0107,23,Male,1.57,70.4,Beginner,2,31.5
+U0108,23,female,1.8,,Beginner,2,16.1
+U0109,53,Male,1.92,82.8,Beginner,5,
+U0110,22,Female,1.71,79.5,Advanced,3,26.3
+U0111,50,Female,1.69,97.1,Advanced,2,37.0
+U0112,25,Female,1.69,,Intermediate,2,17.7
+U0113,41, Male ,,71.2,Beginner,5,23.7
+U0114,24,Female,1.65,,Advanced,3,22.4
+U0115,23,Male,1.79,98.1,Advanced,3,22.7
+U0116,39, Female ,1.82,58.5,Advanced,3,
+U0117,24,Female,1.74,74.9, Intermediate ,4,12.6
+U0118,50,Male,1.78,69.2,Beginner,2,7.4
+U0119,55,Female,1.84,83.4,Beginner,3,25.0
+U0120,46,Male,1.7,78.3,Advanced,3,14.1
+U0121,54,Male,1.59,76.2,Intermediate,3,19.6
+U0122,38,Female,1.72,76.2, Intermediate ,4,20.2
+ U0123 ,19,Male,1.83,92.0,intermediate,5,20.9
+U0124,51,Female,1.96,78.0,INT,4,15.8
+U0125,36,Male,1.6,79.1,Advanced,2,13.8
+U0126,20,Male,1.68,81.8,Advanced,2,20.2
+U0127,59,male,1.7,64.0,Intermediate,2,18.3
+U0128,36, Female ,1.77,89.3,Beginner,3,19.6
+ U0129 ,37, Male ,1.88,56.3,INT,5,19.2
+ U0130 ,59, Female ,1.71,74.3,Intermediate,2,
+U0131,51,F,1.56,75.8,Intermediate,2,11.6
+U0132,46,Male,1.75,72.4,Intermediate,4,9.4
+U0133,22,FEMALE,,70.7,advanced,2,27.8
+U0134,36,Female,1.88,74.8,Intermediate,2,22.1
+U0135,22,Female,1.67,77.3,Beginner,2,33.8
+U0136,47,Female,1.67,80.8,intermediate,4,
+U0137,42,Female,1.6,73.6,ADV,4,19.5
+U0138,52,Male,1.64,59.9,Advanced,2,20.1
+U0139,34,Male,,82.0,Advanced,4,46.0
+U0140,22,Male,1.88,74.7,Intermediate,4,14.7
+U0141,58,Male,1.51,80.4,beginner,2,19.2
+U0142,23,Female,1.76,90.1,INT,5,25.7
+ U0143 ,23,female,,67.0,Beginner,5,
+U0144,34,Male,,78.9,Beginner,2,22.1
+U0145,23,Male,1.71,64.9,Intermediate,4,23.9
+U0146,46,Male,1.66,82.1,Intermediate,3,11.2
+U0147,20,Female,1.65,67.9,expert,3,15.5
+U0148,41,Male,1.5,62.3,Advanced,5,24.6
+U0149,20,MALE,1.79,75.7,Beginer,4,18.9
+U0150,37,Male,1.9,61.3,Beginner,5,11.9
+U0151,31,Male,1.68,83.9,ADV,5,16.8
+U0152,39,Male,1.68,67.1,Advanced,4,68.0
+U0153,54,Female,1.64,82.0,Beginner,2,18.3
+U0154,50,Female,1.49,,Advanced,3,9.3
+U0155,22,Male,1.71,77.4,Intermediate,3,15.5
+U0156,32,Female,1.72,,Beginner,3,22.7
+ U0157 ,41, MALE ,1.65,91.3,Advanced,3,8.5
+U0158,42,Female,1.78,80.2,Intermediate,4,17.4
+U0159,37,Male,1.87,75.5,Beginner,3,14.2
+U0160,38,MALE,1.7,58.9,Beginer,3,13.7
+U0161,32,Male,1.72,88.0,Advanced,4,13.3
+U0162,42,Female,,,Intermediate,2,19.5
+U0163,46,Male,1.66,70.9,advanced,3,18.4
+U0164,49,Female,1.75,84.9,Intermediate,3,13.7
+U0165,35,Female,1.76,76.5,Advanced,2,20.7
+U0166,19, Female ,1.72,62.8,Advanced,5,20.5
+U0167,42,FEMALE,1.54,91.5, B ,3,30.7
+U0168,40,Male,1.76,86.7,Intermediate,3,32.3
+U0169,30,Male,2.2174325445164342,57.6, Beginner ,4,19.8
+U0170,42,Male,1.84,90.7,Intermediate,4,18.7
+U0171,36,Male,1.67,79.5, Intermediate ,2,19.4
+U0172,36,Female,1.8,74.0,beginner,3,21.1
+U0173,35,Female,1.64,71.7,Intermediate,5,
+U0174,31,Male,1.75,95.6,Beginner,2,14.8
+U0175,25, Male ,1.61,62.3,Intermediate,2,21.2
+ U0176 ,36,M,1.75,61.8,Intermediate,4,27.0
+U0177,19,Female,1.63,56.7,Advanced,4,18.7
+U0178,32,male,1.58,66.6,Intermediate,5,13.4
+U0179,41,Female,1.7,72.9,Advanced,5,
+U0180,23, Female ,1.57,66.0,Advanced,4,22.6
+U0181,30,Male,1.84,76.4, Advanced ,3,25.2
+U0182,18,Male,1.69,59.9,Intermediate,3,20.9
+U0183,24,Female,1.73,66.0,Intermediate,2,30.2
+U0184,56,Male,1.62,73.8,Intermediate,5,17.9
+U0185,29,Male,1.68,88.7,Intermediate,2,23.2
+U0186,54,Female,1.59,51.0,Beginner,3,21.6
+U0187,19,Male,1.69,71.2,Advanced,4,16.6
+ U0188 ,57,Male,1.87,71.1,Advanced,5,27.1
+U0189,59, Female ,1.85,75.5,Intermediate,3,20.9
+U0190,38, Female ,1.52,86.1,Beginner,3,15.1
+U0191,36,M,1.6,90.5,Advanced,3,22.9
+U0192,44,Female,1.56,73.6,Advanced,2,31.3
+ U0193 ,40,Female,2.301536944989198,77.4,Beginner,3,20.2
+U0194,54,F,1.91,68.3,expert,5,11.4
+U0195,35,Male,1.64,70.6,Advanced,3,22.1
+U0196,45,Female,2.376137182161094,85.4,beginner,4,23.0
+U0197,50,Male,1.65,70.3,Intermediate,3,15.3
+U0198,18,Male,1.82,68.0,Advanced,2,14.8
+U0199,38,MALE,1.96,91.0,Advanced,2,26.1
+U0200,36,Female,1.86,,Beginner,5,22.9
+U0201,31,Male,1.71,,Intermediate,4,15.0
+U0202,34,Female,1.62,72.0,Beginner,4,19.5
+U0203,47,Male,1.52,75.2, Beginner ,2,34.9
+U0204,45,Male,1.79,83.3, Advanced ,5,
+U0205,23, Male ,1.68,,Intermediate,4,17.6
+U0206,40,Female,1.63,, Intermediate ,5,29.3
+U0207,36,MALE,1.57,90.2,Advanced,2,11.8
+U0208,19,F,1.7,55.8,Advanced,5,27.2
+ U0209 ,49,male,1.7,82.1,Beginner,2,18.5
+U0210,23,Female,1.59,74.0,Advanced,3,12.6
+U0211,46,Male,1.82,65.1,Intermediate,3,15.6
+U0212,48,Female,1.87,80.0,INT,3,21.6
+U0213,48,Male,1.59,99.7,Beginner,2,10.8
+U0214,28,Male,1.78,51.3,Beginner,3,19.7
+U0215,57,Male,1.74,78.6,Beginner,4,16.0
+U0216,50,Female,1.79,76.0,ADV,3,17.8
+U0217,48,Male,1.82,62.8,Beginner,5,
+U0218,36,Male,1.63,77.2,Advanced,4,19.6
+U0219,43,Male,1.68,88.5,Intermediate,4,18.7
+U0220,43,Male,1.74,79.5,Advanced,5,10.7
+U0221,52,Male,1.84,49.1,Beginner,5,23.2
+U0222,25,Female,1.73,83.5,Advanced,4,20.1
+U0223,42,Female,1.72,69.2,Beginner,3,27.6
+U0224,45,Female,1.76,93.6,Intermediate,2,
+U0225,27,FEMALE,1.67,71.4,Beginer,2,10.6
+U0226,38,Female,1.83,61.9,Intermediate,4,30.1
+U0227,51,Male,1.68,86.8, Beginner ,4,19.7
+U0228,54,Male,1.66,73.5,Intermediate,4,31.5
+U0229,36, Male ,1.75,75.8,Advanced,5,18.8
+U0230,44,Male,1.69,62.7,Beginner,3,17.8
+U0231,53,Male,1.78,76.1,Advanced,5,
+U0232,40,Female,1.73,79.7,Intermediate,2,17.3
+U0233,51,Female,1.73,,Advanced,4,21.3
+U0234,50,Male,2.05,50.0,Intermediate,5,21.3
+U0235,33,Male,1.64,,Beginner,3,13.7
+U0236,40,Female,1.59,75.4,Advanced,3,23.6
+U0237,34,Male,1.72,77.5,Beginer,5,15.3
+U0238,22, Male ,2.2314939147688215,75.6,Beginner,4,23.6
+U0239,51,Female,1.78,86.6,Intermediate,3,16.0
+U0240,55,female,1.61,72.9, Beginner ,3,19.2
+U0241,56,Female,1.84,73.6,Advanced,3,18.0
+U0242,26,Male,1.6,85.6,Intermediate,2,15.8
+U0243,23,Female,1.71,91.0, Advanced ,5,20.4
+U0244,31,Male,1.85,64.4,Beginner,2,25.9
+U0245,41,Male,1.75,77.1,Intermediate,5,29.9
+U0246,55,Female,1.84,72.5,Intermediate,3,26.2
+U0247,26,Male,1.63,79.1,Intermediate,3,16.3
+U0248,28,Female,1.65,83.7, Beginner ,3,24.5
+U0249,37,Female,1.63,61.5,Advanced,3,15.6
+U0250,29,MALE,1.73,88.0,Advanced,2,21.5
+U0251,54,Female,1.69,54.5,Intermediate,4,21.3
+U0252,22,Male,1.86,76.0, Advanced ,5,22.8
+U0253,22,Female,1.68,78.0,Beginner,3,23.2
+U0254,51,Female,1.78,57.8,Advanced,4,23.3
+U0255,22,Male,1.73,77.7,advanced,5,22.8
+U0256,34,Male,1.85,63.1,Intermediate,4,18.5
+U0257,39,Male,1.85,86.9,Intermediate,3,
+U0258,18,Male,1.55,93.2,Beginner,3,25.0
+U0259,18,Male,1.68,62.0,Advanced,3,19.7
+ U0260 ,52,Male,1.63,75.9,Intermediate,2,35.2
+U0261,47,Male,1.7,58.7,intermediate,5,32.7
+U0262,55,Male,1.63,70.2,Beginner,4,19.0
+U0263,23,Female,1.61,86.2,Advanced,3,23.3
+U0264,27,Female,1.6,86.4,Beginner,5,21.9
+U0265,44,Male,1.61,99.0,Advanced,4,22.0
+U0266,44, Female ,1.69,72.7,Intermediate,2,21.0
+U0267,44,Male,1.74,58.7,Advanced,5,25.6
+U0268,25,female,1.69,81.4,Beginner,2,15.4
+U0269,39,Male,1.81,65.2,Advanced,3,6.7
+U0270,55, Female ,1.75,73.8,Advanced,4,20.0
+U0271,41, Male ,1.63,78.2,Beginner,5,24.7
+U0272,24, Female ,1.66,81.4,Advanced,2,17.6
+U0273,31,Male,1.59,89.6,Beginner,5,14.6
+U0274,28,female,1.68,73.2,Intermediate,4,27.3
+U0275,27,Female,1.63,62.9,Intermediate,2,17.5
+U0276,31,Female,1.76,55.7,beginner,2,17.7
+U0277,29,Female,1.58,60.9,Beginner,5,11.9
+U0278,51, Male ,1.69,73.5, Advanced ,2,9.9
+U0279,30,Female,1.8,84.3, Beginner ,3,28.0
+U0280,57,MALE,1.66,63.9,Advanced,5,27.6
+ U0281 ,19, Male ,1.8,82.2,Intermediate,4,12.5
+ U0282 ,42,Female,1.86,73.5,Intermediate,2,21.0
+ U0283 ,45,Male,1.72,87.0,beginner,2,12.3
+U0284,36,Female,1.87,59.1,Advanced,3,17.0
+U0285,43,Male,1.76,87.1,Advanced,2,23.4
+U0286,54, Female ,1.75,67.8,Beginner,4,16.7
+U0287,42,Male,1.83,101.7,Beginner,5,26.5
+U0288,43,Male,1.61,89.4,Intermediate,2,24.5
+U0289,23,Female,1.56,74.0,Advanced,2,27.4
+U0290,38,Male,1.83,82.0,Advanced,3,32.0
+U0291,44,Female,1.87,69.2,Advanced,2,20.0
+U0292,49,Female,1.75,73.3,Advanced,3,62.0
+U0293,24,Male,1.66,72.5,Advanced,5,28.6
+U0294,39, MALE ,1.75,85.6,Intermediate,2,11.4
+U0295,42,Male,1.72,62.0,Intermediate,5,24.9
+U0296,39,Female,1.86,79.1,intermediate,5,17.7
+U0297,52,Male,1.77,76.7, Advanced ,2,
+U0298,36,Female,1.89,72.5,Advanced,3,31.0
+U0299,18, Male ,1.65,79.3,Beginner,2,17.0
+U0300,56,Male,1.66,62.1,Advanced,3,17.8
+U0301,22,Male,1.69,71.3, Intermediate ,3,18.4
+U0302,18,Male,1.76,,Advanced,4,21.7
+U0303,39,Male,1.79,82.5,Beginner,3,
+U0304,27,Male,1.56,89.1,Beginner,5,15.3
+U0305,21,Male,1.65,64.3,Advanced,2,27.1
+U0306,43, Female ,1.8,87.5,Beginner,4,13.7
+ U0307 ,22, Female ,1.96,65.1,Beginner,3,23.1
+U0308,31,Male,1.62,96.9,Beginer,2,14.8
+U0309,29,Male,1.84,59.8,Intermediate,4,29.9
+U0310,45,Male,1.66,80.1,Intermediate,5,17.3
+U0311,56,Female,1.79,87.8,Beginer,5,17.5
+ U0312 ,54,Male,1.72,85.6,Beginner,2,12.1
+U0313,33,Male,1.75,76.0,Advanced,5,22.4
+U0314,37,FEMALE,1.7,75.5,Beginner,2,
+U0315,31,Male,1.8,75.0,Intermediate,5,18.2
+U0316,58,Male,,71.2,Advanced,4,10.6
+U0317,46,Male,1.6,53.4,Beginner,4,23.1
+U0318,45,Male,1.88,62.9,Advanced,2,28.4
+ U0319 ,23,Female,1.67,74.6,Beginner,3,50.0
+U0320,30, Female ,1.83,64.7,Advanced,4,16.4
+U0321,21,Female,1.82,54.7,Advanced,2,17.2
+U0322,21,male,1.74,81.1,Intermediate,3,23.2
+U0323,21,Female,1.7,79.9,Intermediate,2,18.0
+U0324,29,Female,1.75,77.4,Intermediate,2,12.4
+U0325,56,Female,1.89,63.5,Beginner,4,27.7
+U0326,43,Male,1.79,86.8,Beginner,2,24.5
+U0327,58,Female,1.55,75.7,Intermediate,3,23.4
+U0328,22,Male,1.74,81.2,Intermediate,2,14.5
+ U0329 ,44,Male,1.72,53.4,advanced,2,21.4
+U0330,38, MALE ,1.76,91.9,Intermediate,3,19.4
+U0331,21,Female,1.53,73.6,advanced,5,19.9
+U0332,41,Male,1.8,65.6,Beginner,2,26.2
+U0333,26,Male,1.75,,Advanced,5,26.9
+U0334,44,Male,1.7,79.1,Intermediate,5,15.2
+U0335,40, Male ,1.66,70.1,Advanced,5,24.7
+U0336,45,Male,1.56,93.9,Beginner,2,37.5
+U0337,22,Female,1.8,85.4,beginner,5,23.4
+ U0338 ,50,Male,1.98,87.4,Beginner,2,19.1
+U0339,58,Male,1.64,54.1,Advanced,3,30.6
+U0340,19,Female,1.55,105.5,ADV,2,23.3
+U0341,58,Male,1.69,76.0,expert,2,31.7
+U0342,44,Male,1.59,82.9,Advanced,5,15.6
+ U0343 ,51,Male,1.86,73.2,Beginer,5,22.2
+U0344,50,Female,1.84,57.8,Beginner,2,5.3
+ U0345 ,29,male,1.84,63.6,Advanced,4,17.2
+U0346,41,Male,1.82,83.0,expert,3,19.9
+U0347,53, F ,1.67,57.4,Beginner,2,16.8
+U0348,26,Male,1.92,88.2,Intermediate,3,12.1
+U0349,31,Female,1.65,74.8,Advanced,3,19.1
+U0350,38,Female,,69.0,Intermediate,5,31.6
+U0351,50,Male,1.84,81.7,Beginner,5,16.4
+U0352,35,MALE,1.72,64.5,Beginner,5,15.8
+U0353,22,Male,1.69,60.6,expert,2,9.0
+U0354,21, male ,1.81,65.9,Beginner,2,28.1
+U0355,35, Female ,1.6,49.9,Advanced,3,24.3
+U0356,48,Male,1.74,73.2,Intermediate,4,26.1
+U0357,27,Male,1.77,67.5,Advanced,2,13.2
+U0358,21,Male,1.72,88.6,Advanced,2,28.6
+U0359,50,Male,,73.2,INT,4,26.6
+U0360,22,Female,1.65,73.6,Intermediate,2,25.3
+U0361,30,Male,1.69,80.7,Beginner,2,
+U0362,43,Male,1.63,78.1,Advanced,5,22.1
+U0363,31,F,1.89,49.1,Beginner,5,24.5
+U0364,24,Female,1.7,49.2,Advanced,2,15.8
+U0365,37,Female,1.6,73.9,Advanced,4,22.5
+U0366,47,Male,1.64,43.4,Intermediate,3,25.7
+U0367,19,Male,1.65,78.9,Intermediate,4,29.7
+U0368,45,Female,1.72,71.3,Intermediate,5,16.7
+ U0369 ,38,Male,1.87,75.0,Beginner,4,20.9
+U0370,39,Male,1.7,99.9,Intermediate,3,21.4
+U0371,39,Female,1.73,80.8,Beginner,5,14.0
+U0372,36,Male,1.87,83.8,Advanced,2,15.7
+U0373,30,Male,1.63,110.3,Beginner,3,22.7
+U0374,30,Female,1.81,61.4,Beginner,5,61.0
+U0375,39,Male,,86.9,Intermediate,4,25.5
+U0376,45,Male,1.83,61.3,Beginner,3,14.8
+U0377,56,Male,1.8,44.1,Beginner,3,19.8
+ U0378 ,47,MALE,1.78,81.2,Advanced,4,21.0
+U0379,43,Female,1.84,57.7,Advanced,4,24.9
+U0380,31, Male ,1.78,43.9, Beginner ,2,17.6
+U0381,34,Male,1.82,61.3,Intermediate,3,21.6
+U0382,23,MALE,1.84,59.0,Beginner,3,14.5
+U0383,47, Female ,1.79,92.6,Advanced,4,12.9
+U0384,28,Female,1.69,84.7,Advanced,4,26.3
+U0385,21,Male,1.67,103.4,Beginner,4,17.1
+U0386,38,Female,1.86,79.8,Intermediate,5,20.6
+U0387,28,MALE,1.78,46.8,Intermediate,4,31.2
+U0388,19,Male,1.69,65.7,Beginner,4,20.5
+U0389,31, Male ,1.61,80.2,Intermediate,4,21.8
+U0390,50,Female,1.73,54.7,Intermediate,5,19.2
+U0391,29,F,1.68,56.8,Beginner,3,8.3
+U0392,52,Male,1.79,81.3, Advanced ,4,14.8
+U0393,56, Male ,1.83,74.6,Intermediate,3,27.6
+U0394,48,Male,2.309982515479784,83.2,Advanced,5,11.4
+U0395,46, Male ,1.7,60.7,Intermediate,5,18.7
+U0396,42,Female,1.68,61.6,INT,4,13.4
+U0397,57,Male,1.72,91.1,Intermediate,4,16.2
+ U0398 ,33,male,1.84,70.6,Intermediate,2,27.3
+U0399,23,Male,1.71,74.3,Advanced,2,19.7
+U0400,23,Female,1.67,85.4,Intermediate,3,9.3
+U0401,31,Male,1.72,75.3, mid ,3,24.4
+U0402,53,Female,1.57,108.3,Advanced,3,31.1
+U0403,46,MALE,1.9,92.3,Intermediate,3,21.6
+U0404,48,M,1.62,77.6,Intermediate,5,17.5
+U0405,27,Female,1.72,71.0,Advanced,3,26.3
+U0406,40,Male,1.58,56.5,Intermediate,4,26.2
+U0407,19,Male,1.72,76.8,Advanced,4,24.0
+U0408,38,Female,1.6,88.7, Intermediate ,5,21.6
+U0409,40,Male,1.83,69.5,INT,3,7.2
+U0410,59,Male,1.9,86.0,Beginner,5,8.1
+U0411,36,Male,1.61,76.8,Beginner,5,18.7
+U0412,38,Male,1.55,82.6,Advanced,5,15.6
+U0413,18,Male,1.76,62.3,Advanced,5,12.1
+U0414,57,Male,1.77,88.6,Advanced,3,12.2
+U0415,23,Male,1.76,50.0, Beginner ,5,32.8
+U0416,52,Male,1.75,78.1,Advanced,3,23.4
+U0417,57,Male,1.73,44.3,Beginner,5,23.7
+U0418,27,Female,1.44,80.9,Beginner,3,20.5
+U0419,52,Female,1.79,85.9,Advanced,4,17.5
+U0420,21,Female,1.74,76.3,Beginner,5,12.7
+U0421,34,Male,1.77,69.5,Intermediate,5,15.2
+U0422,24,male,1.61,74.6,Intermediate,3,18.3
+U0423,53,Male,1.58,71.1,Advanced,2,24.7
+U0424,40,Female,1.64,90.8,Intermediate,3,23.9
+ U0425 ,40,Male,1.83,64.8,Advanced,2,21.8
+U0426,31,Female,1.72,96.6,Beginner,2,22.7
+U0427,35,Female,1.82,72.7,Advanced,5,22.2
+U0428,36,Male,1.81,91.8,Intermediate,5,18.3
+U0429,21,Female,1.65,58.3,Intermediate,2,22.7
+U0430,44,Female,1.72,72.1,Intermediate,3,24.9
+U0431,21,Female,1.81,67.3,Intermediate,2,23.8
+U0432,50,M,1.55,73.7,Intermediate,2,20.3
+U0433,36,Female,1.74,78.9,Intermediate,2,23.7
+U0434,52,Female,1.54,60.4,Intermediate,4,22.4
+U0435,32,Female,1.68,95.8,Intermediate,2,13.6
+U0436,53,Female,,93.2, Intermediate ,3,20.9
+ U0437 ,35,Female,1.89,60.3, Beginner ,3,
+U0438,39,Female,1.79,108.9,Beginner,4,16.4
+U0439,26, Female ,1.79,60.9,ADV,5,10.7
+ U0440 ,19,Male,1.86,55.4,Beginner,2,12.7
+U0441,51,Male,1.85,78.1,Advanced,5,18.6
+U0442,44,Female,1.8,52.8,Beginner,5,26.0
+U0443,57,Female,1.64,74.0,Intermediate,4,29.0
+U0444,40,M,1.73,65.8,Intermediate,2,19.3
+U0445,56,Female,1.79,68.7,Intermediate,3,
+U0446,36,M,1.74,107.5, Intermediate ,4,33.4
+U0447,57,Male,1.88,97.9,Beginner,4,12.5
+U0448,25,Female,1.94,94.0,INT,2,17.5
+U0449,27,Male,1.65,66.3,Beginner,4,17.5
+U0450,54,FEMALE,1.87,73.2,Advanced,5,25.8
+U0451,49,Male,1.53,74.5,Beginner,2,25.6
+U0452,46,Female,1.65,69.9,Advanced,5,18.9
+U0453,25,Female,1.86,67.6,mid,4,22.0
+U0454,30, Female ,1.71,76.5,Advanced,2,32.0
+U0455,37,Female,1.74,69.4,Beginner,5,15.6
+U0456,19,Male,1.96,80.2,Beginner,5,21.2
+ U0457 ,51,Female,1.81,90.6,Intermediate,4,63.0
+ U0458 ,35,Male,1.67,60.3, Beginner ,3,26.5
+U0459,36,Male,1.94,84.1,Advanced,2,24.4
+U0460,49,Female,1.61,71.6, Intermediate ,4,28.6
+ U0461 ,44,Female,1.63,67.0,Intermediate,2,11.8
+U0462,58,Male,1.68,60.9,Advanced,5,20.1
+U0463,50,Male,1.73,81.4,Advanced,2,18.6
+U0464,53,Male,1.81,66.3,Beginner,2,10.4
+U0465,41,Male,1.85,71.1,Intermediate,2,13.3
+U0466,26,F,1.74,85.7, Advanced ,4,19.2
+U0467,35,Female,1.72,64.8,Advanced,3,28.7
+U0468,39,Male,,82.9,mid,2,24.7
+U0469,57,FEMALE,2.01,50.4, Advanced ,3,14.2
+ U0470 ,54,Male,2.453343661986156,57.3,Advanced,4,8.1
+U0471,32,Female,1.73,82.0,Beginner,3,20.5
+U0472,25,Male,1.77,83.5,Beginner,4,30.3
+U0473,36,Male,1.73,69.5,Beginner,3,25.4
+ U0474 ,28, FEMALE ,1.76,68.6,Beginner,4,19.8
+U0475,37,Female,1.65,78.7,Advanced,2,13.0
+U0476,21,female,1.79,77.6, Intermediate ,3,18.4
+U0477,41,Female,1.87,63.9,Advanced,2,5.7
+U0478,34, Female ,1.7,71.7,Intermediate,4,10.6
+ U0479 ,39, Male ,1.9,64.2,expert,2,15.3
+U0480,21, Male ,1.79,66.8, Beginner ,5,4.4
+U0481,31,Male,1.81,,Advanced,4,13.0
+U0482,40,MALE,1.62,90.7,Beginner,4,23.6
+U0483,23,Female,1.73,53.8,Advanced,3,31.1
+U0484,37, F ,1.62,88.0,Advanced,2,
+U0485,48,M,1.87,62.2,Intermediate,2,25.3
+U0486,41,Female,1.8,85.7,Advanced,5,21.3
+U0487,56,Male,1.77,83.1,advanced,4,19.8
+U0488,44,Male,1.64,81.1,Advanced,3,23.2
+U0489,22,Female,1.89,87.2, Advanced ,5,14.2
+U0490,34,Female,1.72,77.8,Intermediate,3,18.7
+ U0491 ,54,Male,1.82,85.3,Advanced,3,28.7
+U0492,57,Male,1.6,88.1,mid,2,8.5
+U0493,29,Female,1.73,75.7,beginner,5,18.7
+U0494,48,Male,2.3947447150402823,68.1,Advanced,3,23.4
+U0495,47,Male,1.68,66.0,Beginner,5,25.7
+U0496,33,F,1.69,64.8,Advanced,5,23.0
+U0497,25,Female,1.63,85.5,Beginner,4,27.1
+ U0498 ,50,Male,1.76,69.8,Beginner,3,26.4
+U0499,50,Male,1.79,60.7,Intermediate,2,23.4
+U0500,25,Male,1.81,74.5,advanced,3,19.5
+U0501,49,Male,1.6,100.3,Advanced,5,
+U0502,51,F,1.79,63.4,Advanced,5,18.9
+U0503,56,Female,1.81,75.0,Intermediate,3,16.9
+U0504,25, Male ,1.65,74.3,Advanced,3,21.2
+U0505,57,Male,1.73,90.6,Advanced,5,18.9
+U0506,25,FEMALE,1.94,46.1,intermediate,3,20.2
+U0507,18,FEMALE,1.72,78.1, Beginner ,3,8.9
+U0508,59,Female,1.67,71.1,Advanced,2,
+U0509,22,Female,1.76,74.9,Intermediate,4,17.3
+U0510,51,Male,,70.7,INT,5,25.6
+U0511,55,MALE,1.65,74.7,Beginner,3,18.4
+U0512,36,MALE,1.7,63.8,Advanced,2,25.4
+U0513,55,Male,1.75,89.7,Advanced,3,17.3
+U0514,21,Male,1.79,81.3,Intermediate,4,10.3
+U0515,21, Female ,1.71,92.8,Advanced,2,12.5
+U0516,57,Male,1.71,75.1,Beginner,3,24.0
+U0517,39,Male,1.66,74.8, Beginner ,5,
+ U0518 ,58,Female,1.67,74.0,Beginner,4,19.2
+U0519,28, Male ,1.66,74.7,Beginner,3,26.3
+U0520,18,Female,1.75,67.7,Intermediate,2,
+U0521,22, male ,1.79,69.5,Advanced,2,18.4
+ U0522 ,44,M,1.67,59.8,Advanced,2,21.9
+U0523,50,Female,1.76,84.2,Intermediate,3,18.3
+U0524,53,Male,1.64,87.2,Intermediate,3,24.7
+U0525,56,Male,1.8,45.6,Advanced,2,17.9
+U0526,41,Male,,,Advanced,5,33.2
+U0527,47,Male,1.79,,Beginner,2,28.7
+U0528,20,Female,1.73,91.7,Intermediate,2,23.4
+U0529,26,Female,1.77,106.0,Advanced,5,21.4
+U0530,58,Female,1.52,106.5, Intermediate ,3,23.0
+U0531,32,Male,1.65,84.3,Beginner,5,20.9
+ U0532 ,22,Male,1.73,80.0,Advanced,2,
+U0533,22,F,1.7,50.9,Advanced,4,17.6
+U0534,39,Female,1.68,72.7,Intermediate,5,21.0
+U0535,57,Male,1.85,57.4,Advanced,4,16.1
+U0536,36,male,2.4288709057118587,91.9,Intermediate,5,20.0
+U0537,29,Female,1.89,75.7, Intermediate ,5,12.1
+U0538,28,Male,1.69,77.8, Beginner ,5,16.7
+ U0539 ,52,FEMALE,1.66,83.1,Beginner,5,
+U0540,34,Female,1.85,81.9,Intermediate,3,22.5
+U0541,30,Female,1.67,82.8,Intermediate,2,24.4
+U0542,23,Male,1.76,84.4,Advanced,2,18.9
+U0543,38,MALE,1.61,59.0,Beginner,2,
+U0544,21,Male,,71.0,Intermediate,5,12.8
+U0545,46,Female,1.69,59.8,Beginner,2,19.3
+U0546,18,Male,1.53,54.5,Intermediate,5,21.1
+U0547,27,Female,1.66,90.8,Intermediate,2,11.6
+U0548,42, Female ,1.6,62.2,intermediate,3,16.1
+U0549,54,Female,1.62,96.5,Advanced,5,13.8
+U0550,23, Female ,2.475201301765503,69.2,Intermediate,4,24.4
+U0551,39,Male,1.74,71.5,B,4,14.4
+U0552,52,Male,1.75,59.3,mid,5,7.6
+U0553,33,M,1.72,94.0,advanced,3,7.1
+U0554,39,Female,,70.4,Intermediate,2,22.0
+U0555,19,Female,1.75,65.9,Intermediate,4,21.7
+U0556,30,Male,1.7,74.4,Intermediate,2,20.2
+U0557,41,Female,1.6,97.6,Intermediate,2,21.0
+U0558,40,Female,1.83,86.3,expert,2,34.0
+U0559,54,Female,1.66,77.3,Intermediate,3,15.4
+U0560,38,Female,1.62,75.0,Advanced,4,23.4
+U0561,31,Female,,,Intermediate,3,16.7
+U0562,51,Male,1.74,72.6,Beginner,3,27.8
+U0563,53,Male,1.87,68.1,Advanced,3,4.2
+U0564,20, Male ,1.55,81.8,Intermediate,4,22.5
+U0565,48,Female,1.83,82.5,Advanced,5,22.0
+ U0566 ,38,Female,1.84,52.1,B,5,16.9
+U0567,29, Female ,1.56,73.7,Beginner,3,21.9
+U0568,42,Female,1.83,87.2,Beginner,5,29.9
+U0569,36,Male,1.74,82.6,Intermediate,3,17.7
+U0570,41, Female ,1.83,89.1,Intermediate,3,18.5
+U0571,49,Male,1.92,79.7,Beginner,5,10.9
+U0572,50, Female ,1.73,68.1,Intermediate,5,23.2
+ U0573 ,50,MALE,1.74,76.1, Beginner ,4,12.3
+U0574,32, female ,1.64,75.8,Advanced,5,11.8
+U0575,53,Male,1.69,62.8,Beginer,3,12.6
+ U0576 ,27,Male,1.72,80.7,Advanced,2,17.2
+U0577,24,Female,1.81,92.3, Beginner ,2,29.0
+U0578,30,Male,1.66,88.6,Advanced,3,
+U0579,33,Male,1.71,56.6,Intermediate,2,29.0
+U0580,47,Female,1.52,51.2,Advanced,3,30.9
+U0581,21,Female,1.56,78.0,expert,2,19.8
+ U0582 ,41,Female,1.55,78.1,Advanced,5,12.0
+U0583,35,Male,1.84,83.4, Advanced ,5,17.0
+U0584,47,Female,1.85,86.0,Beginner,4,14.6
+U0585,35, M ,1.89,,Intermediate,5,20.0
+ U0586 ,46,Female,1.75,76.4,Beginner,3,21.0
+U0587,43,Female,1.78,68.5, Beginner ,4,16.6
+U0588,34,Female,1.88,86.9,Intermediate,2,19.6
+U0589,24,MALE,1.65,76.8, Advanced ,4,69.0
+U0590,47, Female ,1.61,50.4,Advanced,2,32.2
+U0591,20, Male ,1.66,61.5,Intermediate,5,20.2
+U0592,43,Male,1.67,67.7,Intermediate,4,18.0
+U0593,54,Male,1.8,78.3,Intermediate,2,22.6
+U0594,46,Female,1.73,60.9,Beginner,2,
+U0595,27,Male,1.75,69.7,Advanced,4,56.0
+U0596,35,female,1.85,88.5,Advanced,2,18.7
+U0597,41,Female,1.82,96.6, Beginner ,5,7.5
+U0598,53,Female,1.68,85.5,intermediate,4,16.7
+U0599,41,Male,1.78,64.8,Beginner,4,9.1
+U0600,39,Male,2.472865673161405,82.9,Advanced,2,23.8
+U0601,37,Female,1.73,67.2,Advanced,3,13.4
+U0602,58,F,1.65,87.0,Beginner,2,32.9
+U0603,58,Male,1.7,85.3,Intermediate,2,17.9
+U0604,35,Female,1.76,80.8,Intermediate,5,18.8
+U0605,46,Male,1.7,57.3,Advanced,2,27.8
+U0606,50,Male,1.68,89.4, Beginner ,5,22.5
+U0607,38,Male,1.64,90.1,Advanced,5,
+U0608,52,Male,1.63,61.3, Beginner ,4,25.6
+U0609,24, Male ,1.8,72.5,Beginner,2,22.6
+U0610,34,Male,1.83,62.2,Intermediate,3,15.7
+U0611,42,Male,1.51,85.1,Advanced,3,27.6
+U0612,37,Male,1.66,,Advanced,4,21.2
+U0613,28,Male,1.64,,Intermediate,4,24.7
+U0614,51,Female,,,Intermediate,3,17.2
+U0615,29,Male,1.77,60.8,Intermediate,5,15.7
+U0616,34,Female,1.86,96.2,Intermediate,2,58.0
+U0617,45,Male,1.63,84.6,Beginner,3,54.0
+U0618,20,Male,1.72,87.0,Intermediate,2,23.1
+U0619,39,Male,1.69,86.6, Intermediate ,3,
+U0620,37,Female,1.85,99.1,Beginner,2,26.6
+U0621,57,FEMALE,1.83,56.9,Advanced,5,13.7
+U0622,42, Male ,1.63,91.4,Beginner,2,18.4
+U0623,41,Female,1.65,,Beginner,5,20.8
+ U0624 ,36,Male,1.78,51.1,Intermediate,5,16.0
+U0625,44,Male,1.57,83.8,Intermediate,2,30.2
+U0626,50,Female,1.98,48.0,Advanced,4,22.5
+ U0627 ,25,Female,1.75,76.6, Beginner ,5,22.8
+U0628,38,Female,1.57,63.2,Advanced,2,25.3
+U0629,50,Male,1.78,74.6,beginner,4,
+U0630,18,female,1.69,65.8,Intermediate,5,16.0
+U0631,39,Female,1.66,78.4,Advanced,2,28.4
+U0632,44,Female,1.62,87.5,Advanced,2,19.1
+ U0633 ,24,Male,1.61,61.2,Advanced,3,21.7
+U0634,58,Male,1.9,78.9,Intermediate,2,17.9
+U0635,59,Male,1.76,77.4,Intermediate,3,28.7
+U0636,24, Male ,1.73,,Advanced,2,19.6
+U0637,36,Female,1.74,84.7,Advanced,2,17.5
+U0638,21,MALE,1.65,80.4,Intermediate,3,22.5
+U0639,29,Male,1.62,75.0,Beginner,3,22.4
+U0640,49,Female,1.71,51.1,Advanced,4,11.5
+U0641,42,Male,,88.4,expert,2,11.9
+U0642,40,Female,1.98,53.6,Beginner,3,5.1
+U0643,26,Female,1.75,63.5,Intermediate,4,15.7
+U0644,44,Male,1.56,72.5,INT,4,
+U0645,35, Male ,1.68,72.7,Advanced,4,
+U0646,53,FEMALE,1.83,95.2,Intermediate,4,18.3
+U0647,33,male,1.6,64.2,Intermediate,4,
+U0648,29,female,1.77,74.1, Intermediate ,5,14.9
+U0649,29,Male,1.65,65.5,Intermediate,5,14.9
+ U0650 ,47,Female,1.84,70.1,Beginner,4,20.2
+U0651,50,FEMALE,,77.3,Advanced,2,24.4
+U0652,47,Female,1.86,61.1,Beginer,5,21.1
+U0653,45,Female,1.73,61.4,Beginner,3,18.6
+U0654,49,Female,1.63,86.7,intermediate,4,22.2
+U0655,31,Male,1.72,77.9,Intermediate,3,18.8
+U0656,59,Male,1.58,73.6,Advanced,5,17.5
+U0657,40,female,1.92,75.7,Intermediate,4,13.3
+ U0658 ,23,Female,1.78,64.4,Advanced,4,22.1
+U0659,36,Male,1.78,72.7,Advanced,5,21.9
+U0660,31,Male,2.3195657520104622,73.1,Advanced,3,12.2
+U0661,29,M,1.6,96.8,Beginner,3,18.5
+U0662,47,Male,1.71,69.4, Advanced ,4,16.5
+U0663,27,Female,1.83,56.3,Beginner,5,27.5
+ U0664 ,36,Male,1.67,57.3,Intermediate,4,23.3
+U0665,31,Female,1.94,64.9,Advanced,5,15.7
+U0666,24,Male,1.84,71.8,Intermediate,5,17.8
+U0667,42,Male,1.81,71.3,Intermediate,3,20.6
+U0668,49,Female,1.84,61.9,Beginner,5,15.1
+U0669,55,Female,1.75,46.9, Intermediate ,2,10.4
+U0670,53,FEMALE,1.85,94.5,Advanced,2,19.5
+U0671,56,Female,1.73,61.3,Intermediate,3,21.1
+U0672,47,Female,1.73,79.7,Beginner,4,15.5
+U0673,51,Male,1.87,66.5,Advanced,5,18.4
+U0674,58,male,1.73,55.4,Beginner,5,25.2
+U0675,55,Male,1.62,72.4,Advanced,4,20.5
+U0676,59,Female,1.81,80.1,Beginner,4,34.2
+U0677,36,Male,1.58,85.4,Intermediate,5,17.2
+U0678,23,Female,1.65,, Advanced ,5,14.8
+U0679,39,Female,1.71,73.1,Beginner,2,21.1
+U0680,34,Female,1.61,86.3,Intermediate,3,22.8
+ U0681 ,18,Male,1.76,,Beginner,5,21.1
+U0682,34,Female,1.65,44.1, Intermediate ,3,
+U0683,49,Male,1.89,61.3,Beginner,5,15.2
+ U0684 ,48,Male,1.68,92.1,Beginner,2,22.1
+U0685,18,Female,1.71,79.3,Beginner,2,16.6
+U0686,36,Male,1.59,57.9,Advanced,3,18.3
+U0687,34,Male,1.66,77.1,Intermediate,2,22.6
+U0688,28,Female,1.73,71.7,INT,2,16.8
+U0689,56,Male,1.73,72.8,Advanced,5,25.7
+ U0690 ,18,Male,1.88,78.6, Beginner ,5,18.5
+U0691,52,Male,,69.9,Advanced,3,13.4
+U0692,27, Female ,1.77,65.9,Beginner,5,21.4
+U0693,44,Male,1.66,,Beginner,3,
+U0694,59,Female,1.84,79.7, Advanced ,2,20.0
+U0695,31,Male,1.62,47.9,INT,2,15.9
+U0696,55,MALE,1.46,64.5,Intermediate,4,13.5
+U0697,48,Female,1.79,84.3,Intermediate,3,13.4
+U0698,23,MALE,1.65,45.4,Beginner,5,27.7
+U0699,44,Female,1.61,67.3,Intermediate,5,30.0
+ U0700 ,58,Female,1.71,58.0,Beginner,3,14.5
+U0701,23,Male,1.82,72.2,Intermediate,3,
+ U0702 ,27,Female,1.76,,Beginner,5,25.1
+U0703,32,Female,1.73,75.8,Intermediate,4,20.0
+U0704,31, Female ,1.79,,Intermediate,2,13.4
+U0705,38,Female,1.7,93.7,Advanced,4,33.6
+U0706,32,Female,1.42,89.2,Intermediate,3,11.5
+U0707,36,Female,1.73,75.8,Beginner,2,17.3
+U0708,49,Male,,59.9,beginner,3,27.1
+U0709,22,Female,1.79,85.7,Beginner,3,25.3
+U0710,49,Male,1.5,75.2,Intermediate,3,18.5
+U0711,31,Female,1.68,91.0,Advanced,5,24.7
+U0712,21,Male,1.79,43.9,Intermediate,3,
+U0713,48,M,1.6,88.5,Beginner,2,21.0
+U0714,39,Female,1.79,86.5,Advanced,3,24.4
+U0715,27,Male,1.85,84.7,Intermediate,2,19.1
+U0716,18,Female,1.73,61.4,Advanced,5,15.5
+U0717,45,F,1.64,,Intermediate,5,25.8
+U0718,35,Male,1.65,64.2, Beginner ,4,16.1
+U0719,25,Female,1.73,91.9,B,5,24.9
+U0720,35,Male,1.74,69.4,advanced,4,
+U0721,22,Male,1.7,58.5, Beginner ,5,16.8
+U0722,21,Male,1.77,84.6,Advanced,3,15.8
+U0723,29, Male ,1.72,73.8,Intermediate,3,18.3
+U0724,36, Female ,1.91,79.3,Advanced,2,
+U0725,45, female ,1.79,61.1,Intermediate,3,25.8
+U0726,33,Male,1.65,79.9, Intermediate ,4,22.5
+ U0727 ,24,Male,1.76,,Beginner,2,15.3
+U0728,19,Male,1.84,84.0,Beginner,5,14.2
+U0729,31,Female,1.74,73.7,Intermediate,5,16.0
+U0730,37,M,1.64,,Advanced,4,17.3
+ U0731 ,30,Female,1.71,65.4,Beginner,2,29.6
+U0732,32,Male,1.91,83.7,Advanced,3,9.5
+U0733,55,Male,1.63,78.3,INT,2,6.2
+U0734,57,Male,1.74,68.2,Intermediate,4,18.2
+U0735,42,Male,1.47,77.3,Intermediate,4,18.8
+ U0736 ,41,Male,1.6,65.8,Intermediate,2,16.3
+U0737,58,F,1.72,,Beginner,2,22.7
+U0738,32,FEMALE,1.67,73.5,Advanced,3,28.2
+U0739,45, Male ,1.75,76.1,Intermediate,5,19.1
+U0740,54, Male ,1.71,76.2, Intermediate ,2,18.1
+U0741,47,Male,1.6,81.3, Intermediate ,4,15.8
+U0742,32,Female,1.65,81.6,Intermediate,5,15.5
+ U0743 ,22,F,1.62,, Intermediate ,4,24.6
+U0744,22,Female,1.67,82.1,beginner,3,17.0
+U0745,28,MALE,,74.1, Advanced ,5,32.1
+U0746,38,Male,1.81,79.5, Beginner ,2,26.6
+U0747,53,Male,1.84,77.0, Intermediate ,4,3.7
+U0748,49,Male,1.87,,Advanced,2,25.1
+U0749,40,female,1.56,78.4,Beginner,2,8.5
+U0750,58,MALE,1.74,88.6,Beginner,4,19.7
+U0751,26,Male,1.7,93.4,Advanced,3,12.0
+U0752,42,FEMALE,1.8,62.4,Advanced,4,31.2
+U0753,23,Male,1.54,55.1,Intermediate,3,7.6
+U0754,24,Female,1.7,57.9,Intermediate,5,21.7
+U0755,28,Female,,65.8, B ,3,17.1
+ U0756 ,30,Male,1.7,85.6,Advanced,5,17.5
+U0757,51,Male,1.79,81.2,Advanced,3,
+ U0758 ,21,Female,1.82,60.2,B,4,21.6
+U0759,52,Female,1.8,55.2,Advanced,4,18.2
+U0760,53,Male,1.82,88.2,Advanced,5,22.0
+U0761,18,F,1.64,95.5,Beginner,5,19.9
+U0762,19,Male,1.79,77.6,Intermediate,4,19.6
+U0763,50,Male,1.76,99.8,Advanced,5,27.0
+U0764,46,female,1.86,80.3,Beginner,5,21.3
+U0765,52,Male,1.82,52.5,Advanced,5,20.1
+U0766,53,Female,1.77,89.4,Advanced,2,20.9
+U0767,47,Female,1.68,73.9,Intermediate,4,15.2
+U0768,22,Male,1.79,70.9,Beginner,4,16.2
+U0769,26,Male,1.77,79.3,Advanced,3,25.6
+U0770,50,Male,1.82,82.5,Intermediate,3,18.7
+U0771,32,Male,1.88,85.7, Beginner ,5,16.3
+U0772,42,Male,1.75,77.8,Advanced,4,9.8
+U0773,24,Male,1.79,72.2,Beginner,2,16.5
+U0774,46,Male,1.89,96.3,Beginner,5,20.8
+U0775,58,male,1.51,73.5, Beginner ,4,6.6
+U0776,22,Male,2.455604655064351,74.3,Intermediate,4,12.0
+ U0777 ,30,Female,1.87,59.0,intermediate,5,19.3
+U0778,41,Male,1.73,45.6,Beginner,4,15.1
+U0779,35,female,1.87,70.8,Intermediate,3,19.9
+U0780,51,Male,1.65,82.3,Beginner,3,10.8
+ U0781 ,23,Female,1.74,87.9,advanced,4,14.5
+U0782,42,Male,1.71,57.5,B,2,19.2
+U0783,34,Male,1.61,67.9,Intermediate,4,26.8
+U0784,35,Male,1.74,67.6,Advanced,4,15.6
+U0785,44,Male,1.72,83.3,Intermediate,2,17.9
+U0786,27,M,1.72,69.6,Advanced,3,14.1
+U0787,25,Female,1.75,62.4,Beginer,2,11.0
+U0788,19,female,1.77,83.6,Advanced,2,26.3
+U0789,37,Male,1.68,74.1,Advanced,4,18.5
+U0790,53,Male,1.68,92.1,Advanced,4,11.0
+ U0791 ,43,M,1.66,70.0,Beginner,2,14.2
+U0792,25,Female,1.91,43.0,INT,2,
+U0793,54,Female,1.85,57.4,Advanced,2,21.2
+U0794,28,Female,1.84,68.7,Intermediate,2,23.1
+U0795,34,Female,1.75,74.9,Intermediate,5,16.0
+U0796,51,Male,1.75,59.3, Intermediate ,5,13.4
+U0797,37,M,1.84,66.3,Intermediate,3,20.0
+U0798,29,Male,1.73,81.9,Advanced,3,
+U0799,28, Male ,1.76,58.7,Intermediate,3,26.5
+U0800,58,Female,1.65,88.8,Advanced,5,17.7
+ U0801 ,50,Male,1.71,89.2, Intermediate ,2,23.3
+U0802,52,Male,1.65,92.7,Beginner,5,18.0
+U0803,52,MALE,1.84,66.8,mid,2,17.1
+U0804,55,Male,1.8,59.7,Intermediate,3,23.2
+U0805,43,Male,1.65,55.9,Intermediate,5,22.4
+U0806,27,M,1.73,,Beginner,2,22.1
+ U0807 ,50,Male,,78.0,intermediate,2,27.3
+U0808,36, Male ,1.82,89.0,Beginner,5,20.3
+U0809,44,Female,1.6,94.2,Beginner,4,35.8
+U0810,33,Female,1.79,60.5,Beginner,5,16.1
+U0811,54,Female,1.58,57.3,Beginner,5,19.5
+U0812,50,Male,1.79,58.6,Intermediate,3,25.6
+U0813,25,Male,1.69,69.2,intermediate,2,24.9
+U0814,52,male,1.61,65.9,Advanced,2,28.6
+U0815,38,FEMALE,1.72,68.0,Intermediate,2,19.1
+U0816,21,Male,1.83,78.3, Beginner ,3,12.4
+U0817,25,female,1.7,89.7,Advanced,2,14.6
+U0818,18,Male,1.68,73.9,Intermediate,3,25.1
+U0819,34,Female,1.65,68.4,Beginner,2,28.8
+U0820,42,Male,1.67,80.6,Beginner,2,23.2
+U0821,34,Male,1.7,63.8,Intermediate,4,19.1
+U0822,43,Female,,82.2,Advanced,3,29.9
+U0823,56,Female,1.41,73.6,Advanced,3,18.0
+U0824,24,Male,1.74,86.2,advanced,2,
+U0825,53,Female,1.85,78.5,Advanced,4,23.8
+U0826,35,Male,1.73,68.4,Intermediate,2,13.7
+ U0827 ,34,Female,1.75,75.0, Advanced ,3,18.4
+U0828,34,Female,1.85,71.9,Intermediate,2,19.9
+U0829,56, Female ,1.7,100.0,Advanced,4,9.9
+U0830,20,Female,1.71,87.1,Intermediate,5,24.9
+U0831,49,Female,1.83,71.0,Advanced,2,5.3
+U0832,36,Male,1.56,78.7,Beginner,4,17.7
+U0833,27,female,1.75,105.0,Intermediate,2,22.1
+U0834,46,Male,,78.5,Intermediate,5,
+U0835,54,Female,1.81,69.1,ADV,2,18.8
+U0836,39,Male,1.46,67.2,Advanced,3,24.0
+U0837,22,Female,1.61,47.7,Advanced,3,27.6
+U0838,27,Female,1.69,71.4,INT,4,18.8
+ U0839 ,58,Female,2.3021772386774573,81.5,Intermediate,3,9.4
+U0840,37,Male,1.68,94.9, Intermediate ,4,
+U0841,36,Female,1.86,64.2,Intermediate,4,7.7
+U0842,33,Female,1.77,73.5, Beginner ,3,20.0
+U0843,55,Male,1.78,64.8, Beginner ,4,32.9
+U0844,56,Male,1.82,69.0,Advanced,4,17.8
+U0845,25,Male,1.64,69.9,Intermediate,5,12.3
+U0846,57,Male,1.61,77.3, Advanced ,4,24.5
+ U0847 ,54,Female,1.8,84.2,Intermediate,2,16.2
+U0848,29,Male,1.78,56.0,Beginner,4,
+ U0849 ,40,Female,1.64,76.0,Beginner,2,29.1
+U0850,49, Female ,1.56,,Beginner,2,20.3
+U0851,39,Female,1.8,, Advanced ,5,19.4
+U0852,21,male,1.64,47.5,Advanced,2,29.4
+U0853,22, Male ,,79.9,Intermediate,4,16.7
+U0854,28,Female,1.84,44.8,Advanced,5,
+U0855,43,Male,1.78,59.0,B,3,24.5
+U0856,37,Female,1.71,69.6,Advanced,3,17.3
+U0857,51,Female,1.83,84.1, Intermediate ,5,13.6
+U0858,37,Female,1.71,85.2,Advanced,2,17.5
+ U0859 ,33,male,1.62,79.7,beginner,4,17.4
+U0860,46,Female,1.67,,Intermediate,2,24.0
+U0861,48, Female ,1.71,58.1,Advanced,4,20.6
+U0862,45,Female,1.72,75.4,Advanced,4,15.6
+U0863,28,FEMALE,1.74,64.7,beginner,4,23.9
+U0864,46,Male,1.68,65.5,Intermediate,4,14.2
+U0865,44,Female,1.64,57.4,Advanced,2,19.3
+U0866,42,Female,1.67,67.7,Intermediate,2,18.7
+U0867,51,Female,1.69,61.6,Advanced,5,61.0
+U0868,27, Male ,1.85,87.9, Beginner ,2,23.9
+U0869,30,F,1.63,80.7,mid,4,20.9
+U0870,27,Male,1.73,79.5,Advanced,5,16.3
+U0871,53,Male,1.46,75.7,Beginner,3,16.0
+U0872,58,Female,1.73,75.0,Intermediate,2,
+U0873,42,male,1.56,71.1,Intermediate,3,28.8
+U0874,29,Male,1.76,73.7, Beginner ,2,9.1
+U0875,50,Male,1.81,82.8,Beginner,4,
+U0876,58,MALE,1.96,79.4,Advanced,2,19.8
+U0877,53,Female,1.72,88.1,Beginner,3,8.4
+U0878,38,Male,1.67,103.9,Intermediate,4,28.9
+ U0879 ,50,M,1.71,67.3,Advanced,2,22.1
+U0880,39,F,,85.3,Beginner,3,17.6
+U0881,39,M,1.77,84.8,Advanced,4,30.5
+ U0882 ,22, Male ,1.59,,Advanced,3,21.8
+ U0883 ,22,Male,1.76,68.1,Beginner,2,21.4
+U0884,37,FEMALE,1.76,62.4,Intermediate,2,21.2
+U0885,54,Female,1.46,83.8,Beginner,4,14.0
+U0886,57,Female,1.68,85.0,Intermediate,2,23.2
+U0887,57,male,1.65,86.3,Advanced,2,20.1
+U0888,46, Female ,1.56,61.9,Beginner,2,14.6
+U0889,41,Female,1.87,67.8,Advanced,2,23.0
+U0890,23,Female,1.99,63.0, Beginner ,2,16.2
+U0891,40,Female,1.82,73.5,Beginner,2,25.5
+ U0892 ,37,Female,1.81,65.0,Intermediate,4,28.0
+U0893,21,Male,1.6,59.8,Beginner,4,10.2
+U0894,50,Male,1.83,72.8,Beginner,5,18.0
+U0895,38, FEMALE ,1.72,71.3,mid,4,21.2
+U0896,58, Female ,1.62,60.4,Advanced,3,23.1
+ U0897 ,27,female,1.55,76.9,expert,5,24.3
+U0898,36,Female,1.64,70.1,Advanced,3,9.9
+U0899,29,Male,1.69,91.8,Intermediate,5,11.1
+U0900,53,Male,,73.5,Advanced,2,21.9
+U0901,45,Male,1.72,76.9,Beginner,4,16.5
+U0902,21,Male,1.9,81.2,Beginer,5,16.6
+U0903,37,Male,1.71,76.5,Beginner,4,18.0
+U0904,48,female,1.68,69.6,Intermediate,2,17.3
+ U0905 ,43,Female,1.72,63.1,mid,3,13.7
+U0906,21,Female,1.56,56.6, Advanced ,2,20.4
+U0907,29,Female,2.4305882768378138,80.2, Beginner ,5,15.5
+U0908,23,FEMALE,1.82,83.4, beginner ,5,16.4
+U0909,43,Male,1.75,113.1,Intermediate,5,
+U0910,45,Female,1.61,89.3,Beginner,2,16.5
+U0911,22,Male,1.85,65.0,Advanced,3,28.6
+U0912,42,Male,1.7,62.1,Advanced,2,19.9
+U0913,41,Male,1.8,84.4,Beginner,4,16.3
+U0914,32, Female ,1.76,68.6,Intermediate,4,11.6
+ U0915 ,24,Female,1.71,93.1,Advanced,4,14.4
+U0916,34,Male,1.62,81.4,Beginner,2,13.5
+U0917,54,Female,1.79,75.9, Advanced ,5,9.7
+U0918,27,Female,1.8,72.9,Advanced,3,9.0
+U0919,32,female,1.68,74.6,Beginner,2,35.0
+ U0920 ,59,FEMALE,1.73,70.7,Intermediate,3,19.9
+U0921,35,female,1.83,63.6,INT,4,12.9
+U0922,53,Male,1.64,84.6,Advanced,2,21.6
+U0923,36,Male,1.79,75.4,Intermediate,5,24.4
+U0924,33,M,1.62,, Intermediate ,3,13.9
+ U0925 ,55,FEMALE,1.69,69.4,Advanced,5,28.7
+U0926,34,Male,1.59,69.9,Advanced,3,26.3
+U0927,42,Male,1.52,,Advanced,4,22.3
+U0928,27,Male,1.68,74.0,Beginner,2,8.3
+U0929,44,Female,1.85,90.3,Beginner,5,23.8
+U0930,49,Male,1.79,96.1,Beginner,5,
+U0931,46,Male,1.82,85.6,Intermediate,2,
+U0932,46,Male,1.76,69.4,Advanced,4,17.9
+U0933,28,Male,,92.8, Beginner ,3,19.1
+U0934,38,F,1.62,70.1,expert,5,25.0
+U0935,52,Male,1.6,92.0,Intermediate,3,22.4
+U0936,25,Female,1.74,84.4,Advanced,4,21.3
+U0937,23,FEMALE,1.71,70.1,Intermediate,4,27.8
+U0938,40,Female,1.66,63.1,Intermediate,3,
+ U0939 ,39,Male,1.6,65.5,Advanced,5,19.7
+ U0940 ,40, Male ,1.69,67.2,Intermediate,3,22.0
+U0941,42,Female,1.68,80.6,intermediate,2,21.7
+U0942,27,Male,1.72,69.3,Beginer,2,23.8
+U0943,58,Male,1.82,69.2,Intermediate,2,21.9
+U0944,49,Female,1.79,,Beginer,4,14.9
+U0945,51,Male,1.73,84.7,Intermediate,5,29.5
+U0946,59,Female,1.89,,Advanced,2,22.1
+U0947,35,Male,1.64,92.1,Intermediate,2,15.0
+U0948,39,Male,1.71,67.9,advanced,2,52.0
+U0949,29,Female,1.7,63.1,Beginner,3,21.9
+U0950,18,Male,1.54,77.7,Advanced,4,12.9
+U0951,49,Female,1.69,91.8,B,3,33.5
+U0952,50,Female,1.71,62.6, Intermediate ,3,
+U0953,59,Female,1.69,65.0,Advanced,5,18.1
+U0954,56,female,2.453076515428762,69.1, Advanced ,2,15.0
+U0955,52,Male,1.67,70.9,Advanced,4,16.2
+U0956,34,Male,1.75,98.2,beginner,3,22.1
+U0957,20,Male,1.66,100.4,Beginner,2,14.5
+ U0958 ,24,Male,1.69,70.1,Beginner,4,24.6
+U0959,58,Male,1.65,86.4,Advanced,4,
+U0960,42,Female,1.66,93.7,Intermediate,4,30.1
+U0961,18,F,1.84,47.7,Beginner,4,18.9
+U0962,37,Male,1.67,47.1,Beginner,2,12.7
+U0963,41,Male,1.7,66.1,Advanced,4,8.6
+U0964,28,Female,1.86,90.3,Beginner,4,20.9
+U0965,21,Male,1.73,94.8,Beginner,4,20.0
+U0966,31,M,1.73,93.2,Intermediate,2,27.2
+ U0967 ,59,Male,1.82,88.6,Intermediate,2,20.7
+U0968,54,M,1.61,65.4,Intermediate,4,3.1
+U0969,39, Female ,1.76,62.2,Beginer,3,13.0
+U0970,20,Female,1.65,75.0,Intermediate,2,20.0
+U0971,42,Male,1.72,,Beginner,5,15.9
+U0972,18,Female,1.89,88.2,expert,3,23.1
+U0973,23,Female,1.65,84.0,Advanced,3,15.7
+U0974,33,Female,1.81,75.6,Intermediate,5,19.6
+U0975,35,Male,,71.8,Intermediate,2,9.3
+ U0976 ,43,Male,1.62,57.3,Intermediate,5,25.3
+U0977,27,Female,1.83,68.1,Beginner,2,13.0
+ U0978 ,23,Female,1.78,54.3,B,4,16.4
+U0979,18,Male,1.76,75.3, Beginner ,4,
+U0980,31,male,1.76,75.0,Intermediate,2,24.5
+U0981,26,Female,1.76,73.9,Beginner,2,13.2
+U0982,59,Male,1.66,81.7,Beginner,2,7.6
+U0983,28,Female,1.45,89.3,Beginner,3,32.1
+U0984,31,Female,,66.3,Advanced,3,18.5
+U0985,28,female,1.7,81.8,Advanced,2,64.0
+U0986,50, Female ,1.61,63.9,Advanced,3,25.6
+U0987,30,Male,1.7,84.6,Intermediate,2,32.3
+U0988,35,Female,1.66,70.9,Advanced,2,6.5
+U0989,28,Female,2.4550822896501163,104.5,Beginner,4,26.0
+U0990,27,Male,1.68,99.9,Advanced,5,17.7
+U0991,54,Male,1.74,78.4,Advanced,2,24.6
+U0992,24,Female,1.74,72.2,Beginner,5,37.3
+U0993,31, Male ,,79.8,Advanced,2,30.3
+U0994,56,Male,1.73,45.9,Advanced,2,10.5
+U0995,50,Female,1.72,55.4,advanced,4,18.0
+ U0996 ,39,FEMALE,1.58,85.1,Beginner,4,54.0
+U0997,57,Female,2.391276610143538,61.7,Advanced,3,17.1
+U0998,55,M,1.76,86.6,Advanced,4,33.5
+U0999,30,Male,1.55,58.9,Advanced,4,16.6
+U1000,30, Female ,1.59,69.0,Advanced,3,12.5
+U1001,53,Male,1.79,, Beginner ,2,16.6
+U1002,50,male,2.3594233123013733,96.4,Advanced,4,22.0
+U1003,44,Female,1.75,81.3,Intermediate,4,21.4
+U1004,34,Male,1.45,74.3,Intermediate,3,45.0
+U1005,54,Female,1.57,87.9,Beginner,3,20.1
+U1006,20,Male,1.7,80.7, Beginner ,3,20.1
+U1007,59,female,1.81,78.1,Beginner,4,19.8
+U1008,59,Female,2.3496450875594457,79.4,Intermediate,3,68.0
+U1009,43,Female,1.77,78.0, Beginner ,4,19.7
+ U1010 ,31,Male,1.64,90.3, Intermediate ,2,19.7
+U1011,31,Female,1.78,61.5, expert ,3,13.3
+ U1012 ,48,Male,1.83,84.4,Advanced,2,26.2
+U1013,51,Male,1.62,65.1,Beginner,5,18.5
+ U1014 ,32,Male,1.48,64.8,Beginner,4,18.4
+U1015,51,Male,1.86,71.4,Advanced,3,21.4
+U1016,41,Female,1.92,88.3,Advanced,4,20.6
+U1017,22,Male,1.6,77.0,Advanced,2,14.8
+U1018,32,Female,1.76,90.0,Beginner,2,31.4
+U1019,25,Female,1.73,80.0,Advanced,2,22.4
+U1020,55, Male ,1.84,84.3,Intermediate,5,23.6
+U1021,41,Male,1.84,72.2,Beginner,4,16.0
+U1022,19,Female,1.82,80.0,Beginner,2,19.9
+U1023,53,Male,1.8,52.7,Advanced,4,18.7
+U1024,21,Male,1.67,92.5,expert,5,17.5
+U1025,54,Male,1.6,66.8,Intermediate,3,21.6
+U1026,42,Female,,55.7,Intermediate,4,31.6
+U1027,28, Female ,1.85,83.6,Beginner,4,20.4
+U1028,25,Male,1.83,63.1, Beginner ,3,28.7
+U1029,59,Male,1.63,71.7,Intermediate,2,20.6
+U1030,54,Male,1.64,60.5,Advanced,3,27.0
+ U1031 ,52, Male ,1.88,83.9,Advanced,2,23.6
+U1032,39,Male,1.58,78.6,beginner,4,22.5
+U1033,24,Female,1.78,99.9,Beginner,2,19.7
+U1034,19,Male,1.69,81.6,beginner,5,8.3
+U1035,38,female,1.7,87.0,Beginner,3,25.5
+U1036,44,female,1.57,48.6,Beginner,5,18.1
+U1037,41,Male,1.81,65.3,advanced,3,
+U1038,22,Male,1.69,70.3,Beginner,2,
+U1039,51, Male ,1.87,71.6,Beginner,2,55.0
+U1040,49,Female,1.56,106.3,Beginner,4,21.9
+U1041,26,Female,1.74,77.2,Intermediate,2,23.6
+U1042,41,Female,1.65,68.1, Advanced ,3,27.9
+U1043,42, Male ,1.87,76.6,Intermediate,5,18.4
+U1044,34,Female,1.72,92.3,Advanced,4,62.0
+U1045,24,Male,1.61,81.4,Intermediate,2,21.8
+U1046,46,Female,1.69,69.3,Beginner,4,15.2
+U1047,37,Female,1.62,83.5, Intermediate ,4,15.6
+U1048,22,Male,1.79,53.0,Beginner,3,25.4
+U1049,24,male,1.69,73.2,Advanced,4,
+U1050,56, Female ,1.53,76.5,Advanced,4,7.9
+U1051,27,Male,1.84,61.5, Intermediate ,5,12.8
+U1052,19,Female,1.79,91.2, Beginner ,5,22.8
+U1053,29,male,1.65,91.4,Beginer,4,14.6
+U1054,58,Female,1.67,53.7, Advanced ,5,31.0
+U1055,30,Female,,63.5, Intermediate ,4,23.4
+U1056,30,Female,1.68,62.9,Advanced,3,25.7
+U1057,24,Female,2.05,78.1, Advanced ,4,12.5
+U1058,52,Female,1.61,64.5,Beginner,3,19.0
+U1059,23,Male,1.72,66.7,Beginner,4,22.3
+U1060,33,FEMALE,1.67,65.6,Beginner,3,19.8
+U1061,38,Female,1.85,76.3,Beginner,4,22.5
+U1062,58,Male,1.75,81.8,Advanced,5,18.8
+U1063,30, Male ,1.69,100.7,intermediate,4,32.5
+U1064,38,Female,1.74,82.4,Advanced,2,3.7
+U1065,50,Male,1.71,72.6,Intermediate,2,19.1
+U1066,32,Female,1.61,66.9,Beginner,4,13.2
+U1067,42,Female,1.87,62.6,Advanced,3,29.8
+U1068,20,Female,1.68,70.6,Intermediate,2,19.9
+U1069,38,Female,1.68,,Advanced,3,22.8
+U1070,44,Female,1.8,96.7,B,5,14.4
+U1071,49,Female,1.96,88.4,Beginner,5,15.4
+U1072,55,Female,1.68,91.0,Beginner,3,10.6
+U1073,39,Male,1.72,64.2,Beginner,4,9.3
+U1074,52,Male,1.71,85.7,intermediate,5,8.2
+U1075,47, Female ,1.8,58.2,Intermediate,4,29.8
+U1076,40,Male,1.71,82.6,Beginner,5,25.7
+U1077,57,M,1.77,99.6,Intermediate,3,18.9
+U1078,50, Male ,1.66,92.9,Advanced,5,16.3
+U1079,47,Female,1.71,72.0,Beginner,2,18.3
+ U1080 ,45,F,1.91,63.7,beginner,4,13.9
+U1081,27,Male,1.77,62.5,Advanced,3,23.0
+U1082,23,F,1.8,74.8,Intermediate,2,19.7
+U1083,26,Male,1.63,84.5,Intermediate,3,14.3
+U1084,39,Male,1.81,83.7,Intermediate,3,12.7
+ U1085 ,30,Female,1.58,92.9,Intermediate,4,15.9
+U1086,41,Female,1.68,66.9,Intermediate,3,64.0
+U1087,20,Female,1.69,86.7,Intermediate,5,16.0
+ U1088 ,50,Male,1.85,64.7,Beginner,5,25.2
+ U1089 ,32, Female ,2.273100236216714,80.2,INT,5,14.4
+U1090,56,Male,1.76,69.5, expert ,2,14.3
+ U1091 ,33,Male,1.51,72.4, Beginner ,2,17.8
+U1092,34,Female,1.69,75.4,Advanced,2,19.9
+U1093,44,Female,1.73,79.7,Advanced,2,17.2
+U1094,49,Female,,72.4,Beginner,2,
+U1095,32,Male,1.8,74.9,intermediate,3,20.1
+U1096,50,Female,1.67,71.1,mid,5,18.8
+U1097,43,Male,1.72,93.7,Beginner,3,19.9
+ U1098 ,38,Male,1.7,,Intermediate,5,16.6
+U1099,57,Male,1.8,,Advanced,4,25.3
+U1100,18,Female,1.82,92.1,Intermediate,3,16.9
+U1101,34,Female,1.91,89.9,Advanced,5,17.1
+U1102,32,Male,1.8,93.8, Beginner ,3,25.9
+ U1103 ,28,Female,1.75,81.6, B ,4,23.6
+U1104,41,Male,1.8,81.2,Beginner,4,19.0
+U1105,57,Male,1.8,73.6,Intermediate,5,32.3
+U1106,26, Female ,1.75,,Advanced,5,16.9
+U1107,55,Female,,76.6,Intermediate,3,25.7
+U1108,49,Male,1.8,60.4,intermediate,3,16.6
+U1109,28,Male,1.74,69.5,intermediate,5,34.5
+U1110,37,Female,1.63,,Intermediate,2,18.5
+ U1111 ,18,Male,1.76,89.7,Beginner,2,19.6
+ U1112 ,21, Female ,1.58,73.6,Advanced,4,25.4
+U1113,42, M ,1.65,82.3,Advanced,3,19.4
+U1114,56,Male,1.86,67.6,Advanced,4,15.2
+U1115,52,Female,1.63,57.6,Beginner,2,18.9
+U1116,56,Male,1.72,74.9,Advanced,4,20.6
+U1117,34,Male,1.72,78.1,Intermediate,2,17.3
+U1118,36,Female,1.67,75.4,Advanced,5,21.4
+U1119,34,Male,1.86,92.3,Beginner,3,19.9
+U1120,28,Male,1.83,68.9,Intermediate,5,11.2
+U1121,33, Female ,1.81,86.3,Intermediate,5,19.1
+ U1122 ,44,Male,1.82,88.3, Intermediate ,4,17.2
+U1123,33,Male,1.72,71.1,Advanced,4,14.7
+U1124,39,Female,1.78,,intermediate,4,17.7
+ U1125 ,20,Male,1.82,64.5,Advanced,3,7.4
+U1126,45,Male,1.59,80.3,Intermediate,5,21.1
+U1127,33, Female ,1.74,77.3,Intermediate,4,30.7
+U1128,20,Female,1.73,74.0,Beginner,3,20.5
+U1129,47,F,1.63,79.1,Advanced,2,22.2
+U1130,47,Male,1.77,,Beginner,5,
+U1131,23,Male,1.75,64.1,Intermediate,2,13.8
+U1132,42,Male,1.86,47.4,Intermediate,2,16.7
+U1133,19,Male,1.57,95.9,Advanced,5,17.5
+U1134,19, F ,1.68,69.9,Beginner,2,14.2
+U1135,26,Female,1.72,72.0,Advanced,3,14.3
+ U1136 ,26, Male ,2.4010609766054065,71.7,Advanced,3,18.4
+U1137,40,Female,1.8,68.1,Intermediate,2,31.0
+U1138,43,Male,1.67,67.5,Advanced,4,16.6
+U1139,56,Male,1.79,88.3,Advanced,5,
+U1140,48,Male,1.61,83.7,Intermediate,2,15.8
+ U1141 ,55,female,1.74,85.2,Advanced,3,25.7
+U1142,48,F,1.6,75.5,Intermediate,5,16.4
+U1143,33,Male,1.76,64.6,Advanced,4,8.6
+U1144,48,Male,,90.0,intermediate,3,25.8
+U1145,32, Male ,1.92,81.8,Intermediate,4,27.4
+U1146,38,Male,1.63,70.9,Advanced,5,16.0
+U1147,51,Female,,68.2,Advanced,5,26.6
+U1148,44,Male,1.59,69.3,Intermediate,4,10.7
+U1149,43,Female,1.79,88.9,Advanced,5,22.7
+U1150,25,Male,1.83,78.3,Advanced,4,17.0
+U1151,40,Male,1.65,61.4,intermediate,2,21.9
+U1152,55,Male,1.82,70.3,Intermediate,3,15.2
+U1153,50,Female,1.72,69.3,Intermediate,3,20.2
+U1154,45, Female ,1.81,85.1,Intermediate,2,24.4
+U1155,48,Male,1.67,99.3, Advanced ,3,18.8
+U1156,49,Female,1.69,67.2,intermediate,3,30.4
+U1157,57, female ,1.78,89.8,Advanced,4,29.5
+U1158,22,Female,1.59,75.3,Intermediate,2,26.4
+U1159,27,Female,1.68,58.0,Intermediate,5,
+U1160,48, Male ,1.73,77.6,Intermediate,2,24.4
+U1161,44,MALE,1.68,95.6,Intermediate,4,17.3
+U1162,48,male,1.81,87.0,Intermediate,5,14.4
+U1163,34,MALE,1.72,90.4,Advanced,3,14.4
+U1164,18,female,1.66,67.9,expert,4,19.9
+U1165,53,Female,1.63,78.4,Advanced,4,16.6
+U1166,48,Male,1.65,90.7, Beginner ,3,15.1
+U1167,43,Male,1.52,83.4,Advanced,5,24.3
+U1168,44,Male,1.55,86.8,Beginner,5,18.0
+U1169,24, Male ,1.62,64.1,Intermediate,5,23.1
+U1170,21,Male,1.51,,Advanced,3,10.5
+U1171,42,female,1.62,81.0,Advanced,5,24.4
+U1172,54,Female,2.344771752576188,80.6,Advanced,4,14.0
+U1173,29, Male ,1.76,70.5,Beginner,5,22.2
+U1174,39,Male,1.76,65.8,Advanced,5,10.9
+U1175,43,Female,1.62,64.4,Intermediate,3,10.8
+U1176,59,Male,1.88,67.7,Advanced,4,17.3
+U1177,42,MALE,1.59,81.9,Intermediate,2,18.3
+U1178,29,Male,1.73,,Advanced,5,25.7
+U1179,57,Female,2.3514374448710496,73.2,Intermediate,4,25.9
+U1180,37,Male,1.61,64.2,Beginner,4,20.3
+U1181,53,Male,1.75,78.1, Intermediate ,5,29.5
+U1182,39,Male,1.72,,advanced,4,19.8
+U1183,52,Female,1.71,79.2,Advanced,3,15.0
+ U1184 ,30,FEMALE,1.73,54.2,Intermediate,2,14.9
+U1185,21,Female,1.8,78.6,Intermediate,5,10.4
+U1186,33,Male,1.7,84.7,Advanced,4,21.3
+U1187,49, Male ,1.84,60.3,Advanced,4,20.3
+U1188,31,Female,,92.3,Intermediate,5,10.6
+U1189,31,female,1.67,72.7,Advanced,4,28.5
+ U1190 ,40, Male ,1.76,66.6,Advanced,3,13.3
+U1191,56,Male,1.69,71.8,Intermediate,2,16.0
+U1192,31,F,1.51,65.3,Beginner,4,12.4
+U1193,22,Male,1.91,78.2,Beginner,5,8.1
+U1194,47,MALE,,75.4,Beginner,3,22.7
+U1195,30,MALE,1.68,85.7,Beginner,3,25.3
+U1196,27,Female,1.61,100.1,expert,5,33.4
+U1197,31,Male,1.68,82.9,Beginner,3,22.4
+U1198,53,Female,1.88,107.4,Advanced,3,15.0
+ U1199 ,33,Female,1.64,72.6, Intermediate ,2,53.0
+ U1200 ,35,Female,1.65,83.5,advanced,4,26.6
+U1179,57,Female,2.3514374448710496,73.2,Intermediate,4,25.9
+U0866,42,Female,1.67,67.7,Intermediate,2,18.7
+U0102,50,Female,1.78,85.8,Beginer,4,14.3
+ U0440 ,19,Male,1.86,55.4,Beginner,2,12.7
+ U0059 ,50,Male,1.59,78.5,Beginner,3,22.3
+U1121,33, Female ,1.81,86.3,Intermediate,5,19.1
+U0324,29,Female,1.75,77.4,Intermediate,2,12.4
+U0975,35,Male,,71.8,Intermediate,2,9.3
+U0412,38,Male,1.55,82.6,Advanced,5,15.6
+U0856,37,Female,1.71,69.6,Advanced,3,17.3
+U0821,34,Male,1.7,63.8,Intermediate,4,19.1
+U0045,35,Female,1.69,90.0,Advanced,3,32.5
+U0050,31,Male,1.76,61.0,Intermediate,4,57.0
+U0850,49, Female ,1.56,,Beginner,2,20.3
+U0241,56,Female,1.84,73.6,Advanced,3,18.0
+U0171,36,Male,1.67,79.5, Intermediate ,2,19.4
+U0524,53,Male,1.64,87.2,Intermediate,3,24.7
+U0766,53,Female,1.77,89.4,Advanced,2,20.9
+ U0839 ,58,Female,2.3021772386774573,81.5,Intermediate,3,9.4
+U0424,40,Female,1.64,90.8,Intermediate,3,23.9
+U0381,34,Male,1.82,61.3,Intermediate,3,21.6
+U0610,34,Male,1.83,62.2,Intermediate,3,15.7
+U0677,36,Male,1.58,85.4,Intermediate,5,17.2
+ U0345 ,29,male,1.84,63.6,Advanced,4,17.2
+U0110,22,Female,1.71,79.5,Advanced,3,26.3
+U0278,51, Male ,1.69,73.5, Advanced ,2,9.9
+U0678,23,Female,1.65,, Advanced ,5,14.8
+U0571,49,Male,1.92,79.7,Beginner,5,10.9
+U0359,50,Male,,73.2,INT,4,26.6
+U0599,41,Male,1.78,64.8,Beginner,4,9.1
+U0391,29,F,1.68,56.8,Beginner,3,8.3
+U0894,50,Male,1.83,72.8,Beginner,5,18.0
+U0693,44,Male,1.66,,Beginner,3,
+U0728,19,Male,1.84,84.0,Beginner,5,14.2
+U0363,31,F,1.89,49.1,Beginner,5,24.5
+U0597,41,Female,1.82,96.6, Beginner ,5,7.5

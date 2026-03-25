@@ -1,0 +1,27 @@
+{
+  "name": "fitness_track_project",
+  "version": "1.0.0",
+  "description": "a fitness tracking program",
+  "main": "src/index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "concurrently \"nodemon server/server.js\" \"npm run start:streamlit\"",
+    "start:streamlit": "streamlit run streamlit/app.py --server.headless true"
+  },
+  "author": "gurvirsinghdhillon@outlook.com",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "nodemon": "^3.1.14",
+    "pg": "^8.20.0"
+  }
+}
