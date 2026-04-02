@@ -1,0 +1,48 @@
+2026-04-02 14:46:22,713 - INFO - __main__ - Data successfully extracted
+2026-04-02 14:52:25,121 - INFO - __main__ - Data successfully extracted
+2026-04-02 14:59:27,978 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/exercise_metadata.csv
+2026-04-02 14:59:27,981 - INFO - __main__ - Loaded dataframe with shape: (8, 3)
+2026-04-02 14:59:27,981 - INFO - __main__ - Data successfully extracted
+2026-04-02 15:00:09,220 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/exercise_metadata.csv
+2026-04-02 15:00:09,221 - INFO - __main__ - Loaded dataframe with shape: (8, 3)
+2026-04-02 15:00:09,221 - INFO - __main__ - Data successfully extracted
+2026-04-02 15:00:45,238 - INFO - __main__ - Processing file:exercise_metadata.csv
+2026-04-02 15:00:45,239 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/exercise_metadata.csv
+2026-04-02 15:00:45,239 - INFO - __main__ - Loaded dataframe with shape: (8, 3)
+2026-04-02 15:00:45,239 - INFO - __main__ - Processing file:workout_sessions_messy.csv
+2026-04-02 15:00:45,239 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/workout_sessions_messy.csv
+2026-04-02 15:00:45,307 - INFO - __main__ - Loaded dataframe with shape: (153750, 13)
+2026-04-02 15:00:45,307 - INFO - __main__ - Processing file:users_metadata_messy.csv
+2026-04-02 15:00:45,307 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/users_metadata_messy.csv
+2026-04-02 15:00:45,308 - INFO - __main__ - Loaded dataframe with shape: (1236, 8)
+2026-04-02 15:00:45,308 - INFO - __main__ - Processing file:heart_rate_zone.csv
+2026-04-02 15:00:45,308 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/heart_rate_zone.csv
+2026-04-02 15:00:45,308 - ERROR - __main__ - File not found at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/heart_rate_zone.csv
+2026-04-02 15:00:45,308 - WARNING - __main__ - skipping file: heart_rate_zone.csv
+2026-04-02 15:00:45,308 - INFO - __main__ - Data successfully extracted
+2026-04-02 15:01:23,686 - INFO - __main__ - Processing file:exercise_metadata.csv
+2026-04-02 15:01:23,687 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/exercise_metadata.csv
+2026-04-02 15:01:23,687 - INFO - __main__ - Loaded dataframe with shape: (8, 3)
+2026-04-02 15:01:23,687 - INFO - __main__ - Processing file:workout_sessions_messy.csv
+2026-04-02 15:01:23,687 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/workout_sessions_messy.csv
+2026-04-02 15:01:23,751 - INFO - __main__ - Loaded dataframe with shape: (153750, 13)
+2026-04-02 15:01:23,752 - INFO - __main__ - Processing file:users_metadata_messy.csv
+2026-04-02 15:01:23,752 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/users_metadata_messy.csv
+2026-04-02 15:01:23,752 - INFO - __main__ - Loaded dataframe with shape: (1236, 8)
+2026-04-02 15:01:23,753 - INFO - __main__ - Processing file:heart_rate_zones.csv
+2026-04-02 15:01:23,753 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/heart_rate_zones.csv
+2026-04-02 15:01:23,754 - INFO - __main__ - Loaded dataframe with shape: (5, 4)
+2026-04-02 15:01:23,754 - INFO - __main__ - Data successfully extracted
+2026-04-02 15:12:52,567 - INFO - __main__ - Processing file:exercise_metadata.csv
+2026-04-02 15:12:52,567 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/exercise_metadata.csv
+2026-04-02 15:12:52,570 - INFO - __main__ - Loaded dataframe with shape: (8, 3)
+2026-04-02 15:12:52,570 - INFO - __main__ - Processing file:workout_sessions_messy.csv
+2026-04-02 15:12:52,570 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/workout_sessions_messy.csv
+2026-04-02 15:12:52,636 - INFO - __main__ - Loaded dataframe with shape: (153750, 13)
+2026-04-02 15:12:52,636 - INFO - __main__ - Processing file:users_metadata_messy.csv
+2026-04-02 15:12:52,636 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/users_metadata_messy.csv
+2026-04-02 15:12:52,637 - INFO - __main__ - Loaded dataframe with shape: (1236, 8)
+2026-04-02 15:12:52,637 - INFO - __main__ - Processing file:heart_rate_zones.csv
+2026-04-02 15:12:52,637 - INFO - __main__ - Looking for file at: /Users/gurvi/healthcare_project/fitness_track_project/data/raw/heart_rate_zones.csv
+2026-04-02 15:12:52,638 - INFO - __main__ - Loaded dataframe with shape: (5, 4)
+2026-04-02 15:12:52,638 - INFO - __main__ - Data successfully extracted

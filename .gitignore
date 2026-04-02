@@ -1,1 +1,27 @@
+# gitignore
+
+data/raw/*.csv
+data/processed/*.csv
+data/output/*.csv
+downward/
+
+.venv/
+.env
+node_modules
+.DS_Store
+
+__pycache__/
+*.pyc
+*.pyo
+
+.vscode/
 package-lock.json
+
+
+/run.sh
+.log
+
+output.sas
+
+src/fitness_track_project.egg-info/
+sas_plan

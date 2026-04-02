@@ -50,3 +50,43 @@ So according to my research, for maximum strength training Epley Formula which w
 1RM = WEIGHT x (1 + REPS / 30)
 ```
 
+## Domain solving problem
+
+During my Artificial Intelligence masters I learnt about domain problem solving and the power it had to solve complex issues and how it can apply to real world scenarios. 
+Today I decided to utilised context given decisions to identify how a user can train given the data provided. For example, what muscle groups were trained before, how tired
+is the individual and other factors that may be taken into account before creating a routine such as their goals(are they training to lose weight, competition, to gain muscle,
+for health benefits etc).
+
+To test out the running of the code:
+
+```terminal
+./run.sh
+```
+
+How did i do this?
+brew install cmake
+build the python document via
+```terminal
+./build.py
+```
+
+After downloading the fast downward installations that can be found on the website. I had then used nano:
+
+```terminal
+nano run.sh
+```
+
+This will open up a terminal in which this should be pasted
+
+```nano
+#!/bin/bash
+./downward/fast-downward.py planning_logic/domain.pddl planning_logic/problem.pddl
+```
+
+Which should then be saved and entered making a shorthand of "./run.sh"
+
+Alternatively, the following can be used directly if at the root of the folder.
+
+```terminal
+./downward/fast-downward.py planning_logic/domain.pddl planning_logic/problem.pddl
+```

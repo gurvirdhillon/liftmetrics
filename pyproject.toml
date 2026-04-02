@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fitness_track_project"
+version = "0.1.0"
+dependencies = ["pandas", "streamlit"]
+
+[project.scripts]
+run_app = "fitness_track_project.main:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["fitness_track_project*"]

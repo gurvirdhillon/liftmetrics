@@ -1,0 +1,2 @@
+[console_scripts]
+run_app = fitness_track_project.main:main
