@@ -5,12 +5,23 @@ function limitDate() {
 
 // limits the date to either today or before today^
 
+
+function getOrMakeUserId() {
+  let userId = localStorage.getItem("liftmetrics_user_id");
+  if(!userId){
+    const randomNumber = Math.floor(1000 + Math.random() * 9000)
+    userId = `${randomNumber}`;
+    localStorage.setItem("liftmetrics_user_id", userId)
+  }
+  return userId
+}
+
 const form = document.querySelector("#workoutForm")
 
 form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const payload = {
-        user_id: 1,
+        user_id: getOrMakeUserId(),
         session_date: document.getElementById("DateInput").value,
         duration_value: document.querySelector('input[name="session_duration_hr"]').value,
         duration_unit: document.querySelector('select[name="duration_metric"]').value,

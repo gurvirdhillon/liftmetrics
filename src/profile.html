@@ -2,9 +2,15 @@
 <head>
     <title></title>
     <link rel="stylesheet" href="index.css">
+    <script src="index.js" type="module"></script>
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" async defer></script>
 </head>
 <body>
     <h1 class="page-title">LiftMetrics</h1>
+    <p>
+        <button id="login" disabled="true">Log-in</button>
+        <button id="logout" disabled="true">Log out</button>
+    </p>
 
     <nav class="navbar">
         <a href="index.html"><img src="img/home_icon.png" class="icon_img"></a>

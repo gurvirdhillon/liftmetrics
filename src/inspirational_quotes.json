@@ -13,7 +13,64 @@
             "author": "unknown"
         },
         {
-            
-        }
+            "id": 3,
+            "quote": "The only way to do great work is to love what you do.",
+            "category": "work",
+            "author": "Steve Jobs"
+          },
+          {
+            "id": 4,
+            "quote": "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            "category": "success",
+            "author": "Winston Churchill"
+          },
+          {
+            "id": 5,
+            "quote": "Don’t watch the clock; do what it does. Keep going.",
+            "category": "persistence",
+            "author": "Sam Levenson"
+          },
+          {
+            "id": 6,
+            "quote": "Believe you can and you're halfway there.",
+            "category": "belief",
+            "author": "Theodore Roosevelt"
+          },
+          {
+            "id": 7,
+            "quote": "Your time is limited, so don’t waste it living someone else’s life.",
+            "category": "life",
+            "author": "Steve Jobs"
+          },
+          {
+            "id": 8,
+            "quote": "Hardships often prepare ordinary people for an extraordinary destiny.",
+            "category": "resilience",
+            "author": "C.S. Lewis"
+          },
+          {
+            "id": 9,
+            "quote": "Push yourself, because no one else is going to do it for you.",
+            "category": "motivation",
+            "author": "Unknown"
+          },
+          {
+            "id": 10,
+            "quote": "Dream big and dare to fail.",
+            "category": "dreams",
+            "author": "Norman Vaughan"
+          },
+          {
+            "id": 11,
+            "quote": "It always seems impossible until it’s done.",
+            "category": "perseverance",
+            "author": "Nelson Mandela"
+          },
+          {
+            "id": 12,
+            "quote": "Act as if what you do makes a difference. It does.",
+            "category": "impact",
+            "author": "William James"
+          }
     ]
 }

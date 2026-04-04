@@ -1,0 +1,86 @@
+[
+  {
+    "id": 1,
+    "quote": "There are only two ways to live your life. One is as though nothing is a miracle. The other is as though everything is a miracle.",
+    "category": "motivation",
+    "author": "Albert Einstein"
+  },
+  {
+    "id": 2,
+    "quote": "Imperfection is beauty, madness is genius and it's better to be absolutely ridiculous than absolutely boring.",
+    "category": "motivation",
+    "author": "Marilyn Monroe"
+  },
+  {
+    "id": 3,
+    "quote": "Try not to become a man of success. Rather become a man of value.",
+    "category": "success",
+    "author": "Albert Einstein"
+  },
+  {
+    "id": 4,
+    "quote": "I have not failed. I've just found 10,000 ways that won't work.",
+    "category": "hard-work",
+    "author": "Thomas A. Edison"
+  },
+  {
+    "id": 5,
+    "quote": "A person is like a tea bag; you never know how strong they are until they're in hot water.",
+    "category": "strength",
+    "author": "Eleanor Roosevelt"
+  },
+  {
+    "id": 6,
+    "quote": "It is impossible to live without failing at something, unless you live so cautiously that you might as well not have lived at all - in which case, you fail by default.",
+    "category": "perseverance",
+    "author": "J.K. Rowling"
+  },
+  {
+    "id": 7,
+    "quote": "To the well-organized mind, death is but the next great adventure.",
+    "category": "motivation",
+    "author": "J.K. Rowling"
+  },
+  {
+    "id": 8,
+    "quote": "It is never too late to be what you might have been.",
+    "category": "motivation",
+    "author": "George Eliot"
+  },
+  {
+    "id": 9,
+    "quote": "You believe lies so you eventually learn to trust no one but yourself.",
+    "category": "mindset",
+    "author": "Marilyn Monroe"
+  },
+  {
+    "id": 10,
+    "quote": "Only in the darkness can you see the stars.",
+    "category": "motivation",
+    "author": "Martin Luther King Jr."
+  },
+  {
+    "id": 12,
+    "quote": "When one door of happiness closes, another opens; but often we look so long at the closed door that we do not see the one which has been opened for us.",
+    "category": "motivation",
+    "author": "Helen Keller"
+  },
+  {
+    "id": 13,
+    "quote": "Life isn't about finding yourself. Life is about creating yourself.",
+    "category": "motivation",
+    "author": "George Bernard Shaw"
+  },
+  {
+    "id": 14,
+    "quote": "You may say I'm a dreamer, but I'm not the only one. I hope someday you'll join us. And the world will live as one.",
+    "category": "mindset",
+    "author": "John Lennon"
+  },
+  {
+    "id": 16,
+    "quote": "It takes courage to grow up and become who you really are.",
+    "category": "perseverance",
+    "author": "E.E. Cummings"
+  }
+]
