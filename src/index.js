@@ -14,7 +14,10 @@ async function initAuth0Client() {
   auth0 = await createAuth0Client({
     domain: config.domain,
     client_id: config.clientId,
-    redirect_uri: window.location.origin + '/profile.html'
+    authorizationParams: {
+      redirect_uri: window.location.origin + '/profile.html'
+    },
+    cacheLocation: 'localstorage'
   });
 }
 
