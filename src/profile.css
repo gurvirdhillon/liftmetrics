@@ -185,3 +185,93 @@ input[type="radio"]:checked + .image-option .description-icon {
     font-size: 1.1rem;
   }
 }
+#onboarding-form {
+  max-width: 900px;
+  margin: 70px auto 140px;
+  padding: 0 20px;
+}
+
+.progress-text {
+  text-align: center;
+  margin-bottom: 18px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+}
+
+.form-step {
+  display: none;
+}
+
+.form-step.active {
+  display: block;
+  animation: fadeSlide 0.25s ease;
+}
+
+.card-grid,
+.pill-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px;
+}
+
+.pill-option input,
+input[type="radio"] {
+  display: none;
+}
+
+.pill-option span {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 110px;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.pill-option.large span {
+  min-width: 170px;
+}
+
+.pill-option input:checked + span {
+  border-color: #3f91ff;
+  background: rgba(63, 145, 255, 0.18);
+  box-shadow: 0 0 0 4px rgba(63, 145, 255, 0.15);
+}
+
+.step-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.slider-wrap {
+  max-width: 520px;
+  margin: 30px auto 0;
+  text-align: center;
+}
+
+.slider-wrap input[type="range"] {
+  width: 100%;
+}
+
+.slider-value {
+  margin-top: 14px;
+}
+
+@keyframes fadeSlide {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

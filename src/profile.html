@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="profile.css">
     <script src="index.js" type="module"></script>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" async defer></script>
+    <script src="profile.js" type="module"></script>
 </head>
 <body>
     <h1 class="page-title">Welcome to LiftMetrics</h1>
@@ -15,40 +16,182 @@
         <button id="logout" disabled="true">Log out</button>
     </p>
 
-    <form id="user_goals">
-        <h2 class="question_asked">What is your goal?</h2>
+    <form id="onboarding-form">
+        <p class="progress-text" id="progress-text">Step 1 of 6</p>
       
-        <label>
-          <input type="radio" name="choice" value="weight-loss">
-          <div class="image-option">
-            <img src="img/profile/weight-loss.jpg" alt="Weight loss">
-            <p class="description-icon">Weight loss</p>
-          </div>
-        </label>
+        <!-- STEP 1 -->
+        <section class="form-step active" id="step-1">
+          <h2 class="question_asked">What is your goal?</h2>
       
-        <label>
-          <input type="radio" name="choice" value="strength">
-          <div class="image-option">
-            <img src="img/profile/strength.jpg" alt="Strength training">
-            <p class="description-icon">Gain Strength</p>
-          </div>
-        </label>
+          <div class="card-grid">
+            <label>
+              <input type="radio" name="goal" value="weight-loss">
+              <div class="image-option">
+                <img src="img/profile/weight-loss.jpg" alt="Weight loss">
+                <p class="description-icon">Weight loss</p>
+              </div>
+            </label>
       
-        <label>
-          <input type="radio" name="choice" value="stamina">
-          <div class="image-option">
-            <img src="img/profile/stamina.png" alt="Stamina">
-            <p class="description-icon">Stamina</p>
-          </div>
-        </label>
+            <label>
+              <input type="radio" name="goal" value="strength">
+              <div class="image-option">
+                <img src="img/profile/strength.jpg" alt="Gain strength">
+                <p class="description-icon">Gain Strength</p>
+              </div>
+            </label>
       
-        <label>
-          <input type="radio" name="choice" value="wellbeing">
-          <div class="image-option">
-            <img src="img/profile/heart_icon.png" alt="General wellbeing">
-            <p class="description-icon">General wellbeing</p>
+            <label>
+              <input type="radio" name="goal" value="stamina">
+              <div class="image-option">
+                <img src="img/profile/stamina.png" alt="Stamina">
+                <p class="description-icon">Stamina</p>
+              </div>
+            </label>
+      
+            <label>
+              <input type="radio" name="goal" value="wellbeing">
+              <div class="image-option">
+                <img src="img/profile/heart_icon.png" alt="General wellbeing">
+                <p class="description-icon">General wellbeing</p>
+              </div>
+            </label>
           </div>
-        </label>
+      
+          <div class="step-actions">
+            <button type="button" data-next="step-2">Proceed</button>
+          </div>
+        </section>
+      
+        <!-- STEP 2 -->
+        <section class="form-step" id="step-2">
+          <h2 class="question_asked">Which days are you available?</h2>
+      
+          <div class="pill-grid">
+            <label class="pill-option">
+              <input type="checkbox" name="days" value="Mon">
+              <span>Mon</span>
+            </label>
+            <label class="pill-option">
+              <input type="checkbox" name="days" value="Tue">
+              <span>Tue</span>
+            </label>
+            <label class="pill-option">
+              <input type="checkbox" name="days" value="Wed">
+              <span>Wed</span>
+            </label>
+            <label class="pill-option">
+              <input type="checkbox" name="days" value="Thu">
+              <span>Thu</span>
+            </label>
+            <label class="pill-option">
+              <input type="checkbox" name="days" value="Fri">
+              <span>Fri</span>
+            </label>
+            <label class="pill-option">
+              <input type="checkbox" name="days" value="Sat">
+              <span>Sat</span>
+            </label>
+            <label class="pill-option">
+              <input type="checkbox" name="days" value="Sun">
+              <span>Sun</span>
+            </label>
+          </div>
+      
+          <div class="step-actions">
+            <button type="button" class="secondary-btn" data-back="step-1">Back</button>
+            <button type="button" data-next="step-3">Proceed</button>
+          </div>
+        </section>
+      
+        <!-- STEP 3 -->
+        <section class="form-step" id="step-3">
+          <h2 class="question_asked">Time per session available</h2>
+      
+          <div class="pill-grid">
+            <label class="pill-option">
+              <input type="radio" name="timespent" value="30">
+              <span>30 mins</span>
+            </label>
+            <label class="pill-option">
+              <input type="radio" name="timespent" value="45">
+              <span>45 mins</span>
+            </label>
+            <label class="pill-option">
+              <input type="radio" name="timespent" value="60">
+              <span>60+ mins</span>
+            </label>
+          </div>
+      
+          <div class="step-actions">
+            <button type="button" class="secondary-btn" data-back="step-2">Back</button>
+            <button type="button" data-next="step-4">Proceed</button>
+          </div>
+        </section>
+      
+        <!-- STEP 4 -->
+        <section class="form-step" id="step-4">
+          <h2 class="question_asked">Where will you work out?</h2>
+      
+          <div class="pill-grid">
+            <label class="pill-option">
+              <input type="radio" name="equipment" value="gym">
+              <span>Gym</span>
+            </label>
+            <label class="pill-option">
+              <input type="radio" name="equipment" value="home">
+              <span>Home</span>
+            </label>
+            <label class="pill-option">
+              <input type="radio" name="equipment" value="both">
+              <span>Both</span>
+            </label>
+          </div>
+      
+          <div class="step-actions">
+            <button type="button" class="secondary-btn" data-back="step-3">Back</button>
+            <button type="button" data-next="step-5">Proceed</button>
+          </div>
+        </section>
+      
+        <!-- STEP 5 -->
+        <section class="form-step" id="step-5">
+          <h2 class="question_asked">How many days per week do you want to work out?</h2>
+      
+          <div class="slider-wrap">
+            <input type="range" id="activity-level" name="activity_level" min="1" max="7" value="3">
+            <p class="slider-value"><span id="activity-output">3</span> days / week</p>
+          </div>
+      
+          <div class="step-actions">
+            <button type="button" class="secondary-btn" data-back="step-4">Back</button>
+            <button type="button" data-next="step-6">Proceed</button>
+          </div>
+        </section>
+      
+        <!-- STEP 6 -->
+        <section class="form-step" id="step-6">
+          <h2 class="question_asked">What is your fitness level?</h2>
+      
+          <div class="pill-grid">
+            <label class="pill-option large">
+              <input type="radio" name="fitness_level" value="beginner">
+              <span>Beginner</span>
+            </label>
+            <label class="pill-option large">
+              <input type="radio" name="fitness_level" value="intermediate">
+              <span>Intermediate</span>
+            </label>
+            <label class="pill-option large">
+              <input type="radio" name="fitness_level" value="advanced">
+              <span>Advanced</span>
+            </label>
+          </div>
+      
+          <div class="step-actions">
+            <button type="button" class="secondary-btn" data-back="step-5">Back</button>
+            <button type="submit">Generate Plan</button>
+          </div>
+        </section>
       </form>
 
     <nav class="navbar">
