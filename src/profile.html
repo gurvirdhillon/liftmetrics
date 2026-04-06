@@ -2,11 +2,12 @@
 <head>
     <title></title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="profile.css">
     <script src="index.js" type="module"></script>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" async defer></script>
 </head>
 <body>
-    <h1 class="page-title">LiftMetrics</h1>
+    <h1 class="page-title">Welcome to LiftMetrics</h1>
     <p class="tagline">Plan your Workouts. Reach New Limits. Maximise your progress.</p>
 
     <p>
@@ -14,6 +15,41 @@
         <button id="logout" disabled="true">Log out</button>
     </p>
 
+    <form id="user_goals">
+        <h2 class="question_asked">What is your goal?</h2>
+      
+        <label>
+          <input type="radio" name="choice" value="weight-loss">
+          <div class="image-option">
+            <img src="img/profile/weight-loss.jpg" alt="Weight loss">
+            <p class="description-icon">Weight loss</p>
+          </div>
+        </label>
+      
+        <label>
+          <input type="radio" name="choice" value="strength">
+          <div class="image-option">
+            <img src="img/profile/strength.jpg" alt="Strength training">
+            <p class="description-icon">Gain Strength</p>
+          </div>
+        </label>
+      
+        <label>
+          <input type="radio" name="choice" value="stamina">
+          <div class="image-option">
+            <img src="img/profile/stamina.png" alt="Stamina">
+            <p class="description-icon">Stamina</p>
+          </div>
+        </label>
+      
+        <label>
+          <input type="radio" name="choice" value="wellbeing">
+          <div class="image-option">
+            <img src="img/profile/heart_icon.png" alt="General wellbeing">
+            <p class="description-icon">General wellbeing</p>
+          </div>
+        </label>
+      </form>
 
     <nav class="navbar">
         <a href="index.html"><img src="img/home_icon.png" class="icon_img"></a>

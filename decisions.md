@@ -90,3 +90,9 @@ Alternatively, the following can be used directly if at the root of the folder.
 ```terminal
 ./downward/fast-downward.py planning_logic/domain.pddl planning_logic/problem.pddl
 ```
+
+### Planning/Profile page integration
+
+When designing the profile page there was an element of difficulty to make the page look engaging without it seeming like another online form. Also once the profile is complete the option would seem a bit repetitive to have the goals, profile of the customer show up with no real reason. So I had two choices, either to integrate the two systems together with room for reapplying goals and editing the profiles or the second which was to separate the two applications as HTML pages. 
+
+Due to the reliance of the profile system to use the planner, I had chosen to integrate both the planning and profile page.
