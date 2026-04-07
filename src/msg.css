@@ -1,0 +1,21 @@
+:root {
+    --primary: #4f46e5;     /* your main brand color */
+    --primary-dark: #4338ca;
+    --bg: #f4f7fb;          /* page background */
+    --chat-bg: #ffffff;
+    --received: #e5e7eb;    /* incoming message */
+    --text-dark: #111827;
+  }
+
+  
+  .messages.empty {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .empty-text {
+    color: #9ca3af; /* or use your theme variable */
+    font-size: 14px;
+    text-align: center;
+  }

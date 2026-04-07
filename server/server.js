@@ -1,4 +1,5 @@
 import express from "express";
+import uuid from 'uuid-random'
 import path from "path";
 import { Pool } from "pg";
 import cors from "cors";
@@ -135,6 +136,42 @@ app.post("/api/workouts", async (req, res) => {
   }
 });
 
+let message = [
+  {
+    id: 'jedshjfhj',
+    msg: 'hello world',
+    time: 'an hour ago'
+  }, {
+    id: 'ryufugyfrsuf',
+    msg: 'delivered from server.js',
+    time: 'yesterday night sometime'
+  }
+]
+
+function getMessages(req, res) {
+  res.json(messages);
+}
+
+function getMessage(req, res){
+  for(const message of messages){
+    if(message.id == req.params.id){
+      res.json(message);
+      return;
+    }
+  }
+  res.status(404).send('no match for id')
+}
+
+function postMessages(req, res) {
+  const newMessage = {
+    id: uuid(),
+    msg: req.body.msg,
+    time: Date(),
+  };
+  messages = [newMessage, ...messages.slice(0, 9)];
+  res.json(messages);
+}
+
 
 app.get('/auth-config', (req, res) => {
   res.json({
@@ -148,3 +185,7 @@ app.use(express.static(path.join(__dirname, "../src")));
 app.listen(port, () => {
   console.log(`server is running at http://localhost:${port}`);
 });
+
+app.get('/messages/:id', getMessages)
+app.get('/messages', getMessages)
+app.post('/messages', express.json(), postMessages);

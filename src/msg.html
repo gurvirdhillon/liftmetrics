@@ -2,17 +2,27 @@
 <head>
     <title>LiftMetrics</title>
     <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="msg.css">
     <script src="index.js" type="module"></script>
-    <script src="quotes.js" type="module"></script>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" async defer></script>
 </head>
 <body>
-    <div class="hero">
-        <h1 class="page-title">LiftMetrics</h1>
-        <p class="tagline">Track your Performance. Build Strength.</p>
-        <!-- <button id="log_btn">Log your Lift</button> -->
-        <span id="thequote"></span>
-    </div>
+    <h1 class="page-title">LiftMetrics Public chat</h1>
+    <p class="tagline">Join our community. Inspire growth. Inspire change.</p>
+
+    <div class="chat">
+        <div class="messages empty">
+            <p class="empty-text">💬 No messages yet.<br>Start the conversation!</p>
+        </div>
+              
+        <div class="input-area">
+            <form id="msgHolder">
+                <input type="text" placeholder="Type a message..." />
+                <button>Send</button>
+            </form>
+        </div>
+      </div>
+
 
     <nav class="navbar">
         <a href="index.html"><img src="img/home_icon.png" class="icon_img"></a>
