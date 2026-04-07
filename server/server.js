@@ -149,7 +149,7 @@ let message = [
 ]
 
 function getMessages(req, res) {
-  res.json(messages);
+  res.json(message);
 }
 
 function getMessage(req, res){
@@ -186,6 +186,6 @@ app.listen(port, () => {
   console.log(`server is running at http://localhost:${port}`);
 });
 
-app.get('/messages/:id', getMessages)
+app.get('/messages/:id', getMessage)
 app.get('/messages', getMessages)
 app.post('/messages', express.json(), postMessages);
