@@ -1,25 +1,45 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-    <title></title>
+    <title>LiftMetrics Profile</title>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="profile.css">
+    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js"></script>
     <script src="index.js" type="module"></script>
-    <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" async defer></script>
     <script src="profile.js" type="module"></script>
 </head>
 <body>
     <h1 class="page-title">Welcome to LiftMetrics</h1>
     <p class="tagline">Plan your Workouts. Reach New Limits. Maximise your progress.</p>
 
-    <p>
-        <button id="login" disabled="true">Log-in</button>
-        <button id="logout" disabled="true">Log out</button>
-    </p>
+    <div id="loading-state">
+        <p>Loading...</p>
+    </div>
 
-    <form id="onboarding-form">
+    <div id="logged-out-view" style="text-align: center;">
+        <p>Please log in to complete your profile.</p>
+        <button id="login" disabled>Log-in</button>
+    </div>
+
+    <div id="logged-in-actions" style="text-align: center;">
+        <button id="logout" disabled>Log out</button>
+    </div>
+
+    <section id="profile-summary" style="text-align: center;">
+        <h2>Your Profile</h2>
+        <p><strong>Goal:</strong> <span id="summary-goal"></span></p>
+        <p><strong>Available days:</strong> <span id="summary-days"></span></p>
+        <p><strong>Time per session:</strong> <span id="summary-timespent"></span></p>
+        <p><strong>Workout location:</strong> <span id="summary-equipment"></span></p>
+        <p><strong>Current activity:</strong> <span id="summary-activity"></span></p>
+        <p><strong>Fitness level:</strong> <span id="summary-fitness"></span></p>
+
+        <button type="button" id="edit-profile-btn">Edit Profile</button>
+    </section>
+
+    <form id="onboarding-form" style="display: none;">
         <p class="progress-text" id="progress-text">Step 1 of 6</p>
       
-        <!-- STEP 1 -->
         <section class="form-step active" id="step-1">
           <h2 class="question_asked">What is your goal?</h2>
       
@@ -62,39 +82,17 @@
           </div>
         </section>
       
-        <!-- STEP 2 -->
         <section class="form-step" id="step-2">
           <h2 class="question_asked">Which days are you available?</h2>
       
           <div class="pill-grid">
-            <label class="pill-option">
-              <input type="checkbox" name="days" value="Mon">
-              <span>Mon</span>
-            </label>
-            <label class="pill-option">
-              <input type="checkbox" name="days" value="Tue">
-              <span>Tue</span>
-            </label>
-            <label class="pill-option">
-              <input type="checkbox" name="days" value="Wed">
-              <span>Wed</span>
-            </label>
-            <label class="pill-option">
-              <input type="checkbox" name="days" value="Thu">
-              <span>Thu</span>
-            </label>
-            <label class="pill-option">
-              <input type="checkbox" name="days" value="Fri">
-              <span>Fri</span>
-            </label>
-            <label class="pill-option">
-              <input type="checkbox" name="days" value="Sat">
-              <span>Sat</span>
-            </label>
-            <label class="pill-option">
-              <input type="checkbox" name="days" value="Sun">
-              <span>Sun</span>
-            </label>
+            <label class="pill-option"><input type="checkbox" name="days" value="Mon"><span>Mon</span></label>
+            <label class="pill-option"><input type="checkbox" name="days" value="Tue"><span>Tue</span></label>
+            <label class="pill-option"><input type="checkbox" name="days" value="Wed"><span>Wed</span></label>
+            <label class="pill-option"><input type="checkbox" name="days" value="Thu"><span>Thu</span></label>
+            <label class="pill-option"><input type="checkbox" name="days" value="Fri"><span>Fri</span></label>
+            <label class="pill-option"><input type="checkbox" name="days" value="Sat"><span>Sat</span></label>
+            <label class="pill-option"><input type="checkbox" name="days" value="Sun"><span>Sun</span></label>
           </div>
       
           <div class="step-actions">
@@ -103,7 +101,6 @@
           </div>
         </section>
       
-        <!-- STEP 3 -->
         <section class="form-step" id="step-3">
           <h2 class="question_asked">Time per session available</h2>
       
@@ -128,7 +125,6 @@
           </div>
         </section>
       
-        <!-- STEP 4 -->
         <section class="form-step" id="step-4">
           <h2 class="question_asked">Where will you work out?</h2>
       
@@ -153,7 +149,6 @@
           </div>
         </section>
       
-        <!-- STEP 5 -->
         <section class="form-step" id="step-5">
           <h2 class="question_asked">How many days per week do you usually work out?</h2>
       
@@ -168,7 +163,6 @@
           </div>
         </section>
       
-        <!-- STEP 6 -->
         <section class="form-step" id="step-6">
           <h2 class="question_asked">What is your fitness level?</h2>
       
@@ -192,7 +186,7 @@
             <button type="submit">Generate Plan</button>
           </div>
         </section>
-      </form>
+    </form>
 
     <nav class="navbar">
         <a href="index.html"><img src="img/home_icon.png" class="icon_img"></a>
@@ -201,3 +195,4 @@
         <a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img"></a>
     </nav>
 </body>
+</html>

@@ -35,7 +35,7 @@ for name, path in files.items():
     df = drop_dup_data(df)
     print(f"{name}: {len(df)} rows after deduplication")
 
-    
+
 # def drop_na(df, subset=None):
     # return df.dropna(subset=subset)
 
@@ -86,6 +86,15 @@ def transform_to_standardised_format(df, dataset_name):
             .str.strip()
             .str.upper()
         )
+    if dataset_name == "users_metadata":
+        df["height_m"] = (
+            df.groupby("gender")["height_m"].transform(lambda x: x.fillna(x.median())
+        ))
+        
+    if dataset_name == "users_metadata":
+        df["fat_percentage"] = (df.groupby(["gender", "experience_level"])["fat_percentage"].transform(lambda x: x.fillna(x.mean()))
+)
+        
 
         gender_map = {
             "M": "MALE",
@@ -96,7 +105,7 @@ def transform_to_standardised_format(df, dataset_name):
 
     return df
 
-def to_csv_file(df):
+# def to_csv_file(df):
     
 
 for name, path in files.items():
@@ -110,4 +119,7 @@ if __name__ == "__main__":
     df = transform_to_standardised_format(df, name)
     users_metadata_unique = pd.read_csv(users_metadata)
     print(users_metadata_unique["gender"].unique())
+    print(users_metadata_unique["age"].isna().sum())
+    print(users_metadata_unique["height_m"].isna().sum())
+    print(users_metadata_unique["fat_percentage"].isna().sum())
     
