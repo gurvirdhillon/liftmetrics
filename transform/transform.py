@@ -62,6 +62,7 @@ index_map = {
     "users_metadata": "user_id",
 }
 
+
 def set_index_for_files(df, dataset_name):
     index_col = index_map.get(dataset_name)
     if index_col is None:
@@ -77,7 +78,36 @@ def set_index_for_files(df, dataset_name):
     return df.set_index(index_col)
 
 
+def transform_to_standardised_format(df, dataset_name):
+    
+    if dataset_name == "users_metadata":
+        df["gender"] = (
+            df["gender"]
+            .str.strip()
+            .str.upper()
+        )
+
+        gender_map = {
+            "M": "MALE",
+            "F": "FEMALE"
+        }
+
+        df["gender"] = df["gender"].map(gender_map)
+
+    return df
+
+def to_csv_file(df):
+    
+
+for name, path in files.items():
+    df = pd.read_csv(path)
+    df = transform_to_standardised_format(df, name)
+
+
 if __name__ == "__main__":
     data = transform_raw_data()
     df = set_index_for_files(df, name)
-    print(data["exercise_mdata"].columns)
+    df = transform_to_standardised_format(df, name)
+    users_metadata_unique = pd.read_csv(users_metadata)
+    print(users_metadata_unique["gender"].unique())
+    
