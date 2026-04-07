@@ -36,13 +36,14 @@ for name, path in files.items():
     print(f"{name}: {len(df)} rows after deduplication")
 
     
-def drop_na(df, subset=None):
-    return df.dropna(subset=subset)
+# def drop_na(df, subset=None):
+    # return df.dropna(subset=subset)
+
 
 for name, path in files.items():
     df = pd.read_csv(path)
-    df = drop_na(df)
-    print(f"In {name}: dropped na's")
+    # df = drop_na(df)
+    # print(f"In {name}: dropped {len(df)} na's")
 
 
 def transform_raw_data():
@@ -51,10 +52,32 @@ def transform_raw_data():
     for name, path in files.items():
         df = pd.read_csv(path)
         df = standardise_data(df)
-        df = drop_na(df)
+        # df = drop_na(df)
         df = drop_dup_data(df)
         cleaned_data[name] = df
     return cleaned_data
 
+
+index_map = {
+    "users_metadata": "user_id",
+}
+
+def set_index_for_files(df, dataset_name):
+    index_col = index_map.get(dataset_name)
+    if index_col is None:
+        return df
+    
+    if index_col not in df.columns:
+        print(f"{index_col} not found in {dataset_name}")
+        return df
+    
+    if df[index_col].isna().any():
+        print(f"warning: {dataset_name} has nulls in {index_col}")
+    
+    return df.set_index(index_col)
+
+
 if __name__ == "__main__":
     data = transform_raw_data()
+    df = set_index_for_files(df, name)
+    print(data["exercise_mdata"].columns)
