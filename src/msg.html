@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="msg.css">
     <script src="index.js" type="module"></script>
+    <script src="msg.js" defer></script>
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" async defer></script>
 </head>
 <body>
@@ -11,14 +12,14 @@
     <p class="tagline">Join our community. Inspire growth. Inspire change.</p>
 
     <div class="chat">
-        <div class="messages empty">
-            <p class="empty-text">💬 No messages yet.<br>Start the conversation!</p>
+        <div class="messages_box">
+            <p class="empty-text">No messages yet.<br>Start the conversation!</p>
         </div>
               
         <div class="input-area">
             <form id="msgHolder">
-                <input type="text" placeholder="Type a message..." />
-                <button>Send</button>
+                <input type="text" placeholder="Type a message..." id="MsgContent"/>
+                <button id="triggerBtn">Send</button>
             </form>
         </div>
       </div>
@@ -31,4 +32,5 @@
         <a href="msg.html"><img src="img/msg_icon.jpg" class="icon_img"></a>
         <a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img"></a>
     </nav>
+
 </body>

@@ -2,8 +2,10 @@ DROP TABLE IF EXISTS exercise_entries;
 DROP TABLE IF EXISTS workout_sessions;
 DROP TABLE IF EXISTS user_profiles;
 
+-- DATE 
+
 CREATE TABLE user_profiles (
-    user_id VARCHAR(5) PRIMARY KEY,
+    user_id VARCHAR(100) PRIMARY KEY,
     age INTEGER,
     gender VARCHAR(10),
     height_m DECIMAL(4,2),

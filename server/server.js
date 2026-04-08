@@ -6,12 +6,34 @@ import cors from "cors";
 import { fileURLToPath } from "url";
 import authConfig from './auth-config.js'
 import dotenv from "dotenv"
+import { Server } from "socket.io"
+import http from "http"
+
 
 dotenv.config();
 
 const app = express();
-const port = 8080;
 
+const server = http.createServer(app)
+const io = new Server(server, {
+  cors:{
+    origin: "*"
+  }
+});
+
+io.on("connection", (socket) => {
+  console.log("user connected:", socket.id);
+  socket.on("chat message:", (msg) =>{
+    console.log("message", msg)
+    io.emit("chat message:", msg)
+  })
+  socket.on("discount", () =>{
+    console.log("user disconnected", socket.id)
+  })
+})
+
+
+const port = 8080;
 app.use(cors());
 app.use(express.json());
 
