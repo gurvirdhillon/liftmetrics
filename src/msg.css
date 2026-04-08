@@ -1,107 +1,213 @@
 :root {
-    --primary: #4f46e5;     /* your main brand color */
-    --primary-dark: #4338ca;
-    --bg: #f4f7fb;          /* page background */
-    --chat-bg: #ffffff;
-    --received: #e5e7eb;    /* incoming message */
-    --text-dark: #111827;
+    --bg: #07142b;
+    --panel: #ffffff;
+    --panel-border: rgba(15, 23, 42, 0.08);
+    --message-bg: #f8fafc;
+    --message-border: #e2e8f0;
+    --primary: #2563eb;
+    --primary-dark: #1d4ed8;
+    --text: #0f172a;
+    --muted: #64748b;
+    --placeholder: #94a3b8;
+    --shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+  }
+  
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: linear-gradient(180deg, #06122a 0%, #081938 100%);
+    color: #ffffff;
+    font-family: Inter, Arial, sans-serif;
+  }
+  
+  .page-title {
+    margin: 28px 0 8px 32px;
+    font-size: 2.3rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  
+  .tagline {
+    margin: 0 0 0 32px;
+    color: rgba(255, 255, 255, 0.82);
+    font-size: 1rem;
+    font-weight: 400;
+  }
+  
+  .chat {
+    width: min(760px, calc(100% - 48px));
+    margin: 40px auto 110px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  
+  .messages_box {
+    height: 500px;
+    overflow-y: auto;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    scroll-behavior: smooth;
+  }
+  
+  .messages_box::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .messages_box::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .messages_box::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
   }
   
   .empty-text {
-    color: #9ca3af; /* or use your theme variable */
-    font-size: 14px;
-    text-align: center;
-  }
-
-  .chat {
-    width: min(700px, 90%);
-    margin: 2rem auto 6rem auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.messages_box {
-  min-height: 350px;
-  max-height: 500px;
-  overflow-y: auto;
-  background: #ffffff;
-  border: 1px solid #d9d9d9;
-  border-radius: 16px;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-
-  align-items: flex-start; /* 👈 THIS is the key fix */
-}
-
-.empty-text {
     margin: auto;
     text-align: center;
-    color: #777;
+    color: var(--muted);
     font-size: 1rem;
-    line-height: 1.5;
-}
-
-.chat-message {
+    line-height: 1.7;
+  }
+  
+  .chat-message {
+    max-width: 78%;
+    width: fit-content;
     margin: 0;
-    padding: 0.85rem 1rem;
-    background: #f4f6f8;
-    border-radius: 12px;
-    line-height: 1.4;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    font-size: 0.95rem;
-    color: #222;
-    border-left: 4px solid #3b82f6;
-}
-
-.input-area {
-    background: #ffffff;
-    border: 1px solid #d9d9d9;
-    border-radius: 16px;
-    padding: 0.75rem;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-}
-
-#msgHolder {
+    padding: 14px 18px;
+    background: var(--message-bg);
+    border: 1px solid var(--message-border);
+    border-radius: 18px 18px 18px 6px;
+    color: var(--text);
+    line-height: 1.55;
+    font-size: 0.98rem;
+    word-break: break-word;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05);
+  }
+  
+  .chat-message strong {
+    font-weight: 700;
+    color: #0f172a;
+  }
+  
+  .chat-time {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  
+  .input-area {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    border-radius: 22px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+    padding: 14px;
+  }
+  
+  #msgHolder {
     display: flex;
-    gap: 0.75rem;
     align-items: center;
-}
-
-#MsgContent {
+    gap: 12px;
+  }
+  
+  #MsgContent {
     flex: 1;
-    padding: 0.9rem 1rem;
-    border: 1px solid #cfcfcf;
-    border-radius: 12px;
+    height: 56px;
+    padding: 0 18px;
+    border: 1px solid #dbe3ee;
+    border-radius: 16px;
+    background: #f8fafc;
+    color: var(--text);
     font-size: 1rem;
     outline: none;
-}
-
-#MsgContent:focus {
-    border-color: #3b82f6;
-}
-
-#triggerBtn {
-    padding: 0.9rem 1.2rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  
+  #MsgContent::placeholder {
+    color: var(--placeholder);
+  }
+  
+  #MsgContent:focus {
+    border-color: rgba(37, 99, 235, 0.6);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  }
+  
+  #triggerBtn {
+    height: 56px;
+    padding: 0 22px;
     border: none;
-    border-radius: 12px;
-    background: #3b82f6;
-    color: white;
-    font-size: 0.95rem;
-    font-weight: 600;
+    border-radius: 16px;
+    background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: #ffffff;
+    font-size: 0.98rem;
+    font-weight: 700;
     cursor: pointer;
-}
-
-#triggerBtn:hover {
-    opacity: 0.92;
-}
-
-#triggerBtn:active {
-    transform: scale(0.98);
-}
-
+    transition: transform 0.15s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    box-shadow: 0 10px 20px rgba(37, 99, 235, 0.22);
+  }
+  
+  #triggerBtn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 14px 26px rgba(37, 99, 235, 0.28);
+  }
+  
+  #triggerBtn:active {
+    transform: translateY(0);
+  }
+  
+  @media (max-width: 768px) {
+    .page-title,
+    .tagline {
+      margin-left: 18px;
+      margin-right: 18px;
+    }
+  
+    .page-title {
+      font-size: 1.9rem;
+    }
+  
+    .chat {
+      width: calc(100% - 24px);
+      margin-top: 28px;
+    }
+  
+    .messages_box {
+      height: 420px;
+      padding: 18px 16px;
+      border-radius: 20px;
+    }
+  
+    .chat-message {
+      max-width: 92%;
+      font-size: 0.95rem;
+    }
+  
+    .input-area {
+      padding: 10px;
+      border-radius: 18px;
+    }
+  
+    #msgHolder {
+      gap: 10px;
+    }
+  
+    #MsgContent {
+      height: 50px;
+      padding: 0 14px;
+    }
+  
+    #triggerBtn {
+      height: 50px;
+      padding: 0 18px;
+    }
+  }
+  
