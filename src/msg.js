@@ -22,9 +22,7 @@ async function initialiseChat() {
 async function loadMessagesFromServer() {
   try {
     const res = await fetch("/messages");
-    if (!res.ok) {
-      throw new Error("Failed to load messages");
-    }
+    if (!res.ok) throw new Error("Failed to load messages");
 
     const messages = await res.json();
     displayContent.innerHTML = "";
@@ -51,9 +49,7 @@ function displayEmptyState() {
 
 function addMessageToUI(username, message, time = "") {
   const emptyText = displayContent.querySelector(".empty-text");
-  if (emptyText) {
-    emptyText.remove();
-  }
+  if (emptyText) emptyText.remove();
 
   const newMsg = document.createElement("p");
   newMsg.classList.add("chat-message");
@@ -70,7 +66,7 @@ function addMessageToUI(username, message, time = "") {
   if (time) {
     const timeSpan = document.createElement("small");
     timeSpan.classList.add("chat-time");
-    timeSpan.textContent = `  ${formatTime(time)}`;
+    timeSpan.textContent = ` ${formatTime(time)}`;
     newMsg.appendChild(timeSpan);
   }
 
@@ -80,30 +76,22 @@ function addMessageToUI(username, message, time = "") {
 
 function formatTime(timeValue) {
   const date = new Date(timeValue);
-  if (Number.isNaN(date.getTime())) {
-    return "";
-  }
-
-  return date.toLocaleString();
+  return Number.isNaN(date.getTime()) ? "" : date.toLocaleString();
 }
 
 async function getCurrentUsername() {
-  let username = "User";
-
   try {
-    if (window.auth0Client) {
-      const isAuthenticated = await window.auth0Client.isAuthenticated();
+    if (!window.auth0Client) return "User";
 
-      if (isAuthenticated) {
-        const user = await window.auth0Client.getUser();
-        username = user?.name || user?.nickname || user?.email || "User";
-      }
-    }
+    const isAuthenticated = await window.auth0Client.isAuthenticated();
+    if (!isAuthenticated) return "User";
+
+    const user = await window.auth0Client.getUser();
+    return user?.name || user?.nickname || user?.email || "User";
   } catch (error) {
     console.error("Could not get Auth0 user:", error);
+    return "User";
   }
-
-  return username;
 }
 
 async function writeMessage(event) {

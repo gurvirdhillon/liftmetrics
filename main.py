@@ -19,4 +19,3 @@ def main():
     print("Extraction phase complete")
     print(df.head())
     print("pipeline finished")
-
