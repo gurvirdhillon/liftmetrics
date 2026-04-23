@@ -15,8 +15,6 @@ __pycache__/
 *.pyo
 
 .vscode/
-package-lock.json
-
 
 /run.sh
 .log
