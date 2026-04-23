@@ -8,8 +8,8 @@ version = "0.1.0"
 dependencies = ["pandas", "streamlit"]
 
 [project.scripts]
-run_app = "fitness_track_project.main:main"
+run_app = "scripts.run_app:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["fitness_track_project*"]
+include = ["fitness_track_project*", "scripts*", "transform*", "extract*"]

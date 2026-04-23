@@ -109,7 +109,35 @@ def transform_to_standardised_format(df: pd.DataFrame, dataset_name: str) -> pd.
             "BENCH PRESS": "BENCHPRESS"
         }
         df["EXERCISE"] = df["EXERCISE"].replace(exercise_map)
+    
+    if dataset_name == "workout_data":
+        df["WORKOUT_DIFFICULTY"] = pd.to_numeric(df["WORKOUT_DIFFICULTY"], errors="coerce")
         
+        df["WORKOUT_DIFFICULTY"] = df["WORKOUT_DIFFICULTY"].fillna(df["WORKOUT_DIFFICULTY"].mean().round())
+        
+    if dataset_name == "workout_data":
+        df["WORKOUT_TYPE"] = df["WORKOUT_TYPE"].str.strip().str.upper()
+        
+        workout_type_list = {
+            "STR": "STRENGTH",
+            "HIGH INTENSITY": "HIIT",
+            "FLEXIBILITY": "MOBILITY"
+        }
+        
+        df["WORKOUT_TYPE"] = df["WORKOUT_TYPE"].replace(workout_type_list)
+    
+    if dataset_name == "workout_data":
+        df.loc[df["WORKOUT_TYPE"] == "CARDIO", "WEIGHT_KG"] = None
+        
+    if dataset_name == "workout_data":
+        df["SESSION_DURATION_HR"] = pd.to_numeric(df["SESSION_DURATION_HR"], errors="coerce")
+        df["SESSION_DURATION_HR"] = df["SESSION_DURATION_HR"].fillna(df["SESSION_DURATION_HR"].mean())
+        
+        df.drop(columns="CALORIES_BURNED", inplace=True)
+        
+        df["AVG_BPM"] = pd.to_numeric(df["AVG_BPM"], errors="coerce")
+        df["AVG_BPM"] = df["AVG_BPM"].fillna(df["AVG_BPM"].mean())        
+
     return df
 
 
@@ -126,21 +154,69 @@ def transform_raw_data():
 
     return cleaned_data
 
+def save_cleaned_data(cleaned_data: dict) -> None:
+    processed_dir = os.path.join(base_dir, "data", "processed")
+
+    os.makedirs(processed_dir, exist_ok=True)
+
+    for dataset_name, df in cleaned_data.items():
+        output_path = os.path.join(
+            processed_dir,
+            f"{dataset_name}_clean.csv"
+        )
+
+        df.to_csv(output_path, index=True)
+
+        print(
+            f"Saved {dataset_name}: "
+            f"{df.shape} -> {output_path}"
+        )
+
 
 if __name__ == "__main__":
     cleaned_data = transform_raw_data()
+    
+    processed_dir = os.path.join(base_dir, "data", "processed")
+    os.makedirs(processed_dir, exist_ok=True)
+
+    for name, df in cleaned_data.items():
+        output_path = os.path.join(processed_dir, f"{name}_clean.csv")
+        df.to_csv(output_path, index=True)
+        print(f"saved {name}: {df.shape} -> {output_path}")
 
     users_df = cleaned_data["users_metadata"]
     workout_data = cleaned_data["workout_data"]
+    
+    cleaned_data = transform_raw_data()
+    save_cleaned_data(cleaned_data)
+    
 
     print(users_df["GENDER"].unique())
     print(users_df["AGE"].isna().sum())
     print(users_df["HEIGHT_M"].isna().sum())
     print(users_df["FAT_PERCENTAGE"].isna().sum())
     print(users_df["EXPERIENCE_LEVEL"].unique())
+    print("fat percentage min: ", users_df["FAT_PERCENTAGE"].min())
+    print("fat percentage max: ", users_df["FAT_PERCENTAGE"].max())
     print(users_df["WORKOUT_FREQUENCY_DAYS_WEEK"].min()) # 2 which is a normal amount as well
     print(users_df["WORKOUT_FREQUENCY_DAYS_WEEK"].max()) # 5 which is a normal amount
     print(users_df["WORKOUT_FREQUENCY_DAYS_WEEK"].isna().sum()) # none so fillna is not needed
+    
+    # workout data check
+    
     print(workout_data["USER_ID"].unique())
     print(workout_data["EXERCISE"].unique())
-    
+    print("sets min:", workout_data["SETS"].min())
+    print("sets max:", workout_data["SETS"].max())
+    print(workout_data["SETS"].isna().sum())
+    print(workout_data["WORKOUT_DIFFICULTY"].unique())
+    print("workout_type:", workout_data["WORKOUT_TYPE"].unique())
+    print("min weight:", workout_data["WEIGHT_KG"].min())
+    print("max weight", workout_data["WEIGHT_KG"].max())
+    print(workout_data[workout_data["WORKOUT_TYPE"] == "STRENGTH"]["WEIGHT_KG"].isna().sum())
+    print("session duration hr number of nulls:", workout_data["SESSION_DURATION_HR"].isna().sum())
+    print(workout_data.columns)
+    print(workout_data["AVG_BPM"].min())
+    print(workout_data["AVG_BPM"].max())
+    # print(workout_data["AVG_BPM"].unique())
+    print(workout_data["AVG_BPM"].isna().sum())
