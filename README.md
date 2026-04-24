@@ -12,7 +12,7 @@ This application is data driven, inspired by the idea of turning your gym data i
 - <a href="#overview">Overview</a>
 - <a href="#features">Features</a>
 - <a href="">Tech stack</a>
-- <a href="#installation-instructions">Installation instructions</a>
+- <a href="#installation-instructions">Installation Instructions</a>
 - <a href="">Data model</a>
 - <a href="">Usage</a>
 - <a href="">Testing</a>

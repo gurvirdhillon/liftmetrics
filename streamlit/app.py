@@ -9,7 +9,7 @@ st.write("See how well you're performing overtime.")
 
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
-workout_csv_path = os.path.normpath(os.path.join(base_dir, "../data/processed/workout_session.csv"))
+workout_csv_path = os.path.normpath(os.path.join(base_dir, "../data/processed/workout_data_clean.csv"))
 
 df2 = pd.read_csv(workout_csv_path)
 
