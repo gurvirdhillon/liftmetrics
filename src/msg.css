@@ -211,3 +211,95 @@
     }
   }
   
+
+
+/* ---------- Responsive Design ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .page-title {
+    margin: 22px 16px 6px 16px;
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+
+  .tagline {
+    margin: 0 16px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  .chat {
+    width: calc(100% - 20px);
+    margin: 24px auto 95px auto;
+    gap: 14px;
+  }
+
+  .messages_box {
+    height: calc(100vh - 260px);
+    min-height: 330px;
+    padding: 16px 14px;
+    border-radius: 18px;
+  }
+
+  .chat-message {
+    max-width: 95%;
+    padding: 12px 14px;
+    font-size: 0.92rem;
+    line-height: 1.45;
+  }
+
+  .chat-time {
+    font-size: 0.7rem;
+  }
+
+  .input-area {
+    padding: 10px;
+    border-radius: 18px;
+  }
+
+  #msgHolder {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  #MsgContent {
+    width: 100%;
+    height: 50px;
+    font-size: 16px; /* prevents iPhone zoom */
+  }
+
+  #triggerBtn {
+    width: 100%;
+    height: 50px;
+    font-size: 1rem;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  .page-title {
+    font-size: 1.45rem;
+  }
+
+  .messages_box {
+    min-height: 300px;
+  }
+
+  .chat-message {
+    font-size: 0.88rem;
+  }
+}
+  

@@ -275,3 +275,160 @@ input[type="radio"] {
     transform: translateY(0);
   }
 }
+
+
+/* ---------- Responsive Mobile Support ---------- */
+
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+/* Medium tablets */
+@media (max-width: 768px) {
+  #onboarding-form {
+    margin: 50px auto 120px;
+  }
+
+  .step-actions {
+    flex-wrap: wrap;
+  }
+
+  .pill-option span {
+    min-width: 100px;
+    padding: 12px 16px;
+    font-size: 0.95rem;
+  }
+
+  .pill-option.large span {
+    min-width: 150px;
+  }
+
+  .slider-wrap {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+  .page-title {
+    padding: 0 16px;
+    margin-top: 24px;
+    font-size: 1.9rem;
+    line-height: 1.15;
+  }
+
+  .tagline {
+    padding: 0 16px;
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  body > p {
+    padding: 0 16px;
+    margin-top: 22px;
+  }
+
+  button {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 10px;
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  #user_goals {
+    margin-top: 40px;
+    margin-bottom: 100px;
+    padding: 0 14px;
+    gap: 14px;
+  }
+
+  .question_asked {
+    font-size: 1.6rem;
+    margin-bottom: 12px;
+  }
+
+  .image-option {
+    width: 100%;
+    max-width: 320px;
+    min-height: auto;
+  }
+
+  .image-option img {
+    height: 140px;
+    padding: 16px;
+  }
+
+  .description-icon {
+    font-size: 1rem;
+    padding: 16px;
+  }
+
+  #onboarding-form {
+    margin: 40px auto 100px;
+    padding: 0 14px;
+  }
+
+  .progress-text {
+    font-size: 0.85rem;
+  }
+
+  .card-grid,
+  .pill-grid {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .pill-option {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .pill-option span,
+  .pill-option.large span {
+    width: 100%;
+    min-width: unset;
+    padding: 14px;
+    font-size: 0.95rem;
+  }
+
+  .step-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .slider-wrap {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  .slider-value {
+    font-size: 0.95rem;
+  }
+}
+
+/* Very small devices */
+@media (max-width: 360px) {
+  .page-title {
+    font-size: 1.65rem;
+  }
+
+  .question_asked {
+    font-size: 1.4rem;
+  }
+
+  .tagline {
+    font-size: 0.95rem;
+  }
+
+  .image-option img {
+    height: 120px;
+  }
+}

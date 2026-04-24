@@ -218,3 +218,130 @@ input:focus {
     background: white;
 }
 
+/* ---------- Responsive Design ---------- */
+
+/* Make sizing easier across devices */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Prevent content hiding behind bottom navbar */
+main,
+.hero,
+#welcomeSection {
+    padding-bottom: 80px;
+}
+
+/* Make form responsive */
+
+.form_rec {
+    width: min(700px, 92%);
+}
+
+/* Tablets */
+@media (max-width: 768px) {
+    .hero {
+        min-height: calc(100vh - 70px);
+        padding: 20px;
+    }
+
+    .page-title {
+        font-size: 2rem;
+    }
+
+    .tagline {
+        font-size: 1rem;
+        line-height: 1.5;
+        padding: 0 10px;
+    }
+
+    .form_rec {
+        width: 92%;
+        padding: 20px;
+    }
+
+    .exercise_row,
+    .performance_row {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .weight_row {
+        flex-direction: column;
+    }
+
+    .weight_row select {
+        width: 100%;
+    }
+
+    input,
+    select {
+        font-size: 16px; /* prevents iPhone zoom on input focus */
+    }
+}
+
+/* Mobile phones */
+@media (max-width: 480px) {
+    .hero {
+        justify-content: center;
+        padding: 16px;
+        gap: 12px;
+    }
+
+    .page-title {
+        font-size: 1.7rem;
+    }
+
+    .tagline {
+        font-size: 0.95rem;
+    }
+
+    #log_btn {
+        width: 100%;
+        max-width: 260px;
+        padding: 12px 16px;
+        font-size: 1rem;
+    }
+
+    .form_container {
+        width: 100%;
+        padding: 0 12px;
+    }
+
+    .form_rec {
+        width: 100%;
+        padding: 18px;
+        border-radius: 10px;
+    }
+
+    .section_title {
+        gap: 8px;
+        margin-bottom: 16px;
+    }
+
+    .section_title label {
+        font-size: 16px;
+    }
+
+    .input_group label {
+        font-size: 13px;
+    }
+
+    input,
+    select {
+        padding: 11px;
+    }
+
+    .navbar {
+        padding: 10px 0;
+    }
+
+    .icon_img {
+        width: 24px;
+    }
+}

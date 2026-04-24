@@ -91,9 +91,9 @@ def transform_to_standardised_format(df: pd.DataFrame, dataset_name: str) -> pd.
         
         df["EXPERIENCE_LEVEL"] = df["EXPERIENCE_LEVEL"].replace(exp_map)
         
-    if dataset_name == "workout_data":
-        df["USER_ID"] = df["USER_ID"].astype(str).str.strip()
-        
+    if dataset_name in ["workout_data", "users_metadata"]:
+        df["USER_ID"] = (df["USER_ID"].astype(str).str.strip())
+
     if dataset_name == "workout_data":
         df["EXERCISE"] = df["EXERCISE"].str.strip().str.upper()
         
@@ -148,8 +148,8 @@ def transform_raw_data():
         df = pd.read_csv(path)
         df = standardise_data(df)
         df = drop_dup_data(df)
-        df = set_index_for_files(df, name)
         df = transform_to_standardised_format(df, name)
+        df = set_index_for_files(df, name)
         cleaned_data[name] = df
 
     return cleaned_data
