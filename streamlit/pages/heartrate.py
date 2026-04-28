@@ -12,35 +12,31 @@ st.title("Fitness levels")
 st.write("Test your cardio to new limits.")
 
 cardio_types = ["cardio", "hiit", "running", "cycling", "row"]
-df_cardio = df[df["workout_type"].str.lower().isin(cardio_types)].copy()
+df_cardio = df[df["WORKOUT_TYPE"].str.lower().isin(cardio_types)].copy()
 
-df_cardio["session_duration_hr"] = pd.to_numeric(
-    df_cardio["session_duration_hr"], errors="coerce"
+df_cardio["SESSION_DURATION_HR"] = pd.to_numeric(
+    df_cardio["SESSION_DURATION_HR"], errors="coerce"
 )
 
-df_cardio["duration_mins"] = df_cardio["session_duration_hr"] * 60
+df_cardio["DURATION_MINS"] = df_cardio["SESSION_DURATION_HR"] * 60
 
-df_cardio["efficiency"] = df_cardio["duration_mins"] / df_cardio["avg_bpm"] # this sees how the duration of the workout matched the beats per minute and if the user has a higher or lower amount etc...
-
-df_cardio["calories"] = pd.to_numeric(df_cardio["calories_burned"], errors="coerce")
+df_cardio["efficiency"] = df_cardio["DURATION_MINS"] / df_cardio["AVG_BPM"] # this sees how the duration of the workout matched the beats per minute and if the user has a higher or lower amount etc...
 
 def normalise(series):
     return (series - series.min()) / (series.max() - series.min())
 
-df_cardio["norm_duration"] = normalise(df_cardio["duration_mins"])
+df_cardio["norm_duration"] = normalise(df_cardio["DURATION_MINS"])
 df_cardio["norm_efficiency"] = normalise(df_cardio["efficiency"])
-df_cardio["norm_calories"] = normalise(df_cardio["calories"].fillna(0))
-df_cardio["norm_difficulty"] = normalise(10 - df_cardio["workout_difficulty"].fillna(5))
+df_cardio["norm_difficulty"] = normalise(10 - df_cardio["WORKOUT_DIFFICULTY"].fillna(5))
 
 df_cardio["cardio_score"] = (
     df_cardio["norm_duration"] * 0.4 +
     df_cardio["norm_efficiency"] * 0.3 +
-    df_cardio["norm_calories"] * 0.2 +
     df_cardio["norm_difficulty"] * 0.1
 )
 
 cardio_trend = (
-    df_cardio.groupby(["user_id", "date"])["cardio_score"]
+    df_cardio.groupby(["USER_ID", "DATE"])["cardio_score"]
     .mean()
     .reset_index()
 )
@@ -59,9 +55,9 @@ def cardio_recommendation(latest_score, prev_score, difficulty):
         return "Maintain current training"
 
 
-user = st.selectbox("Select User", sorted(df_cardio["user_id"].astype(str).unique()))
-user_cardio = df_cardio[df_cardio["user_id"].astype(str) == user].copy()
-user_cardio = user_cardio.sort_values("date")
+user = st.selectbox("Select User", sorted(df_cardio["USER_ID"].astype(str).unique()))
+user_cardio = df_cardio[df_cardio["USER_ID"].astype(str) == user].copy()
+user_cardio = user_cardio.sort_values("DATE")
 
 if len(user_cardio) < 2:
     st.warning("Not enough cardio sessions to make a recommendation.")
@@ -71,7 +67,7 @@ else:
 
     latest_score = latest_row["cardio_score"]
     prev_score = prev_row["cardio_score"]
-    difficulty = latest_row["workout_difficulty"]
+    difficulty = latest_row["WORKOUT_DIFFICULTY"]
 
     recommendation = cardio_recommendation(latest_score, prev_score, difficulty)
 
@@ -82,5 +78,5 @@ else:
     st.success(recommendation)
 
     st.subheader("Cardio Score Trend")
-    trend = user_cardio.groupby("date", as_index=False)["cardio_score"].mean()
-    st.line_chart(trend.set_index("date")["cardio_score"])
+    trend = user_cardio.groupby("DATE", as_index=False)["cardio_score"].mean()
+    st.line_chart(trend.set_index("DATE")["cardio_score"])

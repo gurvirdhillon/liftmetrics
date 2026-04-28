@@ -190,6 +190,7 @@ if __name__ == "__main__":
     cleaned_data = transform_raw_data()
     save_cleaned_data(cleaned_data)
     
+    
 
     print(users_df["GENDER"].unique())
     print(users_df["AGE"].isna().sum())

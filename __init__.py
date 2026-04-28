@@ -1,2 +1,2 @@
-from fitness_track_project.main import main
+from main import main
 
