@@ -13,18 +13,19 @@ const coachSchema = {
   }
 };
 
-export function coachInput(insights) {
+export function coachInput(insights, safety = {}) {
   return JSON.stringify({
     recommendation: insights.recommendation,
     sessions_this_week: insights.sessionsThisWeek,
     average_effort: insights.averageEffort,
     quality_score: insights.qualityScore,
-    top_progressions: insights.progressions.slice(0, 3),
-    weekly_muscle_sets: insights.muscleBalance.slice(0, 5)
+    next_session_exercises: insights.progressions.slice(0, 3).map(({ exercise, sets, reps, weight, weight_unit, suggestion }) => ({ exercise, sets, reps, weight, weight_unit, suggestion })),
+    weekly_muscle_sets: insights.muscleBalance.slice(0, 5),
+    injury_safety: safety.mode === "none" ? undefined : { mode: safety.mode, restricted_movements: safety.restrictedMovements, instruction: safety.detail }
   });
 }
 
-export async function createCoachResponse(insights) {
+export async function createCoachResponse(insights, safety) {
   if (!process.env.OPENAI_API_KEY) throw new Error("AI coaching is not configured.");
   const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   const response = await client.responses.create({
@@ -32,8 +33,8 @@ export async function createCoachResponse(insights) {
     store: false,
     text: { format: { type: "json_schema", name: "liftmetrics_coach", strict: true, schema: coachSchema } },
     input: [
-      { role: "system", content: "You are LiftMetrics Coach. Explain supplied training data in friendly, concise British English. Do not diagnose, treat injuries, prescribe rehabilitation, mention medical conditions, or override the supplied deterministic recommendation. Never recommend maximum lifts. Give one manageable workout alternative. Remind the user to stop if movement causes pain. Return only the requested JSON." },
-      { role: "user", content: `Explain this verified training summary for its owner: ${coachInput(insights)}` }
+      { role: "system", content: "You are LiftMetrics Coach. Explain supplied training data in friendly, concise British English. Focus on practical sets, reps and working weights. Do not use the terms 1RM, e1RM, volume, quality score, or training load. Do not diagnose, treat injuries, prescribe rehabilitation, mention medical conditions, or override the supplied deterministic recommendation. Never recommend maximum lifts. Give one manageable workout alternative. Remind the user to stop if movement causes pain. Return only the requested JSON." },
+      { role: "user", content: `Explain this verified training summary for its owner: ${coachInput(insights, safety)}` }
     ]
   });
   return JSON.parse(response.output_text);

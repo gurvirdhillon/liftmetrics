@@ -45,13 +45,19 @@ export function buildTrainingInsights(workouts, now = new Date()) {
       }
     }
   }
-  const progressions = [...exerciseHistory.entries()].map(([exercise, entries]) => {
+  const progressions = [...exerciseHistory.entries()].filter(([, entries]) => entries.some((entry) => Number(entry.weight_value) > 0 && Number(entry.reps) > 0)).map(([exercise, entries]) => {
     const chronological = [...entries].sort((a, b) => asDate(a.session_date) - asDate(b.session_date));
     const latestEntry = chronological.at(-1);
     const previous = chronological.at(-2);
     const improvement = previous && latestEntry.oneRm > previous.oneRm ? "improving" : previous ? "hold" : "baseline";
-    const suggestion = improvement === "improving" ? "Keep progressing gradually." : previous ? "Repeat the load and aim for cleaner reps or one extra rep." : "Use this as your baseline.";
-    return { exercise, estimated_1rm: Number(latestEntry.oneRm.toFixed(1)), volume: Number(latestEntry.volume.toFixed(1)), status: improvement, suggestion };
+    const sets = Number(latestEntry.sets) || 3;
+    const reps = Number(latestEntry.reps) || 8;
+    const weight = Number(latestEntry.weight_value);
+    const nextReps = improvement === "improving" ? reps + 1 : reps;
+    const suggestion = improvement === "improving"
+      ? `Try ${sets} sets of ${nextReps} reps at ${weight} ${latestEntry.weight_unit || "kg"}, if your technique stays controlled.`
+      : `Repeat ${sets} sets of ${reps} reps at ${weight} ${latestEntry.weight_unit || "kg"}; stop with 2–3 reps still in reserve.`;
+    return { exercise, sets, reps, weight, weight_unit: latestEntry.weight_unit || "kg", estimated_1rm: Number(latestEntry.oneRm.toFixed(1)), volume: Number(latestEntry.volume.toFixed(1)), status: improvement, suggestion };
   }).sort((a, b) => b.estimated_1rm - a.estimated_1rm);
   const totalVolume = recent.flatMap((w) => w.exercises || []).reduce((sum, entry) => sum + volume(entry), 0);
   const consistency = Math.min(100, recent.length * 25);

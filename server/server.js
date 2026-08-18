@@ -11,6 +11,7 @@ import { validateWorkout } from "./workout-validation.js";
 import { generatePlan } from "./plan-generator.js";
 import { buildTrainingInsights } from "./training-insights.js";
 import { createCoachResponse } from "./ai-coach.js";
+import { applyInjurySafety } from "./injury-safety.js";
 
 dotenv.config();
 
@@ -322,7 +323,8 @@ app.get("/api/insights", async (req, res) => {
       COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
       FROM workout_sessions ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
       WHERE ws.user_id = $1 GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId.trim()]);
-    res.json(buildTrainingInsights(result.rows));
+    const injuryResult = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
+    res.json(applyInjurySafety(buildTrainingInsights(result.rows), injuryResult.rows[0]).insights);
   } catch (error) {
     console.error("Insights retrieval error:", error);
     res.status(500).json({ error: "Could not load your training insights." });
@@ -337,13 +339,43 @@ app.post("/api/coach", async (req, res) => {
       COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
       FROM workout_sessions ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
       WHERE ws.user_id = $1 GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId.trim()]);
-    const coach = await createCoachResponse(buildTrainingInsights(result.rows));
+    const injuryResult = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
+    const { insights, safety } = applyInjurySafety(buildTrainingInsights(result.rows), injuryResult.rows[0]);
+    const coach = await createCoachResponse(insights, safety);
     res.json({ coach });
   } catch (error) {
     console.error("AI coach error:", error.message);
     const status = error.message === "AI coaching is not configured." ? 503 : 502;
     res.status(status).json({ error: "LiftMetrics Coach is unavailable right now. Your regular training guidance is still available." });
   }
+});
+
+app.get("/api/injury-restrictions", async (req, res) => {
+  const userId = req.query.user_id;
+  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  try {
+    const result = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
+    res.json({ injury: result.rows[0] || null });
+  } catch (error) { res.status(503).json({ error: "Injury settings are not available yet. Run database migration 003 first." }); }
+});
+
+app.put("/api/injury-restrictions", async (req, res) => {
+  const { user_id: userId, affected_area: area, status, pain_score: painScore, restricted_movements: restrictedMovements, clinician_guidance: guidance } = req.body || {};
+  if (typeof userId !== "string" || !userId.trim() || !["Shoulder", "Back", "Knee", "Hip", "Wrist", "Other"].includes(area) || !["New pain", "Recovering", "Cleared by clinician"].includes(status) || !Number.isInteger(painScore) || painScore < 0 || painScore > 10 || typeof restrictedMovements !== "string" || restrictedMovements.length > 500 || (guidance != null && (typeof guidance !== "string" || guidance.length > 1000))) return res.status(400).json({ error: "Enter a valid injury area, status, pain score, and movements to avoid." });
+  try {
+    await pool.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [userId.trim()]);
+    await pool.query(`INSERT INTO user_injury_restrictions (user_id, affected_area, status, pain_score, restricted_movements, clinician_guidance) VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT (user_id) DO UPDATE SET affected_area = EXCLUDED.affected_area, status = EXCLUDED.status, pain_score = EXCLUDED.pain_score, restricted_movements = EXCLUDED.restricted_movements, clinician_guidance = EXCLUDED.clinician_guidance, updated_at = CURRENT_TIMESTAMP`, [userId.trim(), area, status, painScore, restrictedMovements.trim(), guidance?.trim() || null]);
+    res.json({ message: "Injury restrictions saved." });
+  } catch (error) { res.status(503).json({ error: "Injury settings are not available yet. Run database migration 003 first." }); }
+});
+
+app.delete("/api/injury-restrictions", async (req, res) => {
+  const userId = req.query.user_id;
+  if (typeof userId !== "string" || !userId.trim()) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  try {
+    await pool.query("DELETE FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
+    res.status(204).end();
+  } catch (error) { res.status(503).json({ error: "Injury settings are not available yet. Run database migration 003 first." }); }
 });
 
 app.patch("/api/workouts/:sessionId", async (req, res) => {

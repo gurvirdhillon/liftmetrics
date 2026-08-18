@@ -70,6 +70,18 @@
             <div id="workout-history-preview" class="workout-history-list"></div>
         </section>
 
+        <section class="profile-card injury-card" aria-labelledby="injury-heading">
+            <div class="section-heading"><div><p class="section-eyebrow">SAFETY SETTINGS</p><h3 id="injury-heading">Injury &amp; restrictions</h3><p class="section-description">Optional. LiftMetrics can avoid movements you mark as restricted; it does not diagnose injuries or replace a clinician.</p></div></div>
+            <form id="injury-form" class="injury-form">
+                <label>Affected area<select id="injury-area"><option>Shoulder</option><option>Back</option><option>Knee</option><option>Hip</option><option>Wrist</option><option>Other</option></select></label>
+                <label>Status<select id="injury-status"><option>New pain</option><option>Recovering</option><option>Cleared by clinician</option></select></label>
+                <label>Pain today (0–10)<input id="injury-pain" type="number" min="0" max="10" value="0" required></label>
+                <label>Movements to avoid <small>Separate with commas</small><input id="injury-movements" maxlength="500" placeholder="e.g. Bench press, overhead press" required></label>
+                <label>Clinician or physio guidance <small>Optional</small><textarea id="injury-guidance" maxlength="1000" rows="3"></textarea></label>
+                <div class="injury-actions"><button type="submit">Save restrictions</button><button type="button" id="clear-injury-btn" class="quiet-button">Clear restrictions</button></div><p id="injury-status-message" role="status"></p>
+            </form>
+        </section>
+
         <section class="profile-card training-intelligence" aria-labelledby="training-intelligence-heading">
             <div class="section-heading"><div><p class="section-eyebrow">TRAINING INTELLIGENCE</p><h3 id="training-intelligence-heading">Your next best workout</h3></div><span id="quality-score" class="quality-score">—</span></div>
             <p id="insight-status" class="workout-history-status" role="status">Loading your training guidance…</p>
@@ -77,7 +89,7 @@
             <p id="weekly-review" class="weekly-review"></p>
             <button type="button" id="ask-coach-btn" class="coach-button">Ask LiftMetrics Coach</button>
             <article id="coach-response" class="coach-response" hidden aria-live="polite"><h4 id="coach-headline"></h4><p id="coach-recommendation"></p><p><strong>Why:</strong> <span id="coach-why"></span></p><p><strong>Alternative:</strong> <span id="coach-alternative"></span></p><small id="coach-safety"></small></article>
-            <div class="insight-columns"><div><h4>Lift progression</h4><ul id="progression-list" class="insight-list"></ul></div><div><h4>Weekly muscle sets</h4><ul id="muscle-balance-list" class="insight-list"></ul></div></div>
+            <div class="insight-columns"><div><h4>Your next strength session</h4><ul id="progression-list" class="insight-list"></ul><details class="advanced-details"><summary>Advanced progress details</summary><ul id="advanced-progression-list" class="insight-list"></ul></details></div><div><h4>Weekly muscle sets</h4><ul id="muscle-balance-list" class="insight-list"></ul></div></div>
         </section>
     </main>
 

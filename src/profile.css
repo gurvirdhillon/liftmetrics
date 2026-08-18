@@ -585,8 +585,17 @@ body {
 .coach-button { margin: 4px 0 16px; background: #d97706; color: white; }
 .coach-response { padding: 16px; border-radius: 8px; background: #eff6ff; color: #172554; line-height: 1.5; }
 .coach-response h4 { margin: 0 0 8px; }
+.injury-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.injury-form label { display: grid; gap: 6px; color: inherit; }
+.injury-form label:nth-of-type(4), .injury-form label:nth-of-type(5) { grid-column: 1 / -1; }
+.injury-form textarea { resize: vertical; padding: 10px; border-radius: 6px; }
+.injury-form button { width: fit-content; }
+.injury-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+@media (max-width: 640px) { .injury-form { grid-template-columns: 1fr; } .injury-form label:nth-of-type(4), .injury-form label:nth-of-type(5) { grid-column: auto; } }
 .insight-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
 .insight-list { padding-left: 18px; line-height: 1.5; }
+.advanced-details { margin-top: 18px; color: #475569; }
+.advanced-details summary { cursor: pointer; font-weight: 700; }
 @media (max-width: 640px) { .insight-columns { grid-template-columns: 1fr; gap: 8px; } }
 
 @media (max-width: 360px) {

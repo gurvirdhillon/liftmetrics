@@ -82,6 +82,7 @@ If you already created the PostgreSQL schema before updating this project, apply
 ```
 psql "$DATABASE_URL" -f SQL/migrations/001_add_cardio_workout_fields.sql
 psql "$DATABASE_URL" -f SQL/migrations/002_create_generated_plans.sql
+psql "$DATABASE_URL" -f SQL/migrations/003_create_injury_restrictions.sql
 ```
 
 

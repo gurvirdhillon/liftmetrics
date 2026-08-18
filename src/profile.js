@@ -34,6 +34,22 @@ document.addEventListener("DOMContentLoaded", async () => {
   const editProfileBtn = document.getElementById("edit-profile-btn");
   const generatePlanBtn = document.getElementById("generate-plan-btn");
   const askCoachBtn = document.getElementById("ask-coach-btn");
+  const injuryForm = document.getElementById("injury-form");
+  const clearInjuryBtn = document.getElementById("clear-injury-btn");
+
+  async function loadInjuryRestrictions() {
+    if (!currentUser?.sub) return;
+    try {
+      const response = await fetch(`/api/injury-restrictions?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const data = await response.json();
+      if (!response.ok || !data.injury) return;
+      document.getElementById("injury-area").value = data.injury.affected_area;
+      document.getElementById("injury-status").value = data.injury.status;
+      document.getElementById("injury-pain").value = data.injury.pain_score;
+      document.getElementById("injury-movements").value = data.injury.restricted_movements;
+      document.getElementById("injury-guidance").value = data.injury.clinician_guidance || "";
+    } catch (error) { console.error("Could not load injury restrictions", error); }
+  }
 
   function getFormData() {
     return {
@@ -313,7 +329,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!items.length) { const item = document.createElement("li"); item.textContent = "Log a strength workout to see this."; list.append(item); return; }
       items.slice(0, 5).forEach((item) => { const element = document.createElement("li"); element.textContent = text(item); list.append(element); });
     };
-    fillList("progression-list", insights.progressions, (item) => `${item.exercise}: ${item.estimated_1rm} kg e1RM — ${item.suggestion}`);
+    fillList("progression-list", insights.progressions, (item) => `${item.exercise}: ${item.suggestion}`);
+    fillList("advanced-progression-list", insights.progressions, (item) => `${item.exercise}: estimated 1-rep maximum ${item.estimated_1rm} ${item.weight_unit}. This is an estimate based on your logged working sets, not a target to test.`);
     fillList("muscle-balance-list", insights.muscleBalance, (item) => `${item.muscle}: ${item.sets} sets`);
   }
 
@@ -353,6 +370,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderSummary(profile);
     loadWorkoutHistoryPreview();
     loadInsights();
+    loadInjuryRestrictions();
 
     loadingState.style.display = "none";
     loggedOutView.style.display = "none";
@@ -420,6 +438,31 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("coach-response").hidden = false;
     } catch (error) { alert(error.message); }
     finally { askCoachBtn.disabled = false; askCoachBtn.textContent = "Ask LiftMetrics Coach"; }
+  });
+
+  injuryForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const status = document.getElementById("injury-status-message");
+    try {
+      const response = await fetch("/api/injury-restrictions", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: currentUser?.sub, affected_area: document.getElementById("injury-area").value, status: document.getElementById("injury-status").value, pain_score: Number(document.getElementById("injury-pain").value), restricted_movements: document.getElementById("injury-movements").value, clinician_guidance: document.getElementById("injury-guidance").value }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not save restrictions.");
+      status.textContent = "Restrictions saved. Refreshing your guidance…";
+      await loadInsights();
+    } catch (error) { status.textContent = error.message; }
+  });
+
+  clearInjuryBtn?.addEventListener("click", async () => {
+    if (!currentUser?.sub || !confirm("Clear your saved injury restrictions?")) return;
+    const status = document.getElementById("injury-status-message");
+    try {
+      const response = await fetch(`/api/injury-restrictions?user_id=${encodeURIComponent(currentUser.sub)}`, { method: "DELETE" });
+      if (!response.ok && response.status !== 204) throw new Error("Could not clear restrictions.");
+      injuryForm.reset();
+      document.getElementById("injury-pain").value = 0;
+      status.textContent = "Restrictions cleared. Refreshing your guidance…";
+      await loadInsights();
+    } catch (error) { status.textContent = error.message; }
   });
 
   editProfileBtn?.addEventListener("click", () => {
