@@ -26,6 +26,16 @@ body{
     background: #e5e5e5;
 }
 
+.history-link {
+    display: inline-block;
+    margin: 12px 0 20px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #e5e5e5;
+    color: #0f172a;
+    text-decoration: none;
+}
+
 
 /* navigation bar */
 
@@ -68,6 +78,80 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.history-page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 32px 24px 110px;
+}
+
+.history-filters,
+.history-edit-form {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: 14px;
+    margin: 24px 0;
+    padding: 20px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.history-filters > div,
+.history-edit-form label {
+    flex: 1 1 150px;
+    color: white;
+}
+
+.history-filters label,
+.history-edit-form label {
+    display: grid;
+    gap: 6px;
+}
+
+.history-list {
+    display: grid;
+    gap: 16px;
+}
+
+.history-card {
+    padding: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.history-card h2,
+.history-card h3 {
+    margin: 0 0 12px;
+}
+
+.history-card h3 {
+    margin-top: 20px;
+    font-size: 1rem;
+}
+
+.history-details,
+.history-exercises {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.history-details li,
+.history-exercises li {
+    margin: 7px 0;
+}
+
+.history-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.danger-button {
+    background: #b42318;
+    color: white;
 }
 
 .form_rec {
@@ -178,6 +262,20 @@ select {
 .performance_row {
     display: flex;
     gap: 25px;
+    align-items: end;
+}
+
+.performance_row .input_group {
+    min-width: 0;
+}
+
+.performance_row .weight-group {
+    flex: 1.5;
+}
+
+.performance_row input,
+.performance_row select {
+    min-height: 46px;
 }
 
 

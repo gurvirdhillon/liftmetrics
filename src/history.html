@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout History | LiftMetrics</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" defer></script>
+  <script src="history.js" type="module"></script>
+</head>
+<body>
+  <main class="history-page">
+    <a class="back-link" href="lift.html">← Log a workout</a>
+    <p class="plan-eyebrow">YOUR TRAINING LOG</p>
+    <h1>Workout history</h1>
+    <p>Review, correct, or remove workouts you have logged.</p>
+
+    <form id="history-filters" class="history-filters">
+      <div>
+        <label for="history-type">Workout type</label>
+        <select id="history-type" name="workout_type">
+          <option value="">All types</option>
+          <option>Strength</option>
+          <option>Cardio</option>
+          <option>HIIT</option>
+          <option>Mobility</option>
+          <option>Sports</option>
+          <option>Recovery</option>
+        </select>
+      </div>
+      <div>
+        <label for="history-from">From</label>
+        <input id="history-from" name="from" type="date">
+      </div>
+      <div>
+        <label for="history-to">To</label>
+        <input id="history-to" name="to" type="date">
+      </div>
+      <button type="submit">Apply filters</button>
+      <button id="clear-filters" type="button">Clear</button>
+    </form>
+
+    <p id="history-status" role="status"></p>
+    <div id="history-list" class="history-list"></div>
+  </main>
+  <nav class="navbar">
+    <a href="index.html"><img src="img/home_icon.png" class="icon_img" alt="Home"></a>
+    <a href="lift.html"><img src="img/plus_icon.png" class="icon_img" alt="Log workout"></a>
+    <a href="http://localhost:8501" target="_blank"><img src="img/workout_insights.jpg" class="icon_img" alt="LiftMetrics insights"></a>
+    <a href="msg.html"><img src="img/msg_icon.jpg" class="icon_img" alt="Messages"></a>
+    <a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img" alt="Profile"></a>
+  </nav>
+</body>
+</html>

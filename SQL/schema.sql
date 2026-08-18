@@ -17,13 +17,16 @@ CREATE TABLE user_profiles (
 
 CREATE TABLE workout_sessions (
     session_id SERIAL PRIMARY KEY,
-    user_id VARCHAR(5) NOT NULL,
+    user_id VARCHAR(100) NOT NULL,
     session_date DATE NOT NULL,
     duration_value DECIMAL(5,2),
     duration_unit VARCHAR(20),
     workout_type VARCHAR(50),
     feeling_score DECIMAL(4,2),
     calories_burned DECIMAL(6,2),
+    distance_value DECIMAL(7,2),
+    distance_unit VARCHAR(10),
+    avg_pace DECIMAL(6,2),
     avg_bpm DECIMAL(5,2),
     max_bpm INTEGER,
     water_intake_l DECIMAL(4,2),
@@ -43,6 +46,18 @@ CREATE TABLE exercise_entries (
     FOREIGN KEY (session_id) REFERENCES workout_sessions(session_id)
 );
 
+CREATE TABLE generated_plans (
+    plan_id SERIAL PRIMARY KEY,
+    user_id VARCHAR(100) NOT NULL REFERENCES user_profiles(user_id),
+    goal VARCHAR(30) NOT NULL,
+    profile JSONB NOT NULL,
+    plan JSONB NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX generated_plans_user_created_at_idx
+    ON generated_plans (user_id, created_at DESC);
+
 
 CREATE TABLE workout_sessions_staging (
     user_id VARCHAR(5),
@@ -60,4 +75,3 @@ CREATE TABLE workout_sessions_staging (
     workout_difficulty VARCHAR(50),
     workout_category VARCHAR(20)
 );
-

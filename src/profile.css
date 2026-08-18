@@ -65,6 +65,167 @@ button:disabled {
   cursor: not-allowed;
 }
 
+#view-plan-link,
+.back-link {
+  color: #ffffff;
+  display: inline-block;
+  margin: 12px;
+}
+
+.plan-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px 120px;
+}
+
+.plan-eyebrow { color: #8ebcff; font-weight: 700; letter-spacing: 0.08em; }
+.plan-sessions { display: grid; gap: 16px; margin-top: 28px; }
+.plan-card { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 16px; padding: 20px; }
+.plan-card h2 { margin-top: 0; }
+.plan-card li { margin: 10px 0; line-height: 1.4; }
+.plan-note { color: rgba(255, 255, 255, 0.8); margin-top: 28px; }
+
+/* Profile dashboard */
+.profile-dashboard {
+  max-width: 1040px;
+  margin: 42px auto 130px;
+  padding: 0 24px;
+}
+
+.profile-overview,
+.profile-card {
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 22px;
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
+}
+
+.profile-overview {
+  display: flex;
+  justify-content: space-between;
+  gap: 28px;
+  align-items: center;
+  padding: 32px;
+  margin-bottom: 20px;
+}
+
+.section-eyebrow {
+  margin: 0 0 8px;
+  color: #8ebcff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+}
+
+.profile-overview h2,
+.profile-card h3 {
+  margin: 0;
+  color: #ffffff;
+}
+
+.profile-overview h2 { font-size: 2.2rem; }
+.profile-card h3 { font-size: 1.35rem; }
+
+.profile-intro,
+.section-description,
+.workout-history-status {
+  color: rgba(245, 247, 251, 0.76);
+}
+
+.profile-intro { max-width: 560px; margin: 10px 0 0; line-height: 1.5; }
+
+.profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-actions button { margin: 0; }
+
+#generate-plan-btn { background: #ffffff; color: #0a1738; }
+
+.secondary-link,
+.history-link-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 999px;
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.quiet-button {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid transparent;
+}
+
+.profile-card { padding: 28px; margin-top: 20px; }
+
+.section-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.section-description { margin: 8px 0 0; }
+
+.profile-details {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin: 24px 0 0;
+}
+
+.profile-details > div,
+.workout-preview-card {
+  padding: 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.profile-details dt {
+  margin-bottom: 7px;
+  color: rgba(245, 247, 251, 0.66);
+  font-size: 0.85rem;
+}
+
+.profile-details dd { margin: 0; font-weight: 700; color: #ffffff; line-height: 1.35; }
+
+.workout-history-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.workout-history-status { margin: 22px 0 0; }
+.workout-history-status:empty { display: none; }
+
+.workout-preview-card { display: grid; gap: 12px; }
+.workout-preview-card h4 { margin: 0; font-size: 1.05rem; }
+.workout-preview-date { margin: 0; color: #8ebcff; font-weight: 700; font-size: 0.9rem; }
+.workout-preview-details { display: flex; flex-wrap: wrap; gap: 7px; color: rgba(245, 247, 251, 0.78); font-size: 0.9rem; }
+.workout-preview-details span + span::before { content: "·"; margin-right: 7px; color: rgba(245, 247, 251, 0.45); }
+
+@media (max-width: 768px) {
+  .profile-dashboard { margin-top: 30px; padding: 0 20px; }
+  .profile-overview { align-items: flex-start; flex-direction: column; padding: 24px; }
+  .profile-actions { justify-content: flex-start; }
+  .profile-details, .workout-history-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 480px) {
+  .profile-dashboard { padding: 0 14px; }
+  .profile-overview, .profile-card { padding: 20px; border-radius: 18px; }
+  .profile-overview h2 { font-size: 1.8rem; }
+  .profile-actions, .profile-actions > *, .history-link-button { width: 100%; }
+  .profile-actions > * { justify-content: center; text-align: center; }
+  .section-heading { flex-direction: column; }
+  .profile-details, .workout-history-list { grid-template-columns: 1fr; }
+}
+
 /* Goal section */
 #user_goals {
   max-width: 980px;

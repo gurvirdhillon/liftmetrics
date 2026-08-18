@@ -5,7 +5,6 @@
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="profile.css">
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js"></script>
-    <script src="index.js" type="module"></script>
     <script src="profile.js" type="module"></script>
     <link rel="icon" type="image/png" href="img/logo.png">
 
@@ -27,17 +26,50 @@
         <button id="logout" disabled>Log out</button>
     </div>
 
-    <section id="profile-summary" style="text-align: center;">
-        <h2>Your Profile</h2>
-        <p><strong>Goal:</strong> <span id="summary-goal"></span></p>
-        <p><strong>Available days:</strong> <span id="summary-days"></span></p>
-        <p><strong>Time per session:</strong> <span id="summary-timespent"></span></p>
-        <p><strong>Workout location:</strong> <span id="summary-equipment"></span></p>
-        <p><strong>Current activity:</strong> <span id="summary-activity"></span></p>
-        <p><strong>Fitness level:</strong> <span id="summary-fitness"></span></p>
+    <main id="profile-summary" class="profile-dashboard" aria-labelledby="profile-heading">
+        <section class="profile-overview">
+            <div>
+                <p class="section-eyebrow">YOUR FITNESS SPACE</p>
+                <h2 id="profile-heading">Your profile</h2>
+                <p class="profile-intro">Your preferences shape every plan. Update them whenever your routine changes.</p>
+            </div>
+            <div class="profile-actions" aria-label="Profile actions">
+                <button type="button" id="generate-plan-btn">Generate a new plan</button>
+                <a id="view-plan-link" class="secondary-link" href="plan.html">View latest plan</a>
+                <button type="button" id="edit-profile-btn" class="quiet-button">Edit profile</button>
+            </div>
+        </section>
 
-        <button type="button" id="edit-profile-btn">Edit Profile</button>
-    </section>
+        <section class="profile-card" aria-labelledby="preferences-heading">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">PLAN PREFERENCES</p>
+                    <h3 id="preferences-heading">How you like to train</h3>
+                </div>
+            </div>
+            <dl class="profile-details">
+                <div><dt>Goal</dt><dd id="summary-goal"></dd></div>
+                <div><dt>Fitness level</dt><dd id="summary-fitness"></dd></div>
+                <div><dt>Available days</dt><dd id="summary-days"></dd></div>
+                <div><dt>Time per session</dt><dd id="summary-timespent"></dd></div>
+                <div><dt>Workout location</dt><dd id="summary-equipment"></dd></div>
+                <div><dt>Current activity</dt><dd id="summary-activity"></dd></div>
+            </dl>
+        </section>
+
+        <section class="profile-card workout-history-preview" aria-labelledby="recent-workouts-heading">
+            <div class="section-heading">
+                <div>
+                    <p class="section-eyebrow">TRAINING LOG</p>
+                    <h3 id="recent-workouts-heading">Recent workouts</h3>
+                    <p class="section-description">A quick look at your latest sessions.</p>
+                </div>
+                <a class="history-link-button" href="history.html">View all history <span aria-hidden="true">→</span></a>
+            </div>
+            <p id="workout-history-status" class="workout-history-status" role="status">Loading recent workouts…</p>
+            <div id="workout-history-preview" class="workout-history-list"></div>
+        </section>
+    </main>
 
     <form id="onboarding-form" style="display: none;">
         <p class="progress-text" id="progress-text">Step 1 of 6</p>

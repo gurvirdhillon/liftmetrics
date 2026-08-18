@@ -81,16 +81,11 @@ function formatTime(timeValue) {
 
 async function getCurrentUsername() {
   try {
-    if (!window.auth0Client) return "User";
-
-    const isAuthenticated = await window.auth0Client.isAuthenticated();
-    if (!isAuthenticated) return "User";
-
-    const user = await window.auth0Client.getUser();
-    return user?.name || user?.nickname || user?.email || "User";
+    const user = await getAuthenticatedUser();
+    return user?.name || user?.nickname || user?.email || null;
   } catch (error) {
     console.error("Could not get Auth0 user:", error);
-    return "User";
+    return null;
   }
 }
 
@@ -101,6 +96,10 @@ async function writeMessage(event) {
   if (!message) return;
 
   const username = await getCurrentUsername();
+  if (!username) {
+    alert("Please log in from your profile before sending a message.");
+    return;
+  }
 
   socket.emit("chat message", {
     user: username,
@@ -109,3 +108,4 @@ async function writeMessage(event) {
 
   grabContent.value = "";
 }
+import { getAuthenticatedUser } from "./auth.js";

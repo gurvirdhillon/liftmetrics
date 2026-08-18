@@ -75,6 +75,15 @@ pip install -r requirements.txt
 npm start
 ```
 
+To use the private Streamlit insights dashboard, copy `.streamlit/secrets.toml.example` to `.streamlit/secrets.toml`, then set the Auth0 client values and a strong `cookie_secret`. In Auth0, add `http://localhost:8501/oauth2callback` as an Allowed Callback URL. The dashboard uses the authenticated Auth0 `sub` to query only that user's PostgreSQL records.
+
+If you already created the PostgreSQL schema before updating this project, apply the database migrations once:
+
+```
+psql "$DATABASE_URL" -f SQL/migrations/001_add_cardio_workout_fields.sql
+psql "$DATABASE_URL" -f SQL/migrations/002_create_generated_plans.sql
+```
+
 
 ## Usage
 
@@ -94,4 +103,3 @@ This project is licensed under the MIT License.
 - LinkedIn: <a href="https://www.linkedin.com/in/gurvirdhillon1/" target="_blank">Gurvir Dhillon LinkedIn</a>
 - Email: gurvirsinghdhillon@outlook.com
 - Portfolio Page: <a href="https://gurvirdhillon.github.io/portfolio/" target="_blank">Portfolio Website</a>
-

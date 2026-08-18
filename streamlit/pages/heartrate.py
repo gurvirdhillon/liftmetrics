@@ -1,82 +1,43 @@
-import streamlit as st
+import sys
+from pathlib import Path
+
 import pandas as pd
-import os
+import streamlit as st
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
-workout_csv_path = os.path.normpath(os.path.join(base_dir, "../../data/processed/workout_data_clean.csv"))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-df = pd.read_csv(workout_csv_path)
+from data_access import load_user_workouts, require_authenticated_user
 
-st.set_page_config(page_title="Fitness levels", layout="wide")
-st.title("Fitness levels")
-st.write("Test your cardio to new limits.")
 
-cardio_types = ["cardio", "hiit", "running", "cycling", "row"]
-df_cardio = df[df["WORKOUT_TYPE"].str.lower().isin(cardio_types)].copy()
+st.set_page_config(page_title="LiftMetrics cardio", layout="wide")
+user_id = require_authenticated_user()
+st.title("Your cardio and heart-rate trends")
 
-df_cardio["SESSION_DURATION_HR"] = pd.to_numeric(
-    df_cardio["SESSION_DURATION_HR"], errors="coerce"
+try:
+    workouts, _ = load_user_workouts(user_id)
+except Exception:
+    st.error("We could not load your workout data. Check the database connection and try again.")
+    st.stop()
+
+if workouts.empty:
+    st.info("Log cardio workouts with heart-rate data to see trends here.")
+    st.stop()
+
+workouts["session_date"] = pd.to_datetime(workouts["session_date"])
+workouts["avg_bpm"] = pd.to_numeric(workouts["avg_bpm"], errors="coerce")
+workouts["max_bpm"] = pd.to_numeric(workouts["max_bpm"], errors="coerce")
+cardio = workouts[workouts["workout_type"].str.lower().isin(["cardio", "hiit", "sports"])].dropna(subset=["avg_bpm"])
+
+if cardio.empty:
+    st.info("No cardio or HIIT sessions with heart-rate data yet.")
+    st.stop()
+
+st.subheader("Average heart rate")
+st.line_chart(cardio.set_index("session_date")[["avg_bpm", "max_bpm"]])
+
+st.subheader("Cardio sessions")
+st.dataframe(
+    cardio.sort_values("session_date", ascending=False)[["session_date", "workout_type", "avg_bpm", "max_bpm", "duration_value", "duration_unit"]],
+    use_container_width=True,
+    hide_index=True,
 )
-
-df_cardio["DURATION_MINS"] = df_cardio["SESSION_DURATION_HR"] * 60
-
-df_cardio["efficiency"] = df_cardio["DURATION_MINS"] / df_cardio["AVG_BPM"] # this sees how the duration of the workout matched the beats per minute and if the user has a higher or lower amount etc...
-
-def normalise(series):
-    return (series - series.min()) / (series.max() - series.min())
-
-df_cardio["norm_duration"] = normalise(df_cardio["DURATION_MINS"])
-df_cardio["norm_efficiency"] = normalise(df_cardio["efficiency"])
-df_cardio["norm_difficulty"] = normalise(10 - df_cardio["WORKOUT_DIFFICULTY"].fillna(5))
-
-df_cardio["cardio_score"] = (
-    df_cardio["norm_duration"] * 0.4 +
-    df_cardio["norm_efficiency"] * 0.3 +
-    df_cardio["norm_difficulty"] * 0.1
-)
-
-cardio_trend = (
-    df_cardio.groupby(["USER_ID", "DATE"])["cardio_score"]
-    .mean()
-    .reset_index()
-)
-
-
-def cardio_recommendation(latest_score, prev_score, difficulty):
-    change = latest_score - prev_score
-
-    if change > 0.05 and difficulty <= 5:
-        return "Increase duration or intensity"
-    elif change > 0.05 and difficulty > 5:
-        return "Maintain or slight increase"
-    elif change < -0.05:
-        return "Reduce intensity or take rest"
-    else:
-        return "Maintain current training"
-
-
-user = st.selectbox("Select User", sorted(df_cardio["USER_ID"].astype(str).unique()))
-user_cardio = df_cardio[df_cardio["USER_ID"].astype(str) == user].copy()
-user_cardio = user_cardio.sort_values("DATE")
-
-if len(user_cardio) < 2:
-    st.warning("Not enough cardio sessions to make a recommendation.")
-else:
-    latest_row = user_cardio.iloc[-1]
-    prev_row = user_cardio.iloc[-2]
-
-    latest_score = latest_row["cardio_score"]
-    prev_score = prev_row["cardio_score"]
-    difficulty = latest_row["WORKOUT_DIFFICULTY"]
-
-    recommendation = cardio_recommendation(latest_score, prev_score, difficulty)
-
-    st.subheader("Cardio Recommendation")
-    st.write(f"Latest cardio score: {latest_score:.2f}")
-    st.write(f"Previous cardio score: {prev_score:.2f}")
-    st.write(f"Last workout difficulty: {difficulty}/10")
-    st.success(recommendation)
-
-    st.subheader("Cardio Score Trend")
-    trend = user_cardio.groupby("DATE", as_index=False)["cardio_score"].mean()
-    st.line_chart(trend.set_index("DATE")["cardio_score"])
