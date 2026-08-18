@@ -75,26 +75,9 @@
                 <img src="img/dumbbell_icon.png" class="icon_img" alt="">
                 <p id="strength-performance-title">Strength performance</p>
             </div>
-            <div class="performance_row">
-                <div class="input_group">
-                    <label for="sets">Sets</label>
-                    <input id="sets" type="number" min="1" name="sets" inputmode="numeric">
-                </div>
-                <div class="input_group">
-                    <label for="reps">Reps</label>
-                    <input id="reps" type="number" min="1" name="reps" inputmode="numeric">
-                </div>
-                <div class="input_group weight-group">
-                    <label for="weight">Weight lifted</label>
-                    <div class="weight_row">
-                        <input id="weight" type="number" min="0" max="500" step="0.5" name="weight" inputmode="decimal" placeholder="e.g. 60">
-                        <select name="weight_metric" aria-label="Weight unit">
-                            <option>kg</option>
-                            <option>lbs</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+            <p class="form-hint">Add every movement you performed. Your last saved workout can be used as a starting point.</p>
+            <div id="exercise-entries" class="exercise-entries"></div>
+            <div class="entry-actions"><button type="button" id="add-exercise">Add exercise</button><button type="button" id="repeat-workout" class="secondary-btn">Repeat last workout</button></div>
         </section>
 
         <section class="form_rec performance-cardio" style="display:none;" aria-labelledby="cardio-performance-title">

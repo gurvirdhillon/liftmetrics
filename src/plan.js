@@ -3,6 +3,7 @@ import { getAuthenticatedUser } from "./auth.js";
 function renderPlan(plan) {
   document.getElementById("plan-title").textContent = plan.title;
   document.getElementById("plan-focus").textContent = `${plan.focus} ${plan.durationMinutes} minutes per session.`;
+  document.getElementById("plan-adaptation").textContent = plan.adaptation?.note || "Progress gradually and adjust any movement that causes pain.";
   const sessions = document.getElementById("plan-sessions");
   sessions.replaceChildren(...plan.sessions.map((session) => {
     const card = document.createElement("section");

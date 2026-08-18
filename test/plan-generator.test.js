@@ -24,3 +24,9 @@ test("honours up to six requested sessions and rotates strength workouts", () =>
   assert.deepEqual(plan.sessions.map((session) => session.day), profile.days);
   assert.deepEqual(plan.sessions.slice(0, 4).map((session) => session.name), ["Upper A", "Lower A", "Upper B", "Lower B"]);
 });
+
+test("reduces session volume when a deload is recommended", () => {
+  const plan = generatePlan({ ...baseProfile, goal: "strength" }, { reduceVolume: true });
+  assert.equal(plan.adaptation.mode, "deload");
+  assert.ok(plan.sessions.every((session) => session.exercises.length <= 3));
+});

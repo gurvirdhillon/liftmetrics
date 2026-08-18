@@ -60,7 +60,7 @@ function selectDays(days, count) {
   return Array.from({ length: count }, (_, index) => available[Math.round(index * (available.length - 1) / (count - 1))]);
 }
 
-export function generatePlan(profile) {
+export function generatePlan(profile, adaptation = {}) {
   const template = templates[profile.goal];
   if (!template) throw new Error("A supported goal is required to generate a plan.");
 
@@ -75,9 +75,13 @@ export function generatePlan(profile) {
     focus: template.focus,
     durationMinutes: Number(profile.timespent),
     fitnessLevel: profile.fitness_level,
+    adaptation: adaptation.reduceVolume
+      ? { mode: "deload", note: "Your recent effort was high, so this plan starts with reduced volume. Keep 2–3 reps in reserve." }
+      : { mode: "progress", note: "Progress one main lift only when form and recovery both feel solid." },
     sessions: selectDays(profile.days, sessionCount).map((day, index) => {
       const session = template[equipment][index % template[equipment].length];
-      return { day, name: session.name, exercises: session.exercises.slice(0, exerciseLimit).map(([name, prescription, rest]) => ({ name, prescription, rest })) };
+      const adjustedLimit = adaptation.reduceVolume ? Math.max(2, exerciseLimit - 1) : exerciseLimit;
+      return { day, name: session.name, exercises: session.exercises.slice(0, adjustedLimit).map(([name, prescription, rest]) => ({ name, prescription, rest })) };
     })
   };
 }

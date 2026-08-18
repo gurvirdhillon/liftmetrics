@@ -576,6 +576,19 @@ body {
 }
 
 /* Very small devices */
+.training-intelligence { margin-bottom: 110px; }
+.quality-score { display: inline-block; padding: 8px 12px; border-radius: 999px; background: #fef3c7; color: #92400e; font-weight: 700; }
+.readiness-card { padding: 18px; border-left: 4px solid #f59e0b; border-radius: 8px; background: #fffbeb; color: #1e293b; }
+.readiness-card h4 { margin: 4px 0 8px; }
+.readiness-card p { margin: 0; }
+.weekly-review { line-height: 1.6; }
+.coach-button { margin: 4px 0 16px; background: #d97706; color: white; }
+.coach-response { padding: 16px; border-radius: 8px; background: #eff6ff; color: #172554; line-height: 1.5; }
+.coach-response h4 { margin: 0 0 8px; }
+.insight-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.insight-list { padding-left: 18px; line-height: 1.5; }
+@media (max-width: 640px) { .insight-columns { grid-template-columns: 1fr; gap: 8px; } }
+
 @media (max-width: 360px) {
   .page-title {
     font-size: 1.65rem;

@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const logoutBtn = document.getElementById("logout");
   const editProfileBtn = document.getElementById("edit-profile-btn");
   const generatePlanBtn = document.getElementById("generate-plan-btn");
+  const askCoachBtn = document.getElementById("ask-coach-btn");
 
   function getFormData() {
     return {
@@ -297,6 +298,35 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  function renderInsights(insights) {
+    const status = document.getElementById("insight-status");
+    const readiness = document.getElementById("readiness-card");
+    status.textContent = "";
+    readiness.hidden = false;
+    document.getElementById("readiness-label").textContent = `${insights.recommendation.status.toUpperCase()} • ${insights.sessionsThisWeek} session${insights.sessionsThisWeek === 1 ? "" : "s"} this week`;
+    document.getElementById("readiness-title").textContent = insights.recommendation.title;
+    document.getElementById("readiness-detail").textContent = insights.recommendation.detail;
+    document.getElementById("quality-score").textContent = `${insights.qualityScore}/100 quality`;
+    document.getElementById("weekly-review").textContent = insights.weeklyReview;
+    const fillList = (id, items, text) => {
+      const list = document.getElementById(id); list.replaceChildren();
+      if (!items.length) { const item = document.createElement("li"); item.textContent = "Log a strength workout to see this."; list.append(item); return; }
+      items.slice(0, 5).forEach((item) => { const element = document.createElement("li"); element.textContent = text(item); list.append(element); });
+    };
+    fillList("progression-list", insights.progressions, (item) => `${item.exercise}: ${item.estimated_1rm} kg e1RM — ${item.suggestion}`);
+    fillList("muscle-balance-list", insights.muscleBalance, (item) => `${item.muscle}: ${item.sets} sets`);
+  }
+
+  async function loadInsights() {
+    if (!currentUser?.sub) return;
+    try {
+      const response = await fetch(`/api/insights?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not load training guidance.");
+      renderInsights(data);
+    } catch (error) { document.getElementById("insight-status").textContent = error.message; }
+  }
+
   function showLoggedOutState() {
     loadingState.style.display = "none";
     loggedOutView.style.display = "block";
@@ -322,6 +352,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function showSummaryState(profile) {
     renderSummary(profile);
     loadWorkoutHistoryPreview();
+    loadInsights();
 
     loadingState.style.display = "none";
     loggedOutView.style.display = "none";
@@ -370,6 +401,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   logoutBtn?.addEventListener("click", () => {
     logout();
+  });
+
+  askCoachBtn?.addEventListener("click", async () => {
+    if (!currentUser?.sub) return;
+    askCoachBtn.disabled = true;
+    askCoachBtn.textContent = "Thinking…";
+    try {
+      const response = await fetch("/api/coach", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: currentUser.sub }) });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Coach is unavailable.");
+      const coach = data.coach;
+      document.getElementById("coach-headline").textContent = coach.headline;
+      document.getElementById("coach-recommendation").textContent = coach.recommendation;
+      document.getElementById("coach-why").textContent = coach.why;
+      document.getElementById("coach-alternative").textContent = coach.alternative;
+      document.getElementById("coach-safety").textContent = coach.safety_note;
+      document.getElementById("coach-response").hidden = false;
+    } catch (error) { alert(error.message); }
+    finally { askCoachBtn.disabled = false; askCoachBtn.textContent = "Ask LiftMetrics Coach"; }
   });
 
   editProfileBtn?.addEventListener("click", () => {

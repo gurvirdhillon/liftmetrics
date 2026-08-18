@@ -9,6 +9,8 @@ import { Server } from "socket.io";
 import http from "http";
 import { validateWorkout } from "./workout-validation.js";
 import { generatePlan } from "./plan-generator.js";
+import { buildTrainingInsights } from "./training-insights.js";
+import { createCoachResponse } from "./ai-coach.js";
 
 dotenv.config();
 
@@ -312,6 +314,38 @@ app.get("/api/workouts", async (req, res) => {
   }
 });
 
+app.get("/api/insights", async (req, res) => {
+  const userId = req.query.user_id;
+  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  try {
+    const result = await pool.query(`SELECT ws.session_id, TO_CHAR(ws.session_date, 'YYYY-MM-DD') AS session_date, ws.feeling_score,
+      COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
+      FROM workout_sessions ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
+      WHERE ws.user_id = $1 GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId.trim()]);
+    res.json(buildTrainingInsights(result.rows));
+  } catch (error) {
+    console.error("Insights retrieval error:", error);
+    res.status(500).json({ error: "Could not load your training insights." });
+  }
+});
+
+app.post("/api/coach", async (req, res) => {
+  const userId = req.body?.user_id;
+  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  try {
+    const result = await pool.query(`SELECT ws.session_id, TO_CHAR(ws.session_date, 'YYYY-MM-DD') AS session_date, ws.feeling_score,
+      COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
+      FROM workout_sessions ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
+      WHERE ws.user_id = $1 GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId.trim()]);
+    const coach = await createCoachResponse(buildTrainingInsights(result.rows));
+    res.json({ coach });
+  } catch (error) {
+    console.error("AI coach error:", error.message);
+    const status = error.message === "AI coaching is not configured." ? 503 : 502;
+    res.status(status).json({ error: "LiftMetrics Coach is unavailable right now. Your regular training guidance is still available." });
+  }
+});
+
 app.patch("/api/workouts/:sessionId", async (req, res) => {
   const sessionId = Number(req.params.sessionId);
   const { user_id: userId, session_date: sessionDate, duration_value: durationValue, duration_unit: durationUnit, workout_type: workoutType, feeling_score: feelingScore } = req.body;
@@ -370,10 +404,12 @@ app.post("/api/plans/generate", async (req, res) => {
 
   let client;
   try {
-    const plan = generatePlan(profile);
     client = await pool.connect();
     await client.query("BEGIN");
     await client.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [user_id.trim()]);
+    const recentEffort = await client.query("SELECT feeling_score FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC, created_at DESC LIMIT 3", [user_id.trim()]);
+    const efforts = recentEffort.rows.map((row) => Number(row.feeling_score)).filter(Number.isFinite);
+    const plan = generatePlan(profile, { reduceVolume: efforts.length >= 2 && efforts.reduce((sum, score) => sum + score, 0) / efforts.length >= 8 });
     const result = await client.query(
       "INSERT INTO generated_plans (user_id, goal, profile, plan) VALUES ($1, $2, $3, $4) RETURNING plan_id, created_at",
       [user_id.trim(), profile.goal, profile, plan]

@@ -69,6 +69,16 @@
             <p id="workout-history-status" class="workout-history-status" role="status">Loading recent workouts…</p>
             <div id="workout-history-preview" class="workout-history-list"></div>
         </section>
+
+        <section class="profile-card training-intelligence" aria-labelledby="training-intelligence-heading">
+            <div class="section-heading"><div><p class="section-eyebrow">TRAINING INTELLIGENCE</p><h3 id="training-intelligence-heading">Your next best workout</h3></div><span id="quality-score" class="quality-score">—</span></div>
+            <p id="insight-status" class="workout-history-status" role="status">Loading your training guidance…</p>
+            <article id="readiness-card" class="readiness-card" hidden><p id="readiness-label" class="section-eyebrow"></p><h4 id="readiness-title"></h4><p id="readiness-detail"></p></article>
+            <p id="weekly-review" class="weekly-review"></p>
+            <button type="button" id="ask-coach-btn" class="coach-button">Ask LiftMetrics Coach</button>
+            <article id="coach-response" class="coach-response" hidden aria-live="polite"><h4 id="coach-headline"></h4><p id="coach-recommendation"></p><p><strong>Why:</strong> <span id="coach-why"></span></p><p><strong>Alternative:</strong> <span id="coach-alternative"></span></p><small id="coach-safety"></small></article>
+            <div class="insight-columns"><div><h4>Lift progression</h4><ul id="progression-list" class="insight-list"></ul></div><div><h4>Weekly muscle sets</h4><ul id="muscle-balance-list" class="insight-list"></ul></div></div>
+        </section>
     </main>
 
     <form id="onboarding-form" style="display: none;">
