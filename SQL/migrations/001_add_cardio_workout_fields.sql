@@ -1,0 +1,8 @@
+ALTER TABLE user_profiles
+  ALTER COLUMN user_id TYPE VARCHAR(100);
+
+ALTER TABLE workout_sessions
+  ALTER COLUMN user_id TYPE VARCHAR(100),
+  ADD COLUMN IF NOT EXISTS distance_value DECIMAL(7,2),
+  ADD COLUMN IF NOT EXISTS distance_unit VARCHAR(10),
+  ADD COLUMN IF NOT EXISTS avg_pace DECIMAL(6,2);

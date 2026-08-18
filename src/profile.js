@@ -1,3 +1,5 @@
+import { getAuthClient, handleAuthRedirect, login, logout } from "./auth.js";
+
 let auth0 = null;
 let currentUser = null;
 
@@ -11,34 +13,8 @@ function getStepKey(user) {
   return `liftmetrics_onboarding_step_${user.sub}`;
 }
 
-async function fetchAuthConfig() {
-  const res = await fetch("/auth-config");
-  if (!res.ok) {
-    throw new Error("Failed to load Auth0 config");
-  }
-  return res.json();
-}
-
 async function initAuth0Client() {
-  const config = await fetchAuthConfig();
-
-  auth0 = await createAuth0Client({
-    domain: config.domain,
-    client_id: config.clientId,
-    redirect_uri: window.location.origin + "/profile.html"
-  });
-}
-
-async function login() {
-  await auth0.loginWithRedirect({
-    redirect_uri: window.location.origin + "/profile.html"
-  });
-}
-
-function logout() {
-  auth0.logout({
-    returnTo: window.location.origin
-  });
+  auth0 = await getAuthClient();
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -56,6 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const loginBtn = document.getElementById("login");
   const logoutBtn = document.getElementById("logout");
   const editProfileBtn = document.getElementById("edit-profile-btn");
+  const generatePlanBtn = document.getElementById("generate-plan-btn");
 
   function getFormData() {
     return {
@@ -267,6 +244,59 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("summary-fitness").textContent = formatFitnessLevel(profile.fitness_level);
   }
 
+  function formatWorkoutDate(value) {
+    const [year, month, day] = String(value).slice(0, 10).split("-").map(Number);
+    if (!year || !month || !day) return "Recent workout";
+    return new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", timeZone: "UTC" })
+      .format(new Date(Date.UTC(year, month - 1, day)));
+  }
+
+  function renderWorkoutHistory(workouts) {
+    const status = document.getElementById("workout-history-status");
+    const list = document.getElementById("workout-history-preview");
+    list.replaceChildren();
+
+    if (!workouts.length) {
+      status.textContent = "No workouts logged yet. Your completed sessions will appear here.";
+      return;
+    }
+
+    status.textContent = "";
+    const cards = workouts.slice(0, 3).map((workout) => {
+      const card = document.createElement("article");
+      card.className = "workout-preview-card";
+      const date = document.createElement("p");
+      date.className = "workout-preview-date";
+      date.textContent = formatWorkoutDate(workout.session_date);
+      const title = document.createElement("h4");
+      title.textContent = workout.workout_type || "Workout";
+      const details = document.createElement("div");
+      details.className = "workout-preview-details";
+      const duration = document.createElement("span");
+      duration.textContent = `${workout.duration_value} ${workout.duration_unit}`;
+      const effort = document.createElement("span");
+      effort.textContent = `Effort ${workout.feeling_score}/10`;
+      details.append(duration, effort);
+      card.append(date, title, details);
+      return card;
+    });
+    list.append(...cards);
+  }
+
+  async function loadWorkoutHistoryPreview() {
+    const status = document.getElementById("workout-history-status");
+    if (!currentUser?.sub) return;
+    status.textContent = "Loading recent workouts…";
+    try {
+      const response = await fetch(`/api/workouts?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not load recent workouts.");
+      renderWorkoutHistory(data.workouts || []);
+    } catch (error) {
+      status.textContent = error.message;
+    }
+  }
+
   function showLoggedOutState() {
     loadingState.style.display = "none";
     loggedOutView.style.display = "block";
@@ -291,6 +321,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function showSummaryState(profile) {
     renderSummary(profile);
+    loadWorkoutHistoryPreview();
 
     loadingState.style.display = "none";
     loggedOutView.style.display = "none";
@@ -306,13 +337,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
       await initAuth0Client();
 
-      if (
-        window.location.search.includes("code=") &&
-        window.location.search.includes("state=")
-      ) {
-        await auth0.handleRedirectCallback();
-        window.history.replaceState({}, document.title, "/profile.html");
-      }
+      await handleAuthRedirect();
 
       const isAuthenticated = await auth0.isAuthenticated();
 
@@ -351,6 +376,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadFromLocalStorage();
     showFormState();
     loadSavedStep();
+  });
+
+  generatePlanBtn?.addEventListener("click", async () => {
+    const profile = getSavedProfile();
+    if (!profile?.completed || !currentUser?.sub) {
+      alert("Please complete your profile before generating a plan.");
+      return;
+    }
+    generatePlanBtn.disabled = true;
+    generatePlanBtn.textContent = "Generating...";
+    try {
+      const response = await fetch("/api/plans/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: currentUser.sub, profile })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not generate your plan.");
+      sessionStorage.setItem("liftmetrics_current_plan", JSON.stringify(data.plan));
+      window.location.href = "plan.html";
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      generatePlanBtn.disabled = false;
+      generatePlanBtn.textContent = "Generate a new plan";
+    }
   });
 
   document.querySelectorAll("[data-next]").forEach((button) => {
@@ -409,7 +460,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const savedProfile = getSavedProfile();
         showSummaryState(savedProfile);
 
-        alert("Profile saved! Your plan can now be generated.");
+        alert("Profile saved! Use Generate a new plan to create your programme.");
       } catch (error) {
         console.error("Error saving profile:", error);
         alert("Something went wrong while saving your profile.");

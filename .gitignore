@@ -7,6 +7,7 @@ downward/
 
 .venv/
 .env
+.streamlit/secrets.toml
 node_modules
 .DS_Store
 
@@ -26,3 +27,5 @@ sas_plan
 
 
 fitness_track_project.egg-info/
+
+.streamlit

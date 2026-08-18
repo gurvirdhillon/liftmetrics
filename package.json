@@ -9,9 +9,9 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "start": "concurrently \"nodemon server/server.js\" \"npm run start:streamlit\"",
-    "start:streamlit": "streamlit run streamlit/app.py --server.headless true"
+    "start:streamlit": ".venv/bin/streamlit run streamlit/app.py --server.headless true"
   },
   "author": "gurvirsinghdhillon@outlook.com",
   "license": "ISC",

@@ -7,6 +7,8 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import http from "http";
+import { validateWorkout } from "./workout-validation.js";
+import { generatePlan } from "./plan-generator.js";
 
 dotenv.config();
 
@@ -44,16 +46,16 @@ io.on("connection", (socket) => {
   console.log("User connected:", socket.id);
 
   socket.on("chat message", (data) => {
-    const newMessage = {
-      id: uuid(),
-      user: data.user || "User",
-      text: data.text || "",
-      time: new Date().toISOString()
-    };
-
-    if (!newMessage.text.trim()) {
+    if (typeof data.user !== "string" || !data.user.trim() || typeof data.text !== "string" || !data.text.trim()) {
       return;
     }
+
+    const newMessage = {
+      id: uuid(),
+      user: data.user.trim(),
+      text: data.text.trim(),
+      time: new Date().toISOString()
+    };
 
     messages.push(newMessage);
 
@@ -86,9 +88,13 @@ app.get("/messages/:id", (req, res) => {
 });
 
 app.post("/messages", (req, res) => {
+  if (typeof req.body.user !== "string" || !req.body.user.trim()) {
+    return res.status(401).json({ error: "An authenticated display name is required" });
+  }
+
   const newMessage = {
     id: uuid(),
-    user: req.body.user || "User",
+    user: req.body.user.trim(),
     text: req.body.text || "",
     time: new Date().toISOString()
   };
@@ -120,9 +126,15 @@ app.use(express.static(path.join(__dirname, "../src")));
 
 // Your existing workout route can stay here
 app.post("/api/workouts", async (req, res) => {
-  const client = await pool.connect();
+  const validationErrors = validateWorkout(req.body);
+  if (validationErrors.length) {
+    return res.status(400).json({ errors: validationErrors });
+  }
+
+  let client;
 
   try {
+    client = await pool.connect();
     const {
       user_id,
       session_date,
@@ -133,6 +145,10 @@ app.post("/api/workouts", async (req, res) => {
       avg_bpm,
       max_bpm,
       water_intake_l,
+      distance_value,
+      distance_unit,
+      calories_burned,
+      avg_pace,
       exercises
     } = req.body;
 
@@ -141,16 +157,9 @@ app.post("/api/workouts", async (req, res) => {
     await client.query(
       `
       INSERT INTO user_profiles (
-        user_id,
-        age,
-        gender,
-        height_m,
-        weight_kg,
-        experience_level,
-        workout_frequency_days_week,
-        fat_percentage
+        user_id
       )
-      VALUES ($1, 25, 'Unknown', 1.70, 70.00, 'Beginner', 3, NULL)
+      VALUES ($1)
       ON CONFLICT (user_id) DO NOTHING
       `,
       [user_id]
@@ -167,21 +176,29 @@ app.post("/api/workouts", async (req, res) => {
         feeling_score,
         avg_bpm,
         max_bpm,
-        water_intake_l
+        water_intake_l,
+        distance_value,
+        distance_unit,
+        calories_burned,
+        avg_pace
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
       RETURNING session_id
       `,
       [
-        user_id,
+        user_id.trim(),
         session_date,
-        duration_value || null,
+        duration_value,
         duration_unit || null,
         workout_type || null,
-        feeling_score || null,
-        avg_bpm || null,
-        max_bpm || null,
-        water_intake_l || null
+        feeling_score ?? null,
+        avg_bpm ?? null,
+        max_bpm ?? null,
+        water_intake_l ?? null,
+        distance_value ?? null,
+        distance_unit || null,
+        calories_burned ?? null,
+        avg_pace ?? null
       ]
     );
 
@@ -204,9 +221,9 @@ app.post("/api/workouts", async (req, res) => {
           [
             sessionId,
             exercise.exercise_name || null,
-            exercise.sets || null,
-            exercise.reps || null,
-            exercise.weight_value || null,
+            exercise.sets ?? null,
+            exercise.reps ?? null,
+            exercise.weight_value ?? null,
             exercise.weight_unit || null
           ]
         );
@@ -221,11 +238,170 @@ app.post("/api/workouts", async (req, res) => {
       user_id: user_id
     });
   } catch (error) {
-    await client.query("ROLLBACK");
+    if (client) await client.query("ROLLBACK");
     console.error("Database error:", error);
     res.status(500).json({ error: error.message });
   } finally {
-    client.release();
+    client?.release();
+  }
+});
+
+app.get("/api/workouts", async (req, res) => {
+  const { user_id: userId, workout_type: workoutType, from, to } = req.query;
+  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) {
+    return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  }
+
+  const values = [userId.trim()];
+  const filters = ["ws.user_id = $1"];
+  if (typeof workoutType === "string" && workoutType.trim()) {
+    values.push(workoutType.trim());
+    filters.push(`ws.workout_type = $${values.length}`);
+  }
+  if (typeof from === "string" && /^\d{4}-\d{2}-\d{2}$/.test(from)) {
+    values.push(from);
+    filters.push(`ws.session_date >= $${values.length}`);
+  }
+  if (typeof to === "string" && /^\d{4}-\d{2}-\d{2}$/.test(to)) {
+    values.push(to);
+    filters.push(`ws.session_date <= $${values.length}`);
+  }
+
+  try {
+    const result = await pool.query(
+      `
+      SELECT
+        ws.session_id,
+        TO_CHAR(ws.session_date, 'YYYY-MM-DD') AS session_date,
+        ws.duration_value,
+        ws.duration_unit,
+        ws.workout_type,
+        ws.feeling_score,
+        ws.calories_burned,
+        ws.distance_value,
+        ws.distance_unit,
+        ws.avg_pace,
+        ws.avg_bpm,
+        ws.max_bpm,
+        ws.water_intake_l,
+        COALESCE(
+          json_agg(
+            json_build_object(
+              'entry_id', ee.entry_id,
+              'exercise_name', ee.exercise_name,
+              'sets', ee.sets,
+              'reps', ee.reps,
+              'weight_value', ee.weight_value,
+              'weight_unit', ee.weight_unit
+            )
+          ) FILTER (WHERE ee.entry_id IS NOT NULL),
+          '[]'::json
+        ) AS exercises
+      FROM workout_sessions ws
+      LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
+      WHERE ${filters.join(" AND ")}
+      GROUP BY ws.session_id
+      ORDER BY ws.session_date DESC, ws.created_at DESC
+      `,
+      values
+    );
+    res.json({ workouts: result.rows });
+  } catch (error) {
+    console.error("Workout history retrieval error:", error);
+    res.status(500).json({ error: "Could not load workout history." });
+  }
+});
+
+app.patch("/api/workouts/:sessionId", async (req, res) => {
+  const sessionId = Number(req.params.sessionId);
+  const { user_id: userId, session_date: sessionDate, duration_value: durationValue, duration_unit: durationUnit, workout_type: workoutType, feeling_score: feelingScore } = req.body;
+  if (!Number.isInteger(sessionId) || sessionId <= 0 || typeof userId !== "string" || !userId.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(sessionDate || "") || !Number.isFinite(durationValue) || durationValue <= 0 || typeof durationUnit !== "string" || !durationUnit.trim() || typeof workoutType !== "string" || !workoutType.trim() || !Number.isFinite(feelingScore) || feelingScore < 0 || feelingScore > 10) {
+    return res.status(400).json({ error: "Enter a valid date, duration, workout type, and feeling score." });
+  }
+
+  try {
+    const result = await pool.query(
+      "UPDATE workout_sessions SET session_date = $1, duration_value = $2, duration_unit = $3, workout_type = $4, feeling_score = $5 WHERE session_id = $6 AND user_id = $7 RETURNING session_id",
+      [sessionDate, durationValue, durationUnit.trim(), workoutType.trim(), feelingScore, sessionId, userId.trim()]
+    );
+    if (!result.rowCount) return res.status(404).json({ error: "Workout not found." });
+    res.json({ message: "Workout updated." });
+  } catch (error) {
+    console.error("Workout update error:", error);
+    res.status(500).json({ error: "Could not update workout." });
+  }
+});
+
+app.delete("/api/workouts/:sessionId", async (req, res) => {
+  const sessionId = Number(req.params.sessionId);
+  const userId = req.query.user_id;
+  if (!Number.isInteger(sessionId) || sessionId <= 0 || typeof userId !== "string" || !userId.trim()) {
+    return res.status(400).json({ error: "A valid workout and user ID are required." });
+  }
+
+  let client;
+  try {
+    client = await pool.connect();
+    await client.query("BEGIN");
+    const session = await client.query("SELECT session_id FROM workout_sessions WHERE session_id = $1 AND user_id = $2 FOR UPDATE", [sessionId, userId.trim()]);
+    if (!session.rowCount) {
+      await client.query("ROLLBACK");
+      return res.status(404).json({ error: "Workout not found." });
+    }
+    await client.query("DELETE FROM exercise_entries WHERE session_id = $1", [sessionId]);
+    await client.query("DELETE FROM workout_sessions WHERE session_id = $1", [sessionId]);
+    await client.query("COMMIT");
+    res.status(204).end();
+  } catch (error) {
+    if (client) await client.query("ROLLBACK");
+    console.error("Workout deletion error:", error);
+    res.status(500).json({ error: "Could not delete workout." });
+  } finally {
+    client?.release();
+  }
+});
+
+app.post("/api/plans/generate", async (req, res) => {
+  const { user_id, profile } = req.body;
+  const validProfile = profile && ["strength", "weight-loss", "stamina", "wellbeing"].includes(profile.goal) && Array.isArray(profile.days) && profile.days.length && ["30", "45", "60"].includes(profile.timespent) && ["gym", "home", "both"].includes(profile.equipment) && ["beginner", "intermediate", "advanced"].includes(profile.fitness_level);
+  if (typeof user_id !== "string" || !user_id.trim() || user_id.length > 100 || !validProfile) {
+    return res.status(400).json({ error: "Complete your profile with a valid authenticated user before generating a plan." });
+  }
+
+  let client;
+  try {
+    const plan = generatePlan(profile);
+    client = await pool.connect();
+    await client.query("BEGIN");
+    await client.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [user_id.trim()]);
+    const result = await client.query(
+      "INSERT INTO generated_plans (user_id, goal, profile, plan) VALUES ($1, $2, $3, $4) RETURNING plan_id, created_at",
+      [user_id.trim(), profile.goal, profile, plan]
+    );
+    await client.query("COMMIT");
+    res.status(201).json({ ...result.rows[0], plan });
+  } catch (error) {
+    if (client) await client.query("ROLLBACK");
+    console.error("Plan generation error:", error);
+    res.status(500).json({ error: "Could not generate your plan." });
+  } finally {
+    client?.release();
+  }
+});
+
+app.get("/api/plans/latest", async (req, res) => {
+  const userId = req.query.user_id;
+  if (typeof userId !== "string" || !userId.trim()) return res.status(400).json({ error: "A user ID is required." });
+  try {
+    const result = await pool.query("SELECT plan_id, created_at, plan FROM generated_plans WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1", [userId.trim()]);
+    if (!result.rowCount) return res.status(404).json({ error: "No saved plan found." });
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Plan retrieval error:", error);
+    if (error.code === "42P01") {
+      return res.status(503).json({ error: "Plan storage is not set up yet. Run the generated-plans database migration first." });
+    }
+    res.status(500).json({ error: "Could not load your plan." });
   }
 });
 
