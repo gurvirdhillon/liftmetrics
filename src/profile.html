@@ -17,12 +17,12 @@
         <p>Loading...</p>
     </div>
 
-    <div id="logged-out-view" style="text-align: center;">
-        <p>Please log in to complete your profile.</p>
+    <div id="logged-out-view" class="auth-actions">
+        <p class="auth-message">Please log in to complete your profile.</p>
         <button id="login" disabled>Log-in</button>
     </div>
 
-    <div id="logged-in-actions" style="text-align: center;">
+    <div id="logged-in-actions" class="auth-actions">
         <button id="logout" disabled>Log out</button>
     </div>
 
@@ -55,6 +55,20 @@
                 <div><dt>Workout location</dt><dd id="summary-equipment"></dd></div>
                 <div><dt>Current activity</dt><dd id="summary-activity"></dd></div>
             </dl>
+        </section>
+
+        <section class="profile-card username-card" aria-labelledby="username-heading">
+            <div>
+                <p class="section-eyebrow">COMMUNITY PROFILE</p>
+                <h3 id="username-heading">Chat username</h3>
+                <p class="section-description">This is the name other members see when you post in the public chat.</p>
+            </div>
+            <form id="username-form" class="username-form">
+                <label for="chat-username">Username</label>
+                <input id="chat-username" name="chat-username" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="e.g. LiftLegend" required>
+                <button type="submit">Save username</button>
+                <p id="username-status" role="status" aria-live="polite"></p>
+            </form>
         </section>
 
         <section class="profile-card workout-history-preview" aria-labelledby="recent-workouts-heading">

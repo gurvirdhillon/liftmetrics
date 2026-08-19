@@ -3,6 +3,7 @@
 }
 
 body {
+  position: relative;
   margin: 0;
   min-height: 100vh;
   font-family: Georgia, "Times New Roman", serif;
@@ -13,7 +14,7 @@ body {
 /* Top content */
 .page-title {
   margin: 32px 0 12px;
-  padding: 0 32px;
+  padding: 0 180px 0 32px;
   font-size: 3rem;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -28,10 +29,24 @@ body {
   max-width: 900px;
 }
 
-/* Login buttons */
-body > p {
-  padding: 0 32px;
-  margin-top: 28px;
+/* Authentication controls */
+.auth-actions {
+  position: absolute;
+  top: 32px;
+  right: 32px;
+  z-index: 1;
+}
+
+.auth-message {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 button {
@@ -199,6 +214,14 @@ button:disabled {
 
 .profile-details dd { margin: 0; font-weight: 700; color: #ffffff; line-height: 1.35; }
 
+.username-card { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
+.username-form { display: grid; grid-template-columns: auto minmax(180px, 260px) auto; align-items: center; gap: 10px; }
+.username-form label { font-weight: 700; }
+.username-form input { min-height: 44px; padding: 10px 12px; border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 10px; background: rgba(255, 255, 255, 0.08); color: #ffffff; font: inherit; }
+.username-form input::placeholder { color: rgba(245, 247, 251, 0.52); }
+.username-form button { margin: 0; background: #ffffff; color: #0a1738; }
+.username-form #username-status { grid-column: 2 / -1; margin: 0; color: rgba(245, 247, 251, 0.76); font-size: 0.9rem; }
+
 .workout-history-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .workout-history-status { margin: 22px 0 0; }
 .workout-history-status:empty { display: none; }
@@ -212,6 +235,7 @@ button:disabled {
 @media (max-width: 768px) {
   .profile-dashboard { margin-top: 30px; padding: 0 20px; }
   .profile-overview { align-items: flex-start; flex-direction: column; padding: 24px; }
+  .username-card { align-items: flex-start; flex-direction: column; }
   .profile-actions { justify-content: flex-start; }
   .profile-details, .workout-history-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -222,6 +246,8 @@ button:disabled {
   .profile-overview h2 { font-size: 1.8rem; }
   .profile-actions, .profile-actions > *, .history-link-button { width: 100%; }
   .profile-actions > * { justify-content: center; text-align: center; }
+  .username-form { width: 100%; grid-template-columns: 1fr; }
+  .username-form #username-status { grid-column: auto; }
   .section-heading { flex-direction: column; }
   .profile-details, .workout-history-list { grid-template-columns: 1fr; }
 }
@@ -310,8 +336,13 @@ input[type="radio"]:checked + .image-option .description-icon {
 
 
 @media (max-width: 768px) {
+  .auth-actions {
+    top: 20px;
+    right: 20px;
+  }
+
   .page-title {
-    padding: 0 20px;
+    padding: 0 140px 0 20px;
     font-size: 2.3rem;
   }
 

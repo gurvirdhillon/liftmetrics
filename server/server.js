@@ -124,6 +124,45 @@ app.get("/auth-config", (req, res) => {
   });
 });
 
+app.get("/api/usernames", async (req, res) => {
+  const userId = req.query.user_id;
+  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) {
+    return res.status(400).json({ error: "A valid user is required." });
+  }
+
+  try {
+    const result = await pool.query("SELECT username FROM user_profiles WHERE user_id = $1", [userId.trim()]);
+    res.json({ username: result.rows[0]?.username || null });
+  } catch (error) {
+    console.error("Could not load username:", error);
+    res.status(500).json({ error: "Could not load username." });
+  }
+});
+
+app.put("/api/usernames", async (req, res) => {
+  const { user_id: userId, username } = req.body || {};
+  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) {
+    return res.status(400).json({ error: "A valid user is required." });
+  }
+
+  const trimmedUsername = typeof username === "string" ? username.trim() : "";
+  if (!/^[A-Za-z0-9_]{3,24}$/.test(trimmedUsername)) {
+    return res.status(400).json({ error: "Use 3–24 letters, numbers, or underscores." });
+  }
+
+  try {
+    await pool.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [userId.trim()]);
+    const result = await pool.query("UPDATE user_profiles SET username = $1 WHERE user_id = $2 RETURNING username", [trimmedUsername, userId.trim()]);
+    res.json({ username: result.rows[0].username });
+  } catch (error) {
+    if (error.code === "23505") {
+      return res.status(409).json({ error: "That username is already taken." });
+    }
+    console.error("Could not save username:", error);
+    res.status(500).json({ error: "Could not save username." });
+  }
+});
+
 // Static files
 app.use(express.static(path.join(__dirname, "../src")));
 

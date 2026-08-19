@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS user_profiles;
 
 CREATE TABLE user_profiles (
     user_id VARCHAR(100) PRIMARY KEY,
+    username VARCHAR(24),
     age INTEGER,
     gender VARCHAR(10),
     height_m DECIMAL(4,2),
@@ -14,6 +15,10 @@ CREATE TABLE user_profiles (
     workout_frequency_days_week INTEGER,
     fat_percentage DECIMAL(5,2)
 );
+
+CREATE UNIQUE INDEX user_profiles_username_unique_idx
+    ON user_profiles (LOWER(username))
+    WHERE username IS NOT NULL;
 
 CREATE TABLE workout_sessions (
     session_id SERIAL PRIMARY KEY,

@@ -82,7 +82,11 @@ function formatTime(timeValue) {
 async function getCurrentUsername() {
   try {
     const user = await getAuthenticatedUser();
-    return user?.name || user?.nickname || user?.email || null;
+    if (!user?.sub) return null;
+
+    const response = await fetch(`/api/usernames?user_id=${encodeURIComponent(user.sub)}`);
+    const data = await response.json();
+    return response.ok && /^[A-Za-z0-9_]{3,24}$/.test(data.username || "") ? data.username : null;
   } catch (error) {
     console.error("Could not get Auth0 user:", error);
     return null;
@@ -97,7 +101,7 @@ async function writeMessage(event) {
 
   const username = await getCurrentUsername();
   if (!username) {
-    alert("Please log in from your profile before sending a message.");
+    alert("Set a chat username in your profile before sending a message.");
     return;
   }
 

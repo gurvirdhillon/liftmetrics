@@ -36,6 +36,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   const askCoachBtn = document.getElementById("ask-coach-btn");
   const injuryForm = document.getElementById("injury-form");
   const clearInjuryBtn = document.getElementById("clear-injury-btn");
+  const usernameForm = document.getElementById("username-form");
+  const usernameInput = document.getElementById("chat-username");
+  const usernameStatus = document.getElementById("username-status");
 
   async function loadInjuryRestrictions() {
     if (!currentUser?.sub) return;
@@ -261,6 +264,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("summary-fitness").textContent = formatFitnessLevel(profile.fitness_level);
   }
 
+  async function loadUsername() {
+    if (!currentUser?.sub || !usernameInput) return;
+    try {
+      const response = await fetch(`/api/usernames?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not load username.");
+      usernameInput.value = data.username || "";
+    } catch (error) {
+      usernameStatus.textContent = error.message;
+    }
+  }
+
   function formatWorkoutDate(value) {
     const [year, month, day] = String(value).slice(0, 10).split("-").map(Number);
     if (!year || !month || !day) return "Recent workout";
@@ -371,6 +386,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadWorkoutHistoryPreview();
     loadInsights();
     loadInjuryRestrictions();
+    loadUsername();
 
     loadingState.style.display = "none";
     loggedOutView.style.display = "none";
@@ -419,6 +435,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   logoutBtn?.addEventListener("click", () => {
     logout();
+  });
+
+  usernameForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const username = usernameInput.value.trim();
+    if (!/^[A-Za-z0-9_]{3,24}$/.test(username)) {
+      usernameStatus.textContent = "Use 3–24 letters, numbers, or underscores.";
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/usernames", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ user_id: currentUser?.sub, username })
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not save username.");
+      usernameInput.value = data.username;
+      usernameStatus.textContent = "Username saved.";
+    } catch (error) {
+      usernameStatus.textContent = error.message;
+    }
   });
 
   askCoachBtn?.addEventListener("click", async () => {
