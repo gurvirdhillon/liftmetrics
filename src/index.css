@@ -4,19 +4,48 @@ body{
 }
 
 .hero {
-    height: calc(100vh - 70px); /* prevents overlap with navbar */
+    min-height: calc(100vh - 70px); /* prevents overlap with navbar */
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: clamp(12px, 2vw, 24px);
+    padding: 32px 24px 96px;
+    box-sizing: border-box;
+}
 
-    gap: 10px;
+.hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background: url("img/hero-runner.png") center / cover no-repeat;
+    opacity: 0.28;
+    filter: saturate(0.85) contrast(1.1);
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(15, 23, 42, 0.72);
+}
+
+.hero > * {
+    position: relative;
+    z-index: 1;
 }
 
 .tagline {
-    font-size: 1.2rem;
-    font-size: large;
+    margin: 0;
+    font-size: clamp(1.1rem, 2.4vw, 1.8rem);
+    font-weight: 600;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
 }
 
 #log_btn {
@@ -71,7 +100,18 @@ body{
 }
 
 .page-title {
-    font-size: xx-large;
+    margin: 0;
+    font-size: clamp(3.5rem, 10vw, 9rem);
+    line-height: 0.95;
+    letter-spacing: -0.06em;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.75);
+}
+
+#thequote {
+    max-width: min(900px, 90vw);
+    font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+    line-height: 1.5;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
 }
 
 .form_container{
@@ -359,12 +399,7 @@ main,
         padding: 20px;
     }
 
-    .page-title {
-        font-size: 2rem;
-    }
-
     .tagline {
-        font-size: 1rem;
         line-height: 1.5;
         padding: 0 10px;
     }
@@ -400,14 +435,6 @@ main,
         justify-content: center;
         padding: 16px;
         gap: 12px;
-    }
-
-    .page-title {
-        font-size: 1.7rem;
-    }
-
-    .tagline {
-        font-size: 0.95rem;
     }
 
     #log_btn {
