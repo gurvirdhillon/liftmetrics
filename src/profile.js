@@ -39,6 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const usernameForm = document.getElementById("username-form");
   const usernameInput = document.getElementById("chat-username");
   const usernameStatus = document.getElementById("username-status");
+  const saveUsernameBtn = document.getElementById("save-username-btn");
 
   async function loadInjuryRestrictions() {
     if (!currentUser?.sub) return;
@@ -271,6 +272,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not load username.");
       usernameInput.value = data.username || "";
+      if (data.username) {
+        usernameInput.disabled = true;
+        saveUsernameBtn.disabled = true;
+        usernameStatus.textContent = "Username locked.";
+      }
     } catch (error) {
       usernameStatus.textContent = error.message;
     }
@@ -454,6 +460,8 @@ document.addEventListener("DOMContentLoaded", async () => {
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not save username.");
       usernameInput.value = data.username;
+      usernameInput.disabled = true;
+      saveUsernameBtn.disabled = true;
       usernameStatus.textContent = "Username saved.";
     } catch (error) {
       usernameStatus.textContent = error.message;

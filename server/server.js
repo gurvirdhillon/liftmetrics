@@ -152,7 +152,13 @@ app.put("/api/usernames", async (req, res) => {
 
   try {
     await pool.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [userId.trim()]);
-    const result = await pool.query("UPDATE user_profiles SET username = $1 WHERE user_id = $2 RETURNING username", [trimmedUsername, userId.trim()]);
+    const result = await pool.query(
+      "UPDATE user_profiles SET username = $1 WHERE user_id = $2 AND username IS NULL RETURNING username",
+      [trimmedUsername, userId.trim()]
+    );
+    if (!result.rows.length) {
+      return res.status(409).json({ error: "Your username has already been set and cannot be changed." });
+    }
     res.json({ username: result.rows[0].username });
   } catch (error) {
     if (error.code === "23505") {
