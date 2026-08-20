@@ -14,6 +14,7 @@ CREATE TABLE user_profiles (
     experience_level VARCHAR(20),
     workout_frequency_days_week INTEGER,
     fat_percentage DECIMAL(5,2)
+    ,account_role VARCHAR(20) NOT NULL DEFAULT 'client' CHECK (account_role IN ('client', 'trainer'))
 );
 
 CREATE UNIQUE INDEX user_profiles_username_unique_idx
@@ -88,6 +89,31 @@ CREATE TABLE messages (
 );
 
 CREATE INDEX messages_created_at_idx ON messages (created_at DESC);
+
+CREATE TABLE trainer_invites (
+    invite_id UUID PRIMARY KEY,
+    trainer_id VARCHAR(100) NOT NULL REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+    invite_code VARCHAR(32) NOT NULL UNIQUE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TIMESTAMPTZ NOT NULL,
+    accepted_at TIMESTAMPTZ
+);
+
+CREATE TABLE trainer_clients (
+    trainer_id VARCHAR(100) NOT NULL REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+    client_id VARCHAR(100) NOT NULL REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+    connected_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (trainer_id, client_id),
+    CHECK (trainer_id <> client_id)
+);
+
+CREATE TABLE trainer_notes (
+    note_id UUID PRIMARY KEY,
+    trainer_id VARCHAR(100) NOT NULL REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+    client_id VARCHAR(100) NOT NULL REFERENCES user_profiles(user_id) ON DELETE CASCADE,
+    body VARCHAR(2000) NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 
 
 CREATE TABLE workout_sessions_staging (

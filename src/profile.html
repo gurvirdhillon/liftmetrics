@@ -36,6 +36,7 @@
             <div class="profile-actions" aria-label="Profile actions">
                 <button type="button" id="generate-plan-btn">Generate a new plan</button>
                 <a class="secondary-link" href="import-plan.html">Upload or paste a plan</a>
+                <a class="secondary-link" href="trainer.html">Trainer portal</a>
                 <a id="view-plan-link" class="secondary-link" href="plan.html">View latest plan</a>
                 <button type="button" id="edit-profile-btn" class="quiet-button">Edit profile</button>
             </div>
@@ -70,6 +71,11 @@
                 <button id="save-username-btn" type="submit">Save username</button>
                 <p id="username-status" role="status" aria-live="polite"></p>
             </form>
+        </section>
+
+        <section class="profile-card" aria-labelledby="account-role-heading">
+            <p class="section-eyebrow">ACCOUNT TYPE</p><h3 id="account-role-heading">How do you use LiftMetrics?</h3>
+            <form id="account-role-form" class="profile-actions"><label for="account-role">Role</label><select id="account-role"><option value="client">Client</option><option value="trainer">Trainer</option></select><button type="submit">Save role</button><p id="account-role-status" role="status"></p></form>
         </section>
 
         <section class="profile-card workout-history-preview" aria-labelledby="recent-workouts-heading">

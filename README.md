@@ -85,6 +85,7 @@ psql "$DATABASE_URL" -f SQL/migrations/002_create_generated_plans.sql
 psql "$DATABASE_URL" -f SQL/migrations/003_create_injury_restrictions.sql
 psql "$DATABASE_URL" -f SQL/migrations/004_add_unique_usernames.sql
 psql "$DATABASE_URL" -f SQL/migrations/005_scale_and_messages.sql
+psql "$DATABASE_URL" -f SQL/migrations/006_create_trainer_portal.sql
 ```
 
 ## Production configuration

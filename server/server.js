@@ -44,6 +44,7 @@ app.use(helmet({
       defaultSrc: ["'self'"],
       scriptSrc: ["'self'", "https://cdn.auth0.com"],
       connectSrc: ["'self'", auth0Origin],
+      frameSrc: [auth0Origin],
       styleSrc: ["'self'", "'unsafe-inline'", "https:"],
       imgSrc: ["'self'", "data:"],
       fontSrc: ["'self'", "https:"],
@@ -126,6 +127,100 @@ app.get("/auth-config", (req, res) => {
     clientId: process.env.AUTH0_CLIENT_ID,
     audience: process.env.AUTH0_AUDIENCE
   });
+});
+
+async function ensureUserProfile(userId) {
+  await pool.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [userId.trim()]);
+}
+
+async function requireTrainer(userId) {
+  await ensureUserProfile(userId);
+  const result = await pool.query("SELECT account_role FROM user_profiles WHERE user_id = $1", [userId.trim()]);
+  if (result.rows[0]?.account_role !== "trainer") throw new Error("Trainer access is required.");
+}
+
+async function requireClientRelationship(trainerId, clientId) {
+  const result = await pool.query("SELECT 1 FROM trainer_clients WHERE trainer_id = $1 AND client_id = $2", [trainerId.trim(), clientId]);
+  if (!result.rowCount) throw new Error("That client is not connected to your trainer account.");
+}
+
+app.put("/api/account-role", async (req, res) => {
+  const role = req.body?.role;
+  if (!["client", "trainer"].includes(role)) return res.status(400).json({ error: "Choose client or trainer." });
+  try {
+    await ensureUserProfile(req.auth.userId);
+    await pool.query("UPDATE user_profiles SET account_role = $1 WHERE user_id = $2", [role, req.auth.userId.trim()]);
+    res.json({ role });
+  } catch (error) { console.error("Account role error:", error); res.status(500).json({ error: "Could not update account role." }); }
+});
+
+app.get("/api/account-role", async (req, res) => {
+  try { await ensureUserProfile(req.auth.userId); const result = await pool.query("SELECT account_role AS role FROM user_profiles WHERE user_id = $1", [req.auth.userId.trim()]); res.json(result.rows[0]); }
+  catch (error) { res.status(500).json({ error: "Could not load account role." }); }
+});
+
+app.post("/api/trainer/invites", async (req, res) => {
+  const userId = req.auth.userId;
+  try {
+    await requireTrainer(userId);
+    const inviteCode = uuid().replace(/-/g, "").slice(0, 12).toUpperCase();
+    await pool.query("INSERT INTO trainer_invites (invite_id, trainer_id, invite_code, expires_at) VALUES ($1, $2, $3, CURRENT_TIMESTAMP + INTERVAL '7 days')", [uuid(), userId.trim(), inviteCode]);
+    res.status(201).json({ inviteCode });
+  } catch (error) { console.error("Trainer invite error:", error); res.status(error.message === "Trainer access is required." ? 403 : 500).json({ error: error.message === "Trainer access is required." ? error.message : "Could not create trainer invite." }); }
+});
+
+app.post("/api/trainer/invites/accept", async (req, res) => {
+  const inviteCode = String(req.body?.inviteCode || "").trim();
+  if (!inviteCode) return res.status(400).json({ error: "An invite code is required." });
+  const clientId = req.auth.userId;
+  let client;
+  try {
+    client = await pool.connect(); await client.query("BEGIN");
+    await client.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [clientId.trim()]);
+    const invite = await client.query("SELECT invite_id, trainer_id FROM trainer_invites WHERE invite_code = $1 AND accepted_at IS NULL AND expires_at > CURRENT_TIMESTAMP FOR UPDATE", [inviteCode]);
+    if (!invite.rowCount) { await client.query("ROLLBACK"); return res.status(404).json({ error: "That trainer invite is invalid or has expired." }); }
+    if (invite.rows[0].trainer_id === clientId.trim()) { await client.query("ROLLBACK"); return res.status(400).json({ error: "You cannot accept your own trainer invite." }); }
+    await client.query("INSERT INTO trainer_clients (trainer_id, client_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [invite.rows[0].trainer_id, clientId.trim()]);
+    await client.query("UPDATE trainer_invites SET accepted_at = CURRENT_TIMESTAMP WHERE invite_id = $1", [invite.rows[0].invite_id]);
+    await client.query("COMMIT"); res.status(201).json({ connected: true });
+  } catch (error) { if (client) await client.query("ROLLBACK"); console.error("Trainer invite acceptance error:", error); res.status(500).json({ error: "Could not accept trainer invite." }); } finally { client?.release(); }
+});
+
+app.get("/api/trainer/clients", async (req, res) => {
+  const trainerId = req.auth.userId;
+  try {
+    await requireTrainer(trainerId);
+    const result = await pool.query(`SELECT tc.client_id, up.username, COUNT(ws.session_id)::int AS workout_count, MAX(ws.session_date) AS last_workout_date FROM trainer_clients tc JOIN user_profiles up ON up.user_id = tc.client_id LEFT JOIN workout_sessions ws ON ws.user_id = tc.client_id WHERE tc.trainer_id = $1 GROUP BY tc.client_id, up.username ORDER BY last_workout_date DESC NULLS LAST`, [trainerId.trim()]);
+    res.json({ clients: result.rows });
+  } catch (error) { console.error("Trainer clients error:", error); res.status(error.message === "Trainer access is required." ? 403 : 500).json({ error: error.message === "Trainer access is required." ? error.message : "Could not load clients." }); }
+});
+
+app.get("/api/trainer/clients/:clientId", async (req, res) => {
+  const trainerId = req.auth.userId; const clientId = req.params.clientId;
+  try {
+    await requireTrainer(trainerId); await requireClientRelationship(trainerId, clientId);
+    const [client, workouts, notes] = await Promise.all([
+      pool.query("SELECT up.username, COUNT(ws.session_id)::int AS workout_count, MAX(ws.session_date) AS last_workout_date FROM user_profiles up LEFT JOIN workout_sessions ws ON ws.user_id = up.user_id WHERE up.user_id = $1 GROUP BY up.username", [clientId]),
+      pool.query("SELECT session_date, workout_type, duration_value, duration_unit FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC LIMIT 10", [clientId]),
+      pool.query("SELECT body, created_at FROM trainer_notes WHERE trainer_id = $1 AND client_id = $2 ORDER BY created_at DESC LIMIT 20", [trainerId.trim(), clientId])
+    ]);
+    res.json({ client: { client_id: clientId, ...client.rows[0] }, workouts: workouts.rows, notes: notes.rows });
+  } catch (error) { console.error("Trainer client detail error:", error); res.status(error.message.includes("access") || error.message.includes("connected") ? 403 : 500).json({ error: error.message || "Could not load client." }); }
+});
+
+app.post("/api/trainer/clients/:clientId/notes", async (req, res) => {
+  const body = String(req.body?.body || "").trim(); if (!body || body.length > 2000) return res.status(400).json({ error: "A note of up to 2,000 characters is required." });
+  try { await requireTrainer(req.auth.userId); await requireClientRelationship(req.auth.userId, req.params.clientId); await pool.query("INSERT INTO trainer_notes (note_id, trainer_id, client_id, body) VALUES ($1, $2, $3, $4)", [uuid(), req.auth.userId.trim(), req.params.clientId, body]); res.status(201).json({ saved: true }); }
+  catch (error) { console.error("Trainer note error:", error); res.status(403).json({ error: error.message || "Could not save note." }); }
+});
+
+app.post("/api/trainer/clients/:clientId/plans", async (req, res) => {
+  try {
+    await requireTrainer(req.auth.userId); await requireClientRelationship(req.auth.userId, req.params.clientId);
+    const plan = validateImportedPlan(req.body?.plan); plan.source = "trainer-assigned"; plan.adaptation.note = "This plan was assigned by your trainer.";
+    await pool.query("INSERT INTO generated_plans (user_id, goal, profile, plan) VALUES ($1, $2, $3, $4)", [req.params.clientId, "trainer-assigned", { assignedBy: req.auth.userId.trim() }, plan]);
+    res.status(201).json({ assigned: true });
+  } catch (error) { console.error("Trainer plan assignment error:", error); res.status(error.message.includes("required") || error.message.includes("connected") ? 403 : 400).json({ error: error.message || "Could not assign plan." }); }
 });
 
 app.get("/api/usernames", async (req, res) => {
@@ -547,6 +642,24 @@ app.get("/api/plans/latest", async (req, res) => {
     }
     res.status(500).json({ error: "Could not load your plan." });
   }
+});
+
+app.get("/api/plans/history", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT plan_id, goal, plan->>'title' AS title, created_at FROM generated_plans WHERE user_id = $1 ORDER BY created_at DESC LIMIT 20", [req.auth.userId.trim()]);
+    res.json({ plans: result.rows });
+  } catch (error) { console.error("Plan history error:", error); res.status(500).json({ error: "Could not load plan history." }); }
+});
+
+app.post("/api/plans/:planId/restore", async (req, res) => {
+  const planId = Number(req.params.planId);
+  if (!Number.isInteger(planId)) return res.status(400).json({ error: "A valid plan is required." });
+  try {
+    const saved = await pool.query("SELECT goal, profile, plan FROM generated_plans WHERE plan_id = $1 AND user_id = $2", [planId, req.auth.userId.trim()]);
+    if (!saved.rowCount) return res.status(404).json({ error: "Plan not found." });
+    const result = await pool.query("INSERT INTO generated_plans (user_id, goal, profile, plan) VALUES ($1, $2, $3, $4) RETURNING plan", [req.auth.userId.trim(), saved.rows[0].goal, saved.rows[0].profile, saved.rows[0].plan]);
+    res.status(201).json({ plan: result.rows[0].plan });
+  } catch (error) { console.error("Plan restore error:", error); res.status(500).json({ error: "Could not restore plan." }); }
 });
 
 // IMPORTANT

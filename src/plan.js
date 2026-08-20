@@ -23,6 +23,19 @@ function renderPlan(plan) {
   }));
 }
 
+async function loadPlanHistory() {
+  const history = document.getElementById("plan-history");
+  try {
+    const response = await authenticatedFetch("/api/plans/history"); const data = await response.json();
+    if (!response.ok) throw new Error(data.error);
+    history.replaceChildren(...data.plans.slice(1).map((saved) => {
+      const button = document.createElement("button"); button.type = "button"; button.textContent = `Restore ${saved.title || saved.goal} (${new Date(saved.created_at).toLocaleDateString()})`;
+      button.addEventListener("click", async () => { if (!confirm("Restore this plan as your current plan?")) return; const restore = await authenticatedFetch(`/api/plans/${saved.plan_id}/restore`, { method: "POST" }); const result = await restore.json(); if (!restore.ok) return alert(result.error || "Could not restore plan."); sessionStorage.setItem("liftmetrics_current_plan", JSON.stringify(result.plan)); renderPlan(result.plan); loadPlanHistory(); }); return button;
+    }));
+    if (!data.plans.slice(1).length) history.textContent = "No previous plans yet.";
+  } catch (error) { history.textContent = "Plan history is unavailable."; }
+}
+
 async function loadPlan() {
   try {
     const cachedPlan = sessionStorage.getItem("liftmetrics_current_plan");
@@ -40,4 +53,4 @@ async function loadPlan() {
   }
 }
 
-loadPlan();
+loadPlan().finally(loadPlanHistory);

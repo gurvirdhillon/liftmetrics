@@ -18,6 +18,8 @@ async function initAuth0Client() {
 }
 
 document.addEventListener("DOMContentLoaded", async () => {
+  const inviteFromLink = new URLSearchParams(window.location.search).get("invite");
+  if (inviteFromLink) sessionStorage.setItem("liftmetrics_pending_trainer_invite", inviteFromLink);
   const steps = document.querySelectorAll(".form-step");
   const progressText = document.getElementById("progress-text");
   const activitySlider = document.getElementById("activity-level");
@@ -40,6 +42,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   const usernameInput = document.getElementById("chat-username");
   const usernameStatus = document.getElementById("username-status");
   const saveUsernameBtn = document.getElementById("save-username-btn");
+  const accountRoleForm = document.getElementById("account-role-form");
+
+  async function acceptTrainerInvite() {
+    const code = new URLSearchParams(window.location.search).get("invite") || sessionStorage.getItem("liftmetrics_pending_trainer_invite");
+    if (!code || !currentUser?.sub) return;
+    const response = await authenticatedFetch("/api/trainer/invites/accept", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ inviteCode: code }) });
+    const data = await response.json();
+    if (!response.ok) return alert(data.error || "Could not accept trainer invite.");
+    sessionStorage.removeItem("liftmetrics_pending_trainer_invite");
+    window.history.replaceState({}, document.title, "profile.html");
+    alert("Trainer invite accepted. Your trainer can now review your progress.");
+  }
 
   async function loadInjuryRestrictions() {
     if (!currentUser?.sub) return;
@@ -430,6 +444,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       currentUser = await auth0.getUser();
 
+      await acceptTrainerInvite();
+
+      const roleResponse = await authenticatedFetch("/api/account-role");
+      if (roleResponse.ok) document.getElementById("account-role").value = (await roleResponse.json()).role;
+
       loadFromLocalStorage();
 
       const savedProfile = getSavedProfile();
@@ -448,6 +467,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   loginBtn?.addEventListener("click", async () => {
     await login();
+  });
+
+  accountRoleForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const status = document.getElementById("account-role-status");
+    const response = await authenticatedFetch("/api/account-role", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ role: document.getElementById("account-role").value }) });
+    const data = await response.json(); status.textContent = response.ok ? `Role saved as ${data.role}.` : data.error || "Could not save role.";
   });
 
   logoutBtn?.addEventListener("click", () => {
