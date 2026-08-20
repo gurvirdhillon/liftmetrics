@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from "./auth.js";
+import { authenticatedFetch, getAuthenticatedUser } from "./auth.js";
 
 function renderPlan(plan) {
   document.getElementById("plan-title").textContent = plan.title;
@@ -27,7 +27,7 @@ async function loadPlan() {
     if (cachedPlan) return renderPlan(JSON.parse(cachedPlan));
     const user = await getAuthenticatedUser();
     if (!user?.sub) throw new Error("Please log in from your profile to view your plan.");
-    const response = await fetch(`/api/plans/latest?user_id=${encodeURIComponent(user.sub)}`);
+    const response = await authenticatedFetch("/api/plans/latest");
     const data = await response.json();
     if (response.status === 404) throw new Error("You do not have a saved plan yet. Return to your profile and choose Generate a new plan.");
     if (!response.ok) throw new Error(data.error || "Could not load your plan.");

@@ -7,6 +7,9 @@ import { fileURLToPath } from "url";
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import http from "http";
+import helmet from "helmet";
+import { rateLimit } from "express-rate-limit";
+import { requireAuth, verifyAccessToken } from "./auth.js";
 import { validateWorkout } from "./workout-validation.js";
 import { generatePlan } from "./plan-generator.js";
 import { buildTrainingInsights } from "./training-insights.js";
@@ -20,14 +23,23 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "*"
+    origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) || true
   }
 });
 
-const port = 8080;
+const port = Number(process.env.PORT || 8080);
+const allowedOrigins = process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) || [];
 
-app.use(cors());
-app.use(express.json());
+if (process.env.NODE_ENV === "production" && !allowedOrigins.length) {
+  throw new Error("CORS_ORIGIN must be configured in production.");
+}
+
+app.disable("x-powered-by");
+app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true }));
+app.use(express.json({ limit: "100kb" }));
+app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: "draft-8", legacyHeaders: false }));
+const coachRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: "draft-8", legacyHeaders: false });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -37,98 +49,72 @@ const pool = new Pool({
   port: process.env.DB_PORT,
   database: process.env.DB_NAME,
   user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD || undefined
+  password: process.env.DB_PASSWORD || undefined,
+  max: Number(process.env.DB_POOL_MAX || 10),
+  idleTimeoutMillis: Number(process.env.DB_IDLE_TIMEOUT_MS || 30_000),
+  connectionTimeoutMillis: Number(process.env.DB_CONNECTION_TIMEOUT_MS || 5_000)
 });
 
-// In-memory chat storage for now
-// Later you can move this to PostgreSQL
-let messages = [];
+io.use(async (socket, next) => {
+  try {
+    const token = socket.handshake.auth?.token;
+    if (typeof token !== "string") throw new Error("Missing token");
+    const payload = await verifyAccessToken(token);
+    socket.data.userId = payload.sub;
+    next();
+  } catch { next(new Error("Unauthorized")); }
+});
 
-// Socket.IO
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
 
-  socket.on("chat message", (data) => {
-    if (typeof data.user !== "string" || !data.user.trim() || typeof data.text !== "string" || !data.text.trim()) {
+  socket.on("chat message", async (data) => {
+    if (typeof data?.text !== "string" || !data.text.trim() || data.text.trim().length > 1000) {
       return;
     }
-
-    const newMessage = {
-      id: uuid(),
-      user: data.user.trim(),
-      text: data.text.trim(),
-      time: new Date().toISOString()
-    };
-
-    messages.push(newMessage);
-
-    // optional: keep only latest 100
-    if (messages.length > 100) {
-      messages = messages.slice(-100);
+    try {
+      const username = await pool.query("SELECT username FROM user_profiles WHERE user_id = $1", [socket.data.userId]);
+      if (!username.rows[0]?.username) return;
+      const result = await pool.query(
+        "INSERT INTO messages (message_id, user_id, username, text) VALUES ($1, $2, $3, $4) RETURNING message_id AS id, username AS user, text, created_at AS time",
+        [uuid(), socket.data.userId, username.rows[0].username, data.text.trim()]
+      );
+      io.emit("chat message", result.rows[0]);
+    } catch (error) {
+      console.error("Could not save chat message", error);
     }
-
-    io.emit("chat message", newMessage);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
   });
 });
 
 // Chat routes
-app.get("/messages", (req, res) => {
-  res.json(messages);
+app.get("/healthz", (req, res) => res.status(200).json({ status: "ok" }));
+app.get("/readyz", async (req, res) => {
+  try { await pool.query("SELECT 1"); res.status(200).json({ status: "ready" }); }
+  catch { res.status(503).json({ status: "unavailable" }); }
 });
 
-app.get("/messages/:id", (req, res) => {
-  const foundMessage = messages.find((msg) => msg.id === req.params.id);
+app.use(["/api", "/messages"], requireAuth);
 
-  if (!foundMessage) {
-    return res.status(404).send("No match for id");
+app.get("/messages", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT message_id AS id, username AS user, text, created_at AS time FROM messages ORDER BY created_at DESC LIMIT 100");
+    res.json(result.rows.reverse());
+  } catch {
+    res.status(503).json({ error: "Messages are not available yet. Run migration 005 first." });
   }
-
-  res.json(foundMessage);
 });
 
-app.post("/messages", (req, res) => {
-  if (typeof req.body.user !== "string" || !req.body.user.trim()) {
-    return res.status(401).json({ error: "An authenticated display name is required" });
-  }
-
-  const newMessage = {
-    id: uuid(),
-    user: req.body.user.trim(),
-    text: req.body.text || "",
-    time: new Date().toISOString()
-  };
-
-  if (!newMessage.text.trim()) {
-    return res.status(400).json({ error: "Message text is required" });
-  }
-
-  messages.push(newMessage);
-
-  if (messages.length > 100) {
-    messages = messages.slice(-100);
-  }
-
-  io.emit("chat message", newMessage);
-  res.status(201).json(newMessage);
-});
 
 // Auth config
 app.get("/auth-config", (req, res) => {
   res.json({
     domain: process.env.AUTH0_DOMAIN,
-    clientId: process.env.AUTH0_CLIENT_ID
+    clientId: process.env.AUTH0_CLIENT_ID,
+    audience: process.env.AUTH0_AUDIENCE
   });
 });
 
 app.get("/api/usernames", async (req, res) => {
-  const userId = req.query.user_id;
-  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) {
-    return res.status(400).json({ error: "A valid user is required." });
-  }
+  const userId = req.auth.userId;
 
   try {
     const result = await pool.query("SELECT username FROM user_profiles WHERE user_id = $1", [userId.trim()]);
@@ -140,10 +126,8 @@ app.get("/api/usernames", async (req, res) => {
 });
 
 app.put("/api/usernames", async (req, res) => {
-  const { user_id: userId, username } = req.body || {};
-  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) {
-    return res.status(400).json({ error: "A valid user is required." });
-  }
+  const { username } = req.body || {};
+  const userId = req.auth.userId;
 
   const trimmedUsername = typeof username === "string" ? username.trim() : "";
   if (!/^[A-Za-z0-9_]{3,24}$/.test(trimmedUsername)) {
@@ -174,6 +158,7 @@ app.use(express.static(path.join(__dirname, "../src")));
 
 // Your existing workout route can stay here
 app.post("/api/workouts", async (req, res) => {
+  req.body = { ...req.body, user_id: req.auth.userId };
   const validationErrors = validateWorkout(req.body);
   if (validationErrors.length) {
     return res.status(400).json({ errors: validationErrors });
@@ -288,17 +273,17 @@ app.post("/api/workouts", async (req, res) => {
   } catch (error) {
     if (client) await client.query("ROLLBACK");
     console.error("Database error:", error);
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Could not save workout." });
   } finally {
     client?.release();
   }
 });
 
 app.get("/api/workouts", async (req, res) => {
-  const { user_id: userId, workout_type: workoutType, from, to } = req.query;
-  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) {
-    return res.status(400).json({ error: "A valid authenticated user ID is required." });
-  }
+  const { workout_type: workoutType, from, to } = req.query;
+  const userId = req.auth.userId;
+  const limit = Math.min(Math.max(Number.parseInt(req.query.limit, 10) || 25, 1), 100);
+  const offset = Math.max(Number.parseInt(req.query.offset, 10) || 0, 0);
 
   const values = [userId.trim()];
   const filters = ["ws.user_id = $1"];
@@ -345,15 +330,14 @@ app.get("/api/workouts", async (req, res) => {
           ) FILTER (WHERE ee.entry_id IS NOT NULL),
           '[]'::json
         ) AS exercises
-      FROM workout_sessions ws
+      FROM (SELECT * FROM workout_sessions WHERE ${filters.map((filter) => filter.replace("ws.", "")).join(" AND ")} ORDER BY session_date DESC, created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}) ws
       LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
-      WHERE ${filters.join(" AND ")}
       GROUP BY ws.session_id
       ORDER BY ws.session_date DESC, ws.created_at DESC
       `,
-      values
+      [...values, limit, offset]
     );
-    res.json({ workouts: result.rows });
+    res.json({ workouts: result.rows, pagination: { limit, offset, hasMore: result.rows.length === limit } });
   } catch (error) {
     console.error("Workout history retrieval error:", error);
     res.status(500).json({ error: "Could not load workout history." });
@@ -361,13 +345,12 @@ app.get("/api/workouts", async (req, res) => {
 });
 
 app.get("/api/insights", async (req, res) => {
-  const userId = req.query.user_id;
-  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  const userId = req.auth.userId;
   try {
     const result = await pool.query(`SELECT ws.session_id, TO_CHAR(ws.session_date, 'YYYY-MM-DD') AS session_date, ws.feeling_score,
       COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
-      FROM workout_sessions ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
-      WHERE ws.user_id = $1 GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId.trim()]);
+      FROM (SELECT * FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC, created_at DESC LIMIT 100) ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
+      GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId]);
     const injuryResult = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
     res.json(applyInjurySafety(buildTrainingInsights(result.rows), injuryResult.rows[0]).insights);
   } catch (error) {
@@ -376,14 +359,13 @@ app.get("/api/insights", async (req, res) => {
   }
 });
 
-app.post("/api/coach", async (req, res) => {
-  const userId = req.body?.user_id;
-  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+app.post("/api/coach", coachRateLimit, async (req, res) => {
+  const userId = req.auth.userId;
   try {
     const result = await pool.query(`SELECT ws.session_id, TO_CHAR(ws.session_date, 'YYYY-MM-DD') AS session_date, ws.feeling_score,
       COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
-      FROM workout_sessions ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
-      WHERE ws.user_id = $1 GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId.trim()]);
+      FROM (SELECT * FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC, created_at DESC LIMIT 100) ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
+      GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId]);
     const injuryResult = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
     const { insights, safety } = applyInjurySafety(buildTrainingInsights(result.rows), injuryResult.rows[0]);
     const coach = await createCoachResponse(insights, safety);
@@ -396,8 +378,7 @@ app.post("/api/coach", async (req, res) => {
 });
 
 app.get("/api/injury-restrictions", async (req, res) => {
-  const userId = req.query.user_id;
-  if (typeof userId !== "string" || !userId.trim() || userId.length > 100) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  const userId = req.auth.userId;
   try {
     const result = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
     res.json({ injury: result.rows[0] || null });
@@ -405,8 +386,9 @@ app.get("/api/injury-restrictions", async (req, res) => {
 });
 
 app.put("/api/injury-restrictions", async (req, res) => {
-  const { user_id: userId, affected_area: area, status, pain_score: painScore, restricted_movements: restrictedMovements, clinician_guidance: guidance } = req.body || {};
-  if (typeof userId !== "string" || !userId.trim() || !["Shoulder", "Back", "Knee", "Hip", "Wrist", "Other"].includes(area) || !["New pain", "Recovering", "Cleared by clinician"].includes(status) || !Number.isInteger(painScore) || painScore < 0 || painScore > 10 || typeof restrictedMovements !== "string" || restrictedMovements.length > 500 || (guidance != null && (typeof guidance !== "string" || guidance.length > 1000))) return res.status(400).json({ error: "Enter a valid injury area, status, pain score, and movements to avoid." });
+  const { affected_area: area, status, pain_score: painScore, restricted_movements: restrictedMovements, clinician_guidance: guidance } = req.body || {};
+  const userId = req.auth.userId;
+  if (!["Shoulder", "Back", "Knee", "Hip", "Wrist", "Other"].includes(area) || !["New pain", "Recovering", "Cleared by clinician"].includes(status) || !Number.isInteger(painScore) || painScore < 0 || painScore > 10 || typeof restrictedMovements !== "string" || restrictedMovements.length > 500 || (guidance != null && (typeof guidance !== "string" || guidance.length > 1000))) return res.status(400).json({ error: "Enter a valid injury area, status, pain score, and movements to avoid." });
   try {
     await pool.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [userId.trim()]);
     await pool.query(`INSERT INTO user_injury_restrictions (user_id, affected_area, status, pain_score, restricted_movements, clinician_guidance) VALUES ($1,$2,$3,$4,$5,$6) ON CONFLICT (user_id) DO UPDATE SET affected_area = EXCLUDED.affected_area, status = EXCLUDED.status, pain_score = EXCLUDED.pain_score, restricted_movements = EXCLUDED.restricted_movements, clinician_guidance = EXCLUDED.clinician_guidance, updated_at = CURRENT_TIMESTAMP`, [userId.trim(), area, status, painScore, restrictedMovements.trim(), guidance?.trim() || null]);
@@ -415,8 +397,7 @@ app.put("/api/injury-restrictions", async (req, res) => {
 });
 
 app.delete("/api/injury-restrictions", async (req, res) => {
-  const userId = req.query.user_id;
-  if (typeof userId !== "string" || !userId.trim()) return res.status(400).json({ error: "A valid authenticated user ID is required." });
+  const userId = req.auth.userId;
   try {
     await pool.query("DELETE FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
     res.status(204).end();
@@ -425,8 +406,9 @@ app.delete("/api/injury-restrictions", async (req, res) => {
 
 app.patch("/api/workouts/:sessionId", async (req, res) => {
   const sessionId = Number(req.params.sessionId);
-  const { user_id: userId, session_date: sessionDate, duration_value: durationValue, duration_unit: durationUnit, workout_type: workoutType, feeling_score: feelingScore } = req.body;
-  if (!Number.isInteger(sessionId) || sessionId <= 0 || typeof userId !== "string" || !userId.trim() || !/^\d{4}-\d{2}-\d{2}$/.test(sessionDate || "") || !Number.isFinite(durationValue) || durationValue <= 0 || typeof durationUnit !== "string" || !durationUnit.trim() || typeof workoutType !== "string" || !workoutType.trim() || !Number.isFinite(feelingScore) || feelingScore < 0 || feelingScore > 10) {
+  const { session_date: sessionDate, duration_value: durationValue, duration_unit: durationUnit, workout_type: workoutType, feeling_score: feelingScore } = req.body;
+  const userId = req.auth.userId;
+  if (!Number.isInteger(sessionId) || sessionId <= 0 || !/^\d{4}-\d{2}-\d{2}$/.test(sessionDate || "") || !Number.isFinite(durationValue) || durationValue <= 0 || typeof durationUnit !== "string" || !durationUnit.trim() || typeof workoutType !== "string" || !workoutType.trim() || !Number.isFinite(feelingScore) || feelingScore < 0 || feelingScore > 10) {
     return res.status(400).json({ error: "Enter a valid date, duration, workout type, and feeling score." });
   }
 
@@ -445,8 +427,8 @@ app.patch("/api/workouts/:sessionId", async (req, res) => {
 
 app.delete("/api/workouts/:sessionId", async (req, res) => {
   const sessionId = Number(req.params.sessionId);
-  const userId = req.query.user_id;
-  if (!Number.isInteger(sessionId) || sessionId <= 0 || typeof userId !== "string" || !userId.trim()) {
+  const userId = req.auth.userId;
+  if (!Number.isInteger(sessionId) || sessionId <= 0) {
     return res.status(400).json({ error: "A valid workout and user ID are required." });
   }
 
@@ -473,9 +455,10 @@ app.delete("/api/workouts/:sessionId", async (req, res) => {
 });
 
 app.post("/api/plans/generate", async (req, res) => {
-  const { user_id, profile } = req.body;
+  const { profile } = req.body;
+  const user_id = req.auth.userId;
   const validProfile = profile && ["strength", "weight-loss", "stamina", "wellbeing"].includes(profile.goal) && Array.isArray(profile.days) && profile.days.length && ["30", "45", "60"].includes(profile.timespent) && ["gym", "home", "both"].includes(profile.equipment) && ["beginner", "intermediate", "advanced"].includes(profile.fitness_level);
-  if (typeof user_id !== "string" || !user_id.trim() || user_id.length > 100 || !validProfile) {
+  if (!validProfile) {
     return res.status(400).json({ error: "Complete your profile with a valid authenticated user before generating a plan." });
   }
 
@@ -503,8 +486,7 @@ app.post("/api/plans/generate", async (req, res) => {
 });
 
 app.get("/api/plans/latest", async (req, res) => {
-  const userId = req.query.user_id;
-  if (typeof userId !== "string" || !userId.trim()) return res.status(400).json({ error: "A user ID is required." });
+  const userId = req.auth.userId;
   try {
     const result = await pool.query("SELECT plan_id, created_at, plan FROM generated_plans WHERE user_id = $1 ORDER BY created_at DESC LIMIT 1", [userId.trim()]);
     if (!result.rowCount) return res.status(404).json({ error: "No saved plan found." });
@@ -522,3 +504,15 @@ app.get("/api/plans/latest", async (req, res) => {
 server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+async function shutdown(signal) {
+  console.log(`${signal} received; shutting down.`);
+  server.close(async () => {
+    await pool.end();
+    process.exit(0);
+  });
+  setTimeout(() => process.exit(1), 10_000).unref();
+}
+
+process.once("SIGTERM", () => shutdown("SIGTERM"));
+process.once("SIGINT", () => shutdown("SIGINT"));

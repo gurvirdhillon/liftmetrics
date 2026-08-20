@@ -16,6 +16,7 @@ export async function getAuthClient() {
       const client = await createClient({
         domain: config.domain,
         client_id: config.clientId,
+        audience: config.audience,
         redirect_uri: `${window.location.origin}/profile.html`,
         cacheLocation: "localstorage"
       });
@@ -41,6 +42,14 @@ export async function handleAuthRedirect() {
 export async function getAuthenticatedUser() {
   const client = await getAuthClient();
   return (await client.isAuthenticated()) ? client.getUser() : null;
+}
+
+export async function authenticatedFetch(url, options = {}) {
+  const client = await getAuthClient();
+  const token = await client.getTokenSilently();
+  const headers = new Headers(options.headers || {});
+  headers.set("Authorization", `Bearer ${token}`);
+  return fetch(url, { ...options, headers });
 }
 
 export async function login() {

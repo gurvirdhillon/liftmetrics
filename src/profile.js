@@ -1,4 +1,4 @@
-import { getAuthClient, handleAuthRedirect, login, logout } from "./auth.js";
+import { authenticatedFetch, getAuthClient, handleAuthRedirect, login, logout } from "./auth.js";
 
 let auth0 = null;
 let currentUser = null;
@@ -44,7 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadInjuryRestrictions() {
     if (!currentUser?.sub) return;
     try {
-      const response = await fetch(`/api/injury-restrictions?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const response = await authenticatedFetch("/api/injury-restrictions");
       const data = await response.json();
       if (!response.ok || !data.injury) return;
       document.getElementById("injury-area").value = data.injury.affected_area;
@@ -268,7 +268,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadUsername() {
     if (!currentUser?.sub || !usernameInput) return;
     try {
-      const response = await fetch(`/api/usernames?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const response = await authenticatedFetch("/api/usernames");
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not load username.");
       usernameInput.value = data.username || "";
@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!currentUser?.sub) return;
     status.textContent = "Loading recent workouts…";
     try {
-      const response = await fetch(`/api/workouts?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const response = await authenticatedFetch("/api/workouts?limit=3");
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not load recent workouts.");
       renderWorkoutHistory(data.workouts || []);
@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadInsights() {
     if (!currentUser?.sub) return;
     try {
-      const response = await fetch(`/api/insights?user_id=${encodeURIComponent(currentUser.sub)}`);
+      const response = await authenticatedFetch("/api/insights");
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not load training guidance.");
       renderInsights(data);
@@ -452,10 +452,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-      const response = await fetch("/api/usernames", {
+      const response = await authenticatedFetch("/api/usernames", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: currentUser?.sub, username })
+        body: JSON.stringify({ username })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not save username.");
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     askCoachBtn.disabled = true;
     askCoachBtn.textContent = "Thinking…";
     try {
-      const response = await fetch("/api/coach", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: currentUser.sub }) });
+      const response = await authenticatedFetch("/api/coach", { method: "POST", headers: { "Content-Type": "application/json" }, body: "{}" });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Coach is unavailable.");
       const coach = data.coach;
@@ -491,7 +491,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     event.preventDefault();
     const status = document.getElementById("injury-status-message");
     try {
-      const response = await fetch("/api/injury-restrictions", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ user_id: currentUser?.sub, affected_area: document.getElementById("injury-area").value, status: document.getElementById("injury-status").value, pain_score: Number(document.getElementById("injury-pain").value), restricted_movements: document.getElementById("injury-movements").value, clinician_guidance: document.getElementById("injury-guidance").value }) });
+      const response = await authenticatedFetch("/api/injury-restrictions", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ affected_area: document.getElementById("injury-area").value, status: document.getElementById("injury-status").value, pain_score: Number(document.getElementById("injury-pain").value), restricted_movements: document.getElementById("injury-movements").value, clinician_guidance: document.getElementById("injury-guidance").value }) });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not save restrictions.");
       status.textContent = "Restrictions saved. Refreshing your guidance…";
@@ -503,7 +503,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (!currentUser?.sub || !confirm("Clear your saved injury restrictions?")) return;
     const status = document.getElementById("injury-status-message");
     try {
-      const response = await fetch(`/api/injury-restrictions?user_id=${encodeURIComponent(currentUser.sub)}`, { method: "DELETE" });
+      const response = await authenticatedFetch("/api/injury-restrictions", { method: "DELETE" });
       if (!response.ok && response.status !== 204) throw new Error("Could not clear restrictions.");
       injuryForm.reset();
       document.getElementById("injury-pain").value = 0;
@@ -527,10 +527,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     generatePlanBtn.disabled = true;
     generatePlanBtn.textContent = "Generating...";
     try {
-      const response = await fetch("/api/plans/generate", {
+      const response = await authenticatedFetch("/api/plans/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ user_id: currentUser.sub, profile })
+        body: JSON.stringify({ profile })
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not generate your plan.");

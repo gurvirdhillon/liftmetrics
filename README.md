@@ -83,7 +83,15 @@ If you already created the PostgreSQL schema before updating this project, apply
 psql "$DATABASE_URL" -f SQL/migrations/001_add_cardio_workout_fields.sql
 psql "$DATABASE_URL" -f SQL/migrations/002_create_generated_plans.sql
 psql "$DATABASE_URL" -f SQL/migrations/003_create_injury_restrictions.sql
+psql "$DATABASE_URL" -f SQL/migrations/004_add_unique_usernames.sql
+psql "$DATABASE_URL" -f SQL/migrations/005_scale_and_messages.sql
 ```
+
+## Production configuration
+
+The API requires Auth0 access tokens. Create an Auth0 API for LiftMetrics and configure its identifier as `AUTH0_AUDIENCE`; set `AUTH0_DOMAIN` and, optionally, `AUTH0_ISSUER_BASE_URL`. Configure `CORS_ORIGIN` as a comma-separated list of exact public frontend origins (required when `NODE_ENV=production`).
+
+Set `DB_POOL_MAX` to a conservative per-API-instance value (default `10`) and use your managed PostgreSQL provider's pooler when running multiple API instances. The API exposes `/healthz` for liveness and `/readyz` for database readiness.
 
 
 ## Usage

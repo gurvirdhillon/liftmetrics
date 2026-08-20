@@ -1,4 +1,4 @@
-import { getAuthenticatedUser } from "./auth.js";
+import { authenticatedFetch, getAuthenticatedUser } from "./auth.js";
 
 const list = document.getElementById("history-list");
 const status = document.getElementById("history-status");
@@ -85,11 +85,10 @@ function showEditForm(card, workout) {
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     const data = new FormData(form);
-    const response = await fetch(`/api/workouts/${workout.session_id}`, {
+    const response = await authenticatedFetch(`/api/workouts/${workout.session_id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        user_id: currentUserId,
         session_date: data.get("session_date"),
         duration_value: Number(data.get("duration_value")),
         duration_unit: data.get("duration_unit"),
@@ -106,7 +105,7 @@ function showEditForm(card, workout) {
 
 async function deleteWorkout(sessionId) {
   if (!window.confirm("Delete this workout? This cannot be undone.")) return;
-  const response = await fetch(`/api/workouts/${sessionId}?user_id=${encodeURIComponent(currentUserId)}`, { method: "DELETE" });
+  const response = await authenticatedFetch(`/api/workouts/${sessionId}`, { method: "DELETE" });
   if (!response.ok) {
     const result = await response.json();
     return alert(result.error || "Could not delete workout.");
@@ -118,8 +117,8 @@ async function loadHistory() {
   try {
     status.textContent = "Loading workouts…";
     const query = new URLSearchParams(new FormData(filters));
-    query.set("user_id", currentUserId);
-    const response = await fetch(`/api/workouts?${query}`);
+    query.set("limit", "50");
+    const response = await authenticatedFetch(`/api/workouts?${query}`);
     const result = await response.json();
     if (!response.ok) throw new Error(result.error || "Could not load workout history.");
     list.replaceChildren();

@@ -1,3 +1,5 @@
+import { authenticatedFetch, getAuthenticatedUser } from "./auth.js";
+
 function limitDate() {
   const today = new Date().toISOString().split("T")[0];
   document.querySelector("#DateInput").setAttribute("max", today);
@@ -134,8 +136,8 @@ function addExercise(exercise) { document.querySelector("#exercise-entries").app
 document.querySelector("#add-exercise")?.addEventListener("click", () => addExercise());
 document.querySelector("#repeat-workout")?.addEventListener("click", async () => {
   try {
-    const userId = await getAuthenticatedUserId();
-    const response = await fetch(`/api/workouts?user_id=${encodeURIComponent(userId)}`);
+    await getAuthenticatedUserId();
+    const response = await authenticatedFetch("/api/workouts?limit=1");
     const data = await response.json();
     const previous = data.workouts?.[0];
     if (!response.ok || !previous?.exercises?.length) throw new Error("No prior workout is available yet.");
@@ -154,16 +156,14 @@ workoutTypeSelect.addEventListener("change", () => {
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
 
-  let userId;
   try {
-    userId = await getAuthenticatedUserId();
+    await getAuthenticatedUserId();
   } catch (error) {
     alert(error.message);
     return;
   }
 
   const payload = {
-    user_id: userId,
     session_date: document.getElementById("DateInput").value,
     duration_value: optionalNumber('input[name="session_duration_hr"]'),
     duration_unit: document.querySelector('select[name="duration_metric"]').value,
@@ -186,7 +186,7 @@ form.addEventListener("submit", async (e) => {
   };
 
   try {
-    const response = await fetch("http://localhost:8080/api/workouts", {
+    const response = await authenticatedFetch("/api/workouts", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -222,4 +222,3 @@ function allFunctions() {
 }
 
 window.addEventListener("load", allFunctions);
-import { getAuthenticatedUser } from "./auth.js";

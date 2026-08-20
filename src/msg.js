@@ -1,27 +1,26 @@
+import { authenticatedFetch, getAuthClient } from "./auth.js";
+
 const grabContent = document.querySelector("#MsgContent");
 const displayContent = document.querySelector(".messages_box");
 const msgHolder = document.querySelector("#msgHolder");
 
-const socket = io();
+let socket;
 
 msgHolder.addEventListener("submit", writeMessage);
 window.addEventListener("load", initialiseChat);
 
-socket.on("connect", () => {
-  console.log("Connected to server:", socket.id);
-});
-
-socket.on("chat message", (message) => {
-  addMessageToUI(message.user, message.text, message.time);
-});
-
 async function initialiseChat() {
+  const client = await getAuthClient();
+  const token = await client.getTokenSilently();
+  socket = io({ auth: { token } });
+  socket.on("chat message", (message) => addMessageToUI(message.user, message.text, message.time));
+  socket.on("connect_error", () => displayEmptyState());
   await loadMessagesFromServer();
 }
 
 async function loadMessagesFromServer() {
   try {
-    const res = await fetch("/messages");
+    const res = await authenticatedFetch("/messages");
     if (!res.ok) throw new Error("Failed to load messages");
 
     const messages = await res.json();
@@ -81,10 +80,7 @@ function formatTime(timeValue) {
 
 async function getCurrentUsername() {
   try {
-    const user = await getAuthenticatedUser();
-    if (!user?.sub) return null;
-
-    const response = await fetch(`/api/usernames?user_id=${encodeURIComponent(user.sub)}`);
+    const response = await authenticatedFetch("/api/usernames");
     const data = await response.json();
     return response.ok && /^[A-Za-z0-9_]{3,24}$/.test(data.username || "") ? data.username : null;
   } catch (error) {
@@ -105,11 +101,7 @@ async function writeMessage(event) {
     return;
   }
 
-  socket.emit("chat message", {
-    user: username,
-    text: message
-  });
+  socket?.emit("chat message", { text: message });
 
   grabContent.value = "";
 }
-import { getAuthenticatedUser } from "./auth.js";
