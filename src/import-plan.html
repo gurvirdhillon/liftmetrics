@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Import a Workout Plan | LiftMetrics</title>
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="profile.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js"></script>
+  <script src="import-plan.js" type="module"></script>
+</head>
+<body>
+  <main class="plan-page import-page">
+    <a class="back-link" href="profile.html">← Back to profile</a>
+    <p class="plan-eyebrow">IMPORT YOUR PROGRAMME</p>
+    <h1>Use the workout plan you already have</h1>
+    <p class="plan-note">Upload a CSV or paste it below. Review the result before saving it to your profile.</p>
+    <form id="import-plan-form" class="profile-card import-form">
+      <label for="import-title">Plan name<input id="import-title" maxlength="120" placeholder="e.g. Coach's 12-week strength plan" required></label>
+      <label for="plan-file">CSV file <small>Optional. Columns: day, session, exercise, prescription, rest</small><input id="plan-file" type="file" accept=".csv,text/csv"></label>
+      <label for="plan-text">Plan details <small>One exercise per line: Day | Session | Exercise | Sets/reps | Rest</small><textarea id="plan-text" rows="10" maxlength="15000" placeholder="Mon | Upper body | Bench press | 3 x 8 | 90 sec&#10;Mon | Upper body | Row | 3 x 10 | 60 sec" required></textarea></label>
+      <p id="import-status" role="status" aria-live="polite"></p>
+      <div class="profile-actions"><button type="button" id="preview-plan-btn">Preview plan</button><button type="submit" id="save-plan-btn" class="quiet-button" disabled>Save imported plan</button></div>
+    </form>
+    <section id="import-preview" class="plan-sessions" aria-live="polite"></section>
+  </main>
+</body>
+</html>

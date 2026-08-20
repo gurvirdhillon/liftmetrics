@@ -12,6 +12,7 @@ import { rateLimit } from "express-rate-limit";
 import { requireAuth, verifyAccessToken } from "./auth.js";
 import { validateWorkout } from "./workout-validation.js";
 import { generatePlan } from "./plan-generator.js";
+import { findRestrictedExercises, validateImportedPlan } from "./plan-import.js";
 import { buildTrainingInsights } from "./training-insights.js";
 import { createCoachResponse } from "./ai-coach.js";
 import { applyInjurySafety } from "./injury-safety.js";
@@ -29,13 +30,27 @@ const io = new Server(server, {
 
 const port = Number(process.env.PORT || 8080);
 const allowedOrigins = process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) || [];
+const auth0Origin = `https://${process.env.AUTH0_DOMAIN}`;
 
 if (process.env.NODE_ENV === "production" && !allowedOrigins.length) {
   throw new Error("CORS_ORIGIN must be configured in production.");
 }
 
 app.disable("x-powered-by");
-app.use(helmet({ crossOriginResourcePolicy: false }));
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "https://cdn.auth0.com"],
+      connectSrc: ["'self'", auth0Origin],
+      styleSrc: ["'self'", "'unsafe-inline'", "https:"],
+      imgSrc: ["'self'", "data:"],
+      fontSrc: ["'self'", "https:"],
+      upgradeInsecureRequests: null
+    }
+  }
+}));
 app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true }));
 app.use(express.json({ limit: "100kb" }));
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: "draft-8", legacyHeaders: false }));
@@ -480,6 +495,40 @@ app.post("/api/plans/generate", async (req, res) => {
     if (client) await client.query("ROLLBACK");
     console.error("Plan generation error:", error);
     res.status(500).json({ error: "Could not generate your plan." });
+  } finally {
+    client?.release();
+  }
+});
+
+app.post("/api/plans/import", async (req, res) => {
+  const userId = req.auth.userId;
+  let plan;
+  try {
+    plan = validateImportedPlan(req.body?.plan);
+  } catch (error) {
+    return res.status(400).json({ error: error.message });
+  }
+
+  let client;
+  try {
+    client = await pool.connect();
+    await client.query("BEGIN");
+    await client.query("INSERT INTO user_profiles (user_id) VALUES ($1) ON CONFLICT (user_id) DO NOTHING", [userId.trim()]);
+    const restrictions = await client.query("SELECT restricted_movements FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
+    const restrictedExercises = findRestrictedExercises(plan, restrictions.rows[0]?.restricted_movements);
+    if (restrictedExercises.length) {
+      plan.safety = { restrictedExercises, note: "Some imported exercises match movements in your saved injury restrictions. Check with a qualified professional before performing them." };
+    }
+    const result = await client.query(
+      "INSERT INTO generated_plans (user_id, goal, profile, plan) VALUES ($1, $2, $3, $4) RETURNING plan_id, created_at",
+      [userId.trim(), "imported", { source: "uploaded" }, plan]
+    );
+    await client.query("COMMIT");
+    res.status(201).json({ ...result.rows[0], plan });
+  } catch (error) {
+    if (client) await client.query("ROLLBACK");
+    console.error("Plan import error:", error);
+    res.status(500).json({ error: "Could not save your imported plan." });
   } finally {
     client?.release();
   }

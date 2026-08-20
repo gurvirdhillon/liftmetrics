@@ -2,8 +2,10 @@ import { authenticatedFetch, getAuthenticatedUser } from "./auth.js";
 
 function renderPlan(plan) {
   document.getElementById("plan-title").textContent = plan.title;
-  document.getElementById("plan-focus").textContent = `${plan.focus} ${plan.durationMinutes} minutes per session.`;
+  document.getElementById("plan-focus").textContent = plan.durationMinutes ? `${plan.focus} ${plan.durationMinutes} minutes per session.` : plan.focus;
   document.getElementById("plan-adaptation").textContent = plan.adaptation?.note || "Progress gradually and adjust any movement that causes pain.";
+  const safety = plan.safety?.restrictedExercises?.length ? ` Safety flag: ${plan.safety.restrictedExercises.join(", ")}. ${plan.safety.note}` : "";
+  document.getElementById("plan-adaptation").textContent += safety;
   const sessions = document.getElementById("plan-sessions");
   sessions.replaceChildren(...plan.sessions.map((session) => {
     const card = document.createElement("section");

@@ -118,6 +118,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
   }
 
+  async function hasCurrentPlan() {
+    if (sessionStorage.getItem("liftmetrics_current_plan")) return true;
+    try {
+      const response = await authenticatedFetch("/api/plans/latest");
+      return response.ok;
+    } catch (error) {
+      console.warn("Could not check for an existing plan:", error);
+      return false;
+    }
+  }
+
   function loadFromLocalStorage() {
     const data = getSavedProfile();
     if (!data) return;
@@ -522,6 +533,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const profile = getSavedProfile();
     if (!profile?.completed || !currentUser?.sub) {
       alert("Please complete your profile before generating a plan.");
+      return;
+    }
+    if (await hasCurrentPlan() && !confirm("Generate a new plan?\n\nThis will replace the plan shown as your current plan. Your existing plan will no longer be available from the current-plan screen, and this app does not yet provide a way to restore it.")) {
       return;
     }
     generatePlanBtn.disabled = true;
