@@ -442,7 +442,21 @@ app.get("/api/workouts", async (req, res) => {
         ) AS exercises
       FROM (SELECT * FROM workout_sessions WHERE ${filters.map((filter) => filter.replace("ws.", "")).join(" AND ")} ORDER BY session_date DESC, created_at DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}) ws
       LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
-      GROUP BY ws.session_id
+      GROUP BY
+        ws.session_id,
+        ws.session_date,
+        ws.duration_value,
+        ws.duration_unit,
+        ws.workout_type,
+        ws.feeling_score,
+        ws.calories_burned,
+        ws.distance_value,
+        ws.distance_unit,
+        ws.avg_pace,
+        ws.avg_bpm,
+        ws.max_bpm,
+        ws.water_intake_l,
+        ws.created_at
       ORDER BY ws.session_date DESC, ws.created_at DESC
       `,
       [...values, limit, offset]
@@ -460,7 +474,8 @@ app.get("/api/insights", async (req, res) => {
     const result = await pool.query(`SELECT ws.session_id, TO_CHAR(ws.session_date, 'YYYY-MM-DD') AS session_date, ws.feeling_score,
       COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
       FROM (SELECT * FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC, created_at DESC LIMIT 100) ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
-      GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId]);
+      GROUP BY ws.session_id, ws.session_date, ws.feeling_score, ws.created_at
+      ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId]);
     const injuryResult = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
     res.json(applyInjurySafety(buildTrainingInsights(result.rows), injuryResult.rows[0]).insights);
   } catch (error) {
@@ -475,7 +490,8 @@ app.post("/api/coach", coachRateLimit, async (req, res) => {
     const result = await pool.query(`SELECT ws.session_id, TO_CHAR(ws.session_date, 'YYYY-MM-DD') AS session_date, ws.feeling_score,
       COALESCE(json_agg(json_build_object('exercise_name', ee.exercise_name, 'sets', ee.sets, 'reps', ee.reps, 'weight_value', ee.weight_value, 'weight_unit', ee.weight_unit)) FILTER (WHERE ee.entry_id IS NOT NULL), '[]'::json) AS exercises
       FROM (SELECT * FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC, created_at DESC LIMIT 100) ws LEFT JOIN exercise_entries ee ON ee.session_id = ws.session_id
-      GROUP BY ws.session_id ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId]);
+      GROUP BY ws.session_id, ws.session_date, ws.feeling_score, ws.created_at
+      ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId]);
     const injuryResult = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
     const { insights, safety } = applyInjurySafety(buildTrainingInsights(result.rows), injuryResult.rows[0]);
     const coach = await createCoachResponse(insights, safety);
