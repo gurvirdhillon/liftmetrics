@@ -43,6 +43,19 @@ document.addEventListener("DOMContentLoaded", async () => {
   const usernameStatus = document.getElementById("username-status");
   const saveUsernameBtn = document.getElementById("save-username-btn");
   const accountRoleForm = document.getElementById("account-role-form");
+  const settingsToggle = document.getElementById("settings-toggle");
+  const settingsDrawer = document.getElementById("settings-drawer");
+  const settingsOverlay = document.getElementById("settings-overlay");
+  const settingsClose = document.getElementById("settings-close");
+
+  function setSettingsDrawer(isOpen) {
+    settingsDrawer.hidden = !isOpen;
+    settingsOverlay.hidden = !isOpen;
+    document.body.classList.toggle("settings-open", isOpen);
+    settingsToggle.setAttribute("aria-expanded", String(isOpen));
+    if (isOpen) settingsClose.focus();
+    else settingsToggle.focus();
+  }
 
   async function acceptTrainerInvite() {
     const code = new URLSearchParams(window.location.search).get("invite") || sessionStorage.getItem("liftmetrics_pending_trainer_invite");
@@ -82,7 +95,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   function resetFormSelections() {
-    document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach((input) => {
+    document.querySelectorAll('#onboarding-form input[type="radio"], #onboarding-form input[type="checkbox"]').forEach((input) => {
       input.checked = false;
     });
 
@@ -404,7 +417,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   function showFormState() {
     loadingState.style.display = "none";
     loggedOutView.style.display = "none";
-    loggedInActions.style.display = "block";
+    loggedInActions.style.display = "flex";
     form.style.display = "block";
     summarySection.style.display = "none";
 
@@ -421,7 +434,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     loadingState.style.display = "none";
     loggedOutView.style.display = "none";
-    loggedInActions.style.display = "block";
+    loggedInActions.style.display = "flex";
     form.style.display = "none";
     summarySection.style.display = "block";
 
@@ -447,7 +460,14 @@ document.addEventListener("DOMContentLoaded", async () => {
       await acceptTrainerInvite();
 
       const roleResponse = await authenticatedFetch("/api/account-role");
-      if (roleResponse.ok) document.getElementById("account-role").value = (await roleResponse.json()).role;
+      if (roleResponse.ok) {
+        const { role } = await roleResponse.json();
+        document.getElementById("account-role").checked = role === "trainer";
+        if (role === "trainer" && !new URLSearchParams(window.location.search).has("clientView")) {
+          window.location.replace("trainer.html");
+          return;
+        }
+      }
 
       loadFromLocalStorage();
 
@@ -469,11 +489,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     await login();
   });
 
-  accountRoleForm?.addEventListener("submit", async (event) => {
-    event.preventDefault();
+  settingsToggle?.addEventListener("click", () => setSettingsDrawer(true));
+  settingsClose?.addEventListener("click", () => setSettingsDrawer(false));
+  settingsOverlay?.addEventListener("click", () => setSettingsDrawer(false));
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !settingsDrawer.hidden) setSettingsDrawer(false);
+  });
+
+  accountRoleForm?.addEventListener("change", async () => {
     const status = document.getElementById("account-role-status");
-    const response = await authenticatedFetch("/api/account-role", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ role: document.getElementById("account-role").value }) });
-    const data = await response.json(); status.textContent = response.ok ? `Role saved as ${data.role}.` : data.error || "Could not save role.";
+    const selectedRole = document.getElementById("account-role").checked ? "trainer" : "client";
+    const response = await authenticatedFetch("/api/account-role", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ role: selectedRole }) });
+    const data = await response.json();
+    status.textContent = response.ok ? `Role saved as ${data.role}.` : data.error || "Could not save role.";
+    if (response.ok && data.role === "trainer") window.location.assign("trainer.html");
   });
 
   logoutBtn?.addEventListener("click", () => {
@@ -605,7 +634,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
-  document.querySelectorAll('input[type="radio"], input[type="checkbox"]').forEach((input) => {
+  document.querySelectorAll('#onboarding-form input[type="radio"], #onboarding-form input[type="checkbox"]').forEach((input) => {
     input.addEventListener("change", () => {
       const activeStep = document.querySelector(".form-step.active")?.id || "step-1";
       saveToLocalStorage(activeStep);

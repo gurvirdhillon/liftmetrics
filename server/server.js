@@ -201,7 +201,7 @@ app.get("/api/trainer/clients/:clientId", async (req, res) => {
     await requireTrainer(trainerId); await requireClientRelationship(trainerId, clientId);
     const [client, workouts, notes] = await Promise.all([
       pool.query("SELECT up.username, COUNT(ws.session_id)::int AS workout_count, MAX(ws.session_date) AS last_workout_date FROM user_profiles up LEFT JOIN workout_sessions ws ON ws.user_id = up.user_id WHERE up.user_id = $1 GROUP BY up.username", [clientId]),
-      pool.query("SELECT session_date, workout_type, duration_value, duration_unit FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC LIMIT 10", [clientId]),
+      pool.query("SELECT session_date, workout_type, duration_value, duration_unit, feeling_score FROM workout_sessions WHERE user_id = $1 ORDER BY session_date DESC LIMIT 10", [clientId]),
       pool.query("SELECT body, created_at FROM trainer_notes WHERE trainer_id = $1 AND client_id = $2 ORDER BY created_at DESC LIMIT 20", [trainerId.trim(), clientId])
     ]);
     res.json({ client: { client_id: clientId, ...client.rows[0] }, workouts: workouts.rows, notes: notes.rows });

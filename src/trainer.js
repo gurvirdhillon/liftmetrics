@@ -22,6 +22,15 @@ function workoutSummary(client) {
   return `${client.workout_count} workouts logged · Last workout: ${client.last_workout_date || "not yet logged"}`;
 }
 
+function formatDate(value) {
+  return value ? new Date(`${value}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" }) : "No sessions yet";
+}
+
+function recentWorkouts(client) {
+  const lastWorkout = client.last_workout_date ? Math.floor((Date.now() - new Date(`${client.last_workout_date}T00:00:00`)) / 86400000) : null;
+  return lastWorkout === null ? "No workout logged yet" : lastWorkout === 0 ? "Trained today" : lastWorkout === 1 ? "Trained yesterday" : `Last trained ${lastWorkout} days ago`;
+}
+
 async function loadClients() {
   const response = await authenticatedFetch("/api/trainer/clients");
   const data = await response.json();
@@ -29,7 +38,10 @@ async function loadClients() {
   document.getElementById("trainer-tools").hidden = false;
   list.replaceChildren(...data.clients.map((client) => {
     const card = document.createElement("button"); card.type = "button"; card.className = "trainer-client-card";
-    card.innerHTML = `<strong>${client.username || "Client"}</strong><span>${workoutSummary(client)}</span>`;
+    const name = document.createElement("strong"); name.textContent = client.username || "Client";
+    const detail = document.createElement("span"); detail.textContent = workoutSummary(client);
+    const activity = document.createElement("small"); activity.textContent = recentWorkouts(client);
+    card.append(name, detail, activity);
     card.addEventListener("click", () => loadClient(client.client_id)); return card;
   }));
   status.textContent = data.clients.length ? `${data.clients.length} connected client${data.clients.length === 1 ? "" : "s"}.` : "No clients yet. Create an invite link to get started.";
@@ -41,7 +53,23 @@ async function loadClient(clientId) {
   selectedClientId = clientId; detail.hidden = false; list.hidden = true; document.getElementById("trainer-tools").hidden = true;
   document.getElementById("client-name").textContent = data.client.username || "Client";
   document.getElementById("client-summary").textContent = workoutSummary(data.client);
-  document.getElementById("client-workouts").textContent = data.workouts.length ? data.workouts.map((workout) => `${workout.session_date}: ${workout.workout_type} (${workout.duration_value || "—"} ${workout.duration_unit || ""})`).join("\n") : "No workouts logged yet.";
+  const workouts = data.workouts || [];
+  const weeklyCount = workouts.filter((workout) => (Date.now() - new Date(`${workout.session_date}T00:00:00`)) <= 7 * 86400000).length;
+  const averageEffort = workouts.length ? Math.round(workouts.reduce((total, workout) => total + Number(workout.feeling_score || 0), 0) / workouts.length) : null;
+  document.getElementById("client-metrics").replaceChildren(...[
+    ["Last session", formatDate(workouts[0]?.session_date)],
+    ["Last 7 days", `${weeklyCount} session${weeklyCount === 1 ? "" : "s"}`],
+    ["Average effort", averageEffort === null ? "—" : `${averageEffort}/10`]
+  ].map(([label, value]) => { const metric = document.createElement("div"); metric.innerHTML = `<span>${label}</span><strong>${value}</strong>`; return metric; }));
+  const chart = document.getElementById("client-progress-chart");
+  chart.replaceChildren(...[...workouts].reverse().map((workout) => {
+    const bar = document.createElement("div"); bar.className = "client-progress-bar";
+    const duration = Number(workout.duration_value) || 0;
+    bar.style.setProperty("--bar-height", `${Math.max(14, Math.min(100, duration))}%`);
+    bar.title = `${formatDate(workout.session_date)}: ${duration || "—"} ${workout.duration_unit || ""}`;
+    bar.innerHTML = `<span>${formatDate(workout.session_date)}</span>`; return bar;
+  }));
+  document.getElementById("client-workouts").textContent = workouts.length ? workouts.map((workout) => `${formatDate(workout.session_date)} · ${workout.workout_type} · ${workout.duration_value || "—"} ${workout.duration_unit || ""} · Effort ${workout.feeling_score ?? "—"}/10`).join("\n") : "No workouts logged yet.";
   document.getElementById("client-notes").textContent = data.notes.length ? data.notes.map((note) => `${new Date(note.created_at).toLocaleDateString()}: ${note.body}`).join("\n\n") : "No notes yet.";
 }
 

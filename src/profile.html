@@ -23,8 +23,44 @@
     </div>
 
     <div id="logged-in-actions" class="auth-actions">
-        <button id="logout" disabled>Log out</button>
+        <button id="settings-toggle" class="settings-toggle" type="button" aria-expanded="false" aria-controls="settings-drawer"><span class="settings-toggle-icon" aria-hidden="true"></span><span class="sr-only">Open settings</span></button>
     </div>
+
+    <div id="settings-overlay" class="settings-overlay" hidden></div>
+    <aside id="settings-drawer" class="settings-drawer" aria-labelledby="settings-heading" aria-modal="true" role="dialog" hidden>
+        <div class="settings-drawer-header">
+            <div><p class="section-eyebrow">ACCOUNT SETTINGS</p><h2 id="settings-heading">Settings</h2></div>
+            <button id="settings-close" class="settings-close" type="button" aria-label="Close settings">×</button>
+        </div>
+        <div class="settings-drawer-content">
+            <section class="settings-section" aria-labelledby="username-heading">
+                <p class="section-eyebrow">COMMUNITY PROFILE</p>
+                <h3 id="username-heading">Chat username</h3>
+                <p class="section-description">This is the name other members see when you post in the public chat.</p>
+                <form id="username-form" class="settings-username-form">
+                    <label for="chat-username">Username</label>
+                    <input id="chat-username" name="chat-username" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="e.g. LiftLegend" required>
+                    <button id="save-username-btn" type="submit">Save username</button>
+                    <p id="username-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+            <section class="settings-section" aria-labelledby="role-heading">
+                <p class="section-eyebrow">ACCOUNT TYPE</p>
+                <h3 id="role-heading">Your role</h3>
+                <p class="section-description">Choose how you use LiftMetrics.</p>
+                <form id="account-role-form">
+                    <label class="account-role-toggle" for="account-role">
+                        <span class="account-role-label account-role-label-client">Client</span>
+                        <input id="account-role" type="checkbox" role="switch" aria-label="Switch between client and trainer role">
+                        <span class="account-role-switch" aria-hidden="true"></span>
+                        <span class="account-role-label account-role-label-trainer">Trainer</span>
+                    </label>
+                    <p id="account-role-status" role="status" aria-live="polite"></p>
+                </form>
+            </section>
+        </div>
+        <div class="settings-drawer-footer"><button id="logout" type="button" disabled>Log out</button></div>
+    </aside>
 
     <main id="profile-summary" class="profile-dashboard" aria-labelledby="profile-heading">
         <section class="profile-overview">
@@ -57,25 +93,6 @@
                 <div><dt>Workout location</dt><dd id="summary-equipment"></dd></div>
                 <div><dt>Current activity</dt><dd id="summary-activity"></dd></div>
             </dl>
-        </section>
-
-        <section class="profile-card username-card" aria-labelledby="username-heading">
-            <div>
-                <p class="section-eyebrow">COMMUNITY PROFILE</p>
-                <h3 id="username-heading">Chat username</h3>
-                <p class="section-description">This is the name other members see when you post in the public chat.</p>
-            </div>
-            <form id="username-form" class="username-form">
-                <label for="chat-username">Username</label>
-                <input id="chat-username" name="chat-username" type="text" minlength="3" maxlength="24" pattern="[A-Za-z0-9_]+" autocomplete="username" placeholder="e.g. LiftLegend" required>
-                <button id="save-username-btn" type="submit">Save username</button>
-                <p id="username-status" role="status" aria-live="polite"></p>
-            </form>
-        </section>
-
-        <section class="profile-card" aria-labelledby="account-role-heading">
-            <p class="section-eyebrow">ACCOUNT TYPE</p><h3 id="account-role-heading">How do you use LiftMetrics?</h3>
-            <form id="account-role-form" class="profile-actions"><label for="account-role">Role</label><select id="account-role"><option value="client">Client</option><option value="trainer">Trainer</option></select><button type="submit">Save role</button><p id="account-role-status" role="status"></p></form>
         </section>
 
         <section class="profile-card workout-history-preview" aria-labelledby="recent-workouts-heading">
