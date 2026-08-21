@@ -22,6 +22,10 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
+// Render terminates TLS before forwarding requests to this service. Trust its
+// proxy hop so rate limits are tracked per visitor rather than per proxy.
+app.set("trust proxy", 1);
+
 const io = new Server(server, {
   cors: {
     origin: process.env.CORS_ORIGIN?.split(",").map((origin) => origin.trim()).filter(Boolean) || true
@@ -54,7 +58,8 @@ app.use(helmet({
 }));
 app.use(cors({ origin: allowedOrigins.length ? allowedOrigins : true }));
 app.use(express.json({ limit: "100kb" }));
-app.use(rateLimit({ windowMs: 15 * 60 * 1000, limit: 300, standardHeaders: "draft-8", legacyHeaders: false }));
+const apiRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 1_000, standardHeaders: "draft-8", legacyHeaders: false });
+app.use(["/api", "/messages"], apiRateLimit);
 const coachRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: "draft-8", legacyHeaders: false });
 
 const __filename = fileURLToPath(import.meta.url);
