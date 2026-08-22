@@ -481,3 +481,100 @@ main,
         width: 24px;
     }
 }
+
+/* Responsive layout foundation */
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    min-width: 320px;
+    padding-bottom: calc(76px + env(safe-area-inset-bottom));
+}
+
+img {
+    max-width: 100%;
+}
+
+.navbar {
+    min-height: 64px;
+    padding: 8px max(16px, env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
+}
+
+.navbar a {
+    display: grid;
+    flex: 1 1 0;
+    min-width: 44px;
+    min-height: 44px;
+    place-items: center;
+}
+
+.hero,
+#welcomeSection {
+    min-height: calc(100dvh - 76px - env(safe-area-inset-bottom));
+}
+
+.form_container {
+    padding: 0 16px;
+}
+
+.form_rec {
+    width: min(700px, 100%);
+}
+
+.history-page {
+    padding-inline: max(16px, env(safe-area-inset-left));
+    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+}
+
+@media (max-width: 600px) {
+    .page-title {
+        font-size: clamp(2.5rem, 13vw, 4.25rem);
+    }
+
+    .hero {
+        padding-inline: 16px;
+    }
+
+    .history-page {
+        padding-top: 24px;
+    }
+
+    .history-filters,
+    .history-edit-form,
+    .history-card {
+        padding: 16px;
+    }
+
+    .history-actions {
+        flex-direction: column;
+    }
+
+    .history-actions button {
+        width: 100%;
+        margin: 0;
+    }
+
+    .form_rec {
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    .section_title {
+        align-items: flex-start;
+    }
+
+    .weight_row {
+        flex-direction: column;
+    }
+
+    .weight_row select {
+        width: 100%;
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+}

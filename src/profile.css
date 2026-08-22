@@ -724,3 +724,48 @@ body {
     height: 120px;
   }
 }
+
+/* Small-screen refinements shared by profile, plan, and trainer pages. */
+@media (max-width: 600px) {
+  .page-title {
+    padding-right: 72px;
+  }
+
+  .settings-drawer {
+    width: 100%;
+    padding: max(20px, env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom));
+  }
+
+  .plan-page {
+    padding: 24px 16px calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .plan-card {
+    padding: 16px;
+  }
+
+  .trainer-hero {
+    margin-top: 20px;
+  }
+
+  .trainer-hero > p:last-child {
+    font-size: 1rem;
+  }
+
+  .client-progress-chart {
+    gap: 4px;
+    padding: 12px 8px;
+  }
+
+  .client-progress-bar span {
+    font-size: .58rem;
+  }
+
+  .import-form input,
+  .import-form textarea,
+  .injury-form input,
+  .injury-form select,
+  .injury-form textarea {
+    font-size: 16px;
+  }
+}
