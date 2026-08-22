@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="index.css">
   <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" defer></script>
   <script src="history.js" type="module"></script>
+  <script src="insights-link.js" defer></script>
 </head>
 <body>
   <main class="history-page">
@@ -46,7 +47,7 @@
   <nav class="navbar">
     <a href="index.html"><img src="img/home_icon.png" class="icon_img" alt="Home"></a>
     <a href="lift.html"><img src="img/plus_icon.png" class="icon_img" alt="Log workout"></a>
-    <a href="http://localhost:8501" target="_blank"><img src="img/workout_insights.jpg" class="icon_img" alt="LiftMetrics insights"></a>
+    <a data-insights-link href="http://localhost:8501" target="_blank" rel="noopener"><img src="img/workout_insights.jpg" class="icon_img" alt="LiftMetrics insights"></a>
     <a href="msg.html"><img src="img/msg_icon.jpg" class="icon_img" alt="Messages"></a>
     <a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img" alt="Profile"></a>
   </nav>
