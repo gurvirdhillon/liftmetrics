@@ -16,15 +16,18 @@
     <div class="hero">
         <h1 class="page-title">LiftMetrics</h1>
         <p class="tagline">Track your Performance. Build Strength.</p>
+        <section id="login-prompt" class="login-prompt" aria-live="polite" hidden>
+            <button id="login" type="button">Log in</button>
+        </section>
         <!-- <button id="log_btn">Log your Lift</button> -->
         <span id="thequote"></span>
     </div>
 
     <nav class="navbar">
         <a href="index.html"><img src="img/home_icon.png" class="icon_img"></a>
-        <a href="lift.html"><img src="img/plus_icon.png" class="icon_img"></a>
-        <a data-insights-link href="http://localhost:8501" target="_blank" rel="noopener"><img src="img/workout_insights.jpg" class="icon_img"></a>
-        <a href="msg.html"><img src="img/msg_icon.jpg" class="icon_img"></a>
-        <a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img"></a>
+        <a data-auth-required href="lift.html"><img src="img/plus_icon.png" class="icon_img" alt="Log workout"></a>
+        <a data-auth-required data-insights-link href="http://localhost:8501" target="_blank" rel="noopener"><img src="img/workout_insights.jpg" class="icon_img" alt="LiftMetrics insights"></a>
+        <a data-auth-required href="msg.html"><img src="img/msg_icon.jpg" class="icon_img" alt="Messages"></a>
+        <a data-auth-required href="profile.html"><img src="img/profile_icon.jpg" class="icon_img" alt="Profile"></a>
     </nav>
 </body>

@@ -48,6 +48,29 @@ body{
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
 }
 
+.login-prompt {
+    margin-top: 10px;
+}
+
+.login-prompt button {
+    margin: 0;
+    padding: 14px 32px;
+    border: 1px solid #32d2f4;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #0874df 0%, #12a8ed 52%, #34ccef 100%);
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    box-shadow: 0 10px 22px rgba(18, 168, 237, 0.3);
+}
+
+.login-prompt button:hover {
+    background: linear-gradient(135deg, #168deb 0%, #22baf2 52%, #58dbf5 100%);
+    box-shadow: 0 13px 26px rgba(18, 168, 237, 0.42);
+}
+
 #log_btn {
     padding: 6px 14px;
     border-radius: 8px;
