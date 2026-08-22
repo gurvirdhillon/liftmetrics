@@ -83,22 +83,6 @@ const exerciseOptions = {
   ]
 };
 
-function updateExerciseOptions() {
-  const workoutType = document.querySelector('select[name="workout_type"]').value;
-  const exerciseSelect = document.querySelector('select[name="exercise"]');
-
-  const exercises = exerciseOptions[workoutType] || ["Other"];
-
-  exerciseSelect.innerHTML = '<option value="">Select Exercise</option>';
-
-  exercises.forEach((exercise) => {
-    const option = document.createElement("option");
-    option.value = exercise;
-    option.textContent = exercise;
-    exerciseSelect.appendChild(option);
-  });
-}
-
 function toggleWorkoutFields() {
   const workoutType = document.querySelector('select[name="workout_type"]').value;
 
@@ -150,7 +134,6 @@ document.querySelector("#repeat-workout")?.addEventListener("click", async () =>
 
 workoutTypeSelect.addEventListener("change", () => {
   toggleWorkoutFields();
-  updateExerciseOptions();
 });
 
 form.addEventListener("submit", async (e) => {
@@ -182,7 +165,7 @@ form.addEventListener("submit", async (e) => {
       reps: entry.querySelector(".entry-reps").value === "" ? null : Number(entry.querySelector(".entry-reps").value),
       weight_value: entry.querySelector(".entry-weight").value === "" ? null : Number(entry.querySelector(".entry-weight").value),
       weight_unit: entry.querySelector(".entry-unit").value
-    })) : [{ exercise_name: document.querySelector('select[name="exercise"]').value }]
+    })) : [{ exercise_name: `${workoutTypeSelect.value} session` }]
   };
 
   try {
@@ -203,7 +186,6 @@ form.addEventListener("submit", async (e) => {
       document.querySelector("#exercise-entries").replaceChildren();
       addExercise();
       toggleWorkoutFields();
-      updateExerciseOptions();
     } else {
       alert(data.errors?.join(" ") || data.error || "Failed to save workout");
       console.error(data);
@@ -217,7 +199,6 @@ form.addEventListener("submit", async (e) => {
 function allFunctions() {
   limitDate();
   toggleWorkoutFields();
-  updateExerciseOptions();
   addExercise();
 }
 
