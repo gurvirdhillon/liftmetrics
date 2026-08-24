@@ -114,3 +114,4 @@ This project is licensed under the MIT License.
 - LinkedIn: <a href="https://www.linkedin.com/in/gurvirdhillon1/" target="_blank">Gurvir Dhillon LinkedIn</a>
 - Email: gurvirsinghdhillon@outlook.com
 - Portfolio Page: <a href="https://gurvirdhillon.github.io/portfolio/" target="_blank">Portfolio Website</a>
+- Published website: <a href="https://liftmetrics.onrender.com" target="_blank">LiftMetrics</a>
