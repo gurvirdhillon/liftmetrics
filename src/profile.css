@@ -136,6 +136,7 @@ button:disabled {
 .plan-card { background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 16px; padding: 20px; }
 .plan-card h2 { margin-top: 0; }
 .plan-card li { margin: 10px 0; line-height: 1.4; }
+.plan-start-button { display: inline-block; margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: #8ebcff; color: #07142f; font-weight: 700; text-decoration: none; }
 .plan-note { color: rgba(255, 255, 255, 0.8); margin-top: 28px; }
 
 .import-form { display: grid; gap: 18px; }

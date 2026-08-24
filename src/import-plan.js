@@ -79,6 +79,6 @@ document.getElementById("import-plan-form").addEventListener("submit", async (ev
     const user = await getAuthenticatedUser(); if (!user?.sub) throw new Error("Please log in before saving a plan.");
     const response = await authenticatedFetch("/api/plans/import", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ plan: reviewedPlan }) });
     const data = await response.json(); if (!response.ok) throw new Error(data.error || "Could not save your plan.");
-    sessionStorage.setItem("liftmetrics_current_plan", JSON.stringify(data.plan)); window.location.href = "plan.html";
+    sessionStorage.setItem("liftmetrics_current_plan", JSON.stringify({ plan: data.plan, planId: data.plan_id })); window.location.href = "plan.html";
   } catch (error) { status.textContent = error.message; }
 });

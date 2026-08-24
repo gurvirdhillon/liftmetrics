@@ -603,7 +603,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       });
       const data = await response.json();
       if (!response.ok) throw new Error(data.error || "Could not generate your plan.");
-      sessionStorage.setItem("liftmetrics_current_plan", JSON.stringify(data.plan));
+      sessionStorage.setItem("liftmetrics_current_plan", JSON.stringify({ plan: data.plan, planId: data.plan_id }));
       window.location.href = "plan.html";
     } catch (error) {
       alert(error.message);

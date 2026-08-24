@@ -106,12 +106,27 @@ const workoutTypeSelect = document.querySelector('select[name="workout_type"]');
 function exerciseEntry(exercise = {}) {
   const row = document.createElement("div");
   row.className = "exercise-entry performance_row";
-  row.innerHTML = `<div class="input_group"><label>Exercise</label><select class="entry-exercise" required>${exerciseOptions.Strength.map((name) => `<option ${name === exercise.exercise_name ? "selected" : ""}>${name}</option>`).join("")}</select></div>
+  const names = exercise.exercise_name && !exerciseOptions.Strength.includes(exercise.exercise_name) ? [exercise.exercise_name, ...exerciseOptions.Strength] : exerciseOptions.Strength;
+  row.innerHTML = `<div class="input_group"><label>Exercise</label><select class="entry-exercise" required>${names.map((name) => `<option ${name === exercise.exercise_name ? "selected" : ""}>${name}</option>`).join("")}</select></div>
     <div class="input_group"><label>Sets</label><input class="entry-sets" type="number" min="1" value="${exercise.sets ?? ""}" inputmode="numeric"></div>
     <div class="input_group"><label>Reps</label><input class="entry-reps" type="number" min="1" value="${exercise.reps ?? ""}" inputmode="numeric"></div>
     <div class="input_group weight-group"><label>Weight</label><div class="weight_row"><input class="entry-weight" type="number" min="0" step="0.5" value="${exercise.weight_value ?? ""}" inputmode="decimal"><select class="entry-unit"><option ${exercise.weight_unit === "lbs" ? "" : "selected"}>kg</option><option ${exercise.weight_unit === "lbs" ? "selected" : ""}>lbs</option></select></div></div>
+    ${exercise.rest ? `<div class="entry-rest"><span>Rest: ${exercise.rest}</span><button type="button" class="start-rest">Start timer</button></div>` : ""}
     <button type="button" class="remove-exercise" aria-label="Remove exercise">×</button>`;
   row.querySelector(".remove-exercise").addEventListener("click", () => { if (document.querySelectorAll(".exercise-entry").length > 1) row.remove(); });
+  row.querySelector(".start-rest")?.addEventListener("click", (event) => {
+    const seconds = Number.parseInt(exercise.rest, 10);
+    if (!Number.isFinite(seconds)) return;
+    const button = event.currentTarget;
+    button.disabled = true;
+    const timer = window.setInterval(() => {
+      const remaining = Math.max(0, seconds - Math.floor((Date.now() - startedAt) / 1000));
+      button.textContent = remaining ? `${remaining}s remaining` : "Rest complete";
+      if (!remaining) { window.clearInterval(timer); button.disabled = false; }
+    }, 250);
+    const startedAt = Date.now();
+    button.textContent = `${seconds}s remaining`;
+  });
   return row;
 }
 
@@ -167,6 +182,8 @@ form.addEventListener("submit", async (e) => {
       weight_unit: entry.querySelector(".entry-unit").value
     })) : [{ exercise_name: `${workoutTypeSelect.value} session` }]
   };
+  const activeSession = JSON.parse(sessionStorage.getItem("liftmetrics_active_plan_session") || "null");
+  if (activeSession?.planId != null) Object.assign(payload, { plan_id: activeSession.planId, plan_session_index: activeSession.sessionIndex });
 
   try {
     const response = await authenticatedFetch("/api/workouts", {
@@ -180,7 +197,10 @@ form.addEventListener("submit", async (e) => {
     const data = await response.json();
 
     if (response.ok) {
-      alert("Workout saved successfully");
+      const completion = document.querySelector("#workout-completion");
+      completion.hidden = !data.completion;
+      completion.textContent = data.completion?.summary || "Workout saved successfully.";
+      sessionStorage.removeItem("liftmetrics_active_plan_session");
       console.log(data);
       form.reset();
       document.querySelector("#exercise-entries").replaceChildren();
@@ -200,6 +220,17 @@ function allFunctions() {
   limitDate();
   toggleWorkoutFields();
   addExercise();
+  const activeSession = JSON.parse(sessionStorage.getItem("liftmetrics_active_plan_session") || "null");
+  if (activeSession?.session) {
+    const banner = document.querySelector("#active-plan-session");
+    banner.hidden = false;
+    banner.textContent = `Following your plan: ${activeSession.session.day} · ${activeSession.session.name}. Targets are prefilled below.`;
+    document.querySelector("#exercise-entries").replaceChildren();
+    activeSession.session.exercises.forEach((exercise) => {
+      const match = exercise.prescription.match(/(\d+)\s*x\s*(\d+)/i);
+      addExercise({ exercise_name: exercise.name, sets: match?.[1] || null, reps: match?.[2] || null, rest: exercise.rest });
+    });
+  }
 }
 
 window.addEventListener("load", allFunctions);

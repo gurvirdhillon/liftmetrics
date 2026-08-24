@@ -16,6 +16,7 @@ import { findRestrictedExercises, validateImportedPlan } from "./plan-import.js"
 import { buildTrainingInsights } from "./training-insights.js";
 import { createCoachResponse } from "./ai-coach.js";
 import { applyInjurySafety } from "./injury-safety.js";
+import { comparePlanCompletion } from "./plan-completion.js";
 
 dotenv.config();
 
@@ -297,10 +298,28 @@ app.post("/api/workouts", async (req, res) => {
       distance_unit,
       calories_burned,
       avg_pace,
-      exercises
+      exercises,
+      plan_id: planId,
+      plan_session_index: planSessionIndex
     } = req.body;
 
     await client.query("BEGIN");
+
+    let plannedSession = null;
+    let validPlanId = null;
+    if (planId != null || planSessionIndex != null) {
+      if (!Number.isInteger(planId) || !Number.isInteger(planSessionIndex) || planSessionIndex < 0) {
+        await client.query("ROLLBACK");
+        return res.status(400).json({ error: "The selected plan session is invalid." });
+      }
+      const planResult = await client.query("SELECT plan FROM generated_plans WHERE plan_id = $1 AND user_id = $2", [planId, user_id.trim()]);
+      plannedSession = planResult.rows[0]?.plan?.sessions?.[planSessionIndex] || null;
+      if (!plannedSession) {
+        await client.query("ROLLBACK");
+        return res.status(400).json({ error: "That plan session is no longer available." });
+      }
+      validPlanId = planId;
+    }
 
     await client.query(
       `
@@ -328,9 +347,11 @@ app.post("/api/workouts", async (req, res) => {
         distance_value,
         distance_unit,
         calories_burned,
-        avg_pace
+        avg_pace,
+        plan_id,
+        planned_session
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
       RETURNING session_id
       `,
       [
@@ -346,7 +367,9 @@ app.post("/api/workouts", async (req, res) => {
         distance_value ?? null,
         distance_unit || null,
         calories_burned ?? null,
-        avg_pace ?? null
+        avg_pace ?? null,
+        validPlanId,
+        plannedSession
       ]
     );
 
@@ -383,7 +406,8 @@ app.post("/api/workouts", async (req, res) => {
     res.status(201).json({
       message: "Workout saved successfully",
       session_id: sessionId,
-      user_id: user_id
+      user_id: user_id,
+      completion: plannedSession ? comparePlanCompletion(plannedSession, exercises) : null
     });
   } catch (error) {
     if (client) await client.query("ROLLBACK");
@@ -678,8 +702,8 @@ app.post("/api/plans/:planId/restore", async (req, res) => {
   try {
     const saved = await pool.query("SELECT goal, profile, plan FROM generated_plans WHERE plan_id = $1 AND user_id = $2", [planId, req.auth.userId.trim()]);
     if (!saved.rowCount) return res.status(404).json({ error: "Plan not found." });
-    const result = await pool.query("INSERT INTO generated_plans (user_id, goal, profile, plan) VALUES ($1, $2, $3, $4) RETURNING plan", [req.auth.userId.trim(), saved.rows[0].goal, saved.rows[0].profile, saved.rows[0].plan]);
-    res.status(201).json({ plan: result.rows[0].plan });
+    const result = await pool.query("INSERT INTO generated_plans (user_id, goal, profile, plan) VALUES ($1, $2, $3, $4) RETURNING plan_id, plan", [req.auth.userId.trim(), saved.rows[0].goal, saved.rows[0].profile, saved.rows[0].plan]);
+    res.status(201).json(result.rows[0]);
   } catch (error) { console.error("Plan restore error:", error); res.status(500).json({ error: "Could not restore plan." }); }
 });
 
