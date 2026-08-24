@@ -71,6 +71,29 @@ body{
     box-shadow: 0 13px 26px rgba(18, 168, 237, 0.42);
 }
 
+.home-dashboard { display: grid; width: min(680px, 100%); gap: 16px; text-align: left; }
+.home-dashboard[hidden] { display: none; }
+.home-greeting { margin: 0; color: rgba(255, 255, 255, 0.82); font-size: clamp(1.1rem, 2vw, 1.35rem); font-weight: 600; }
+.next-session-card, .home-summary-card { border: 1px solid rgba(129, 203, 247, 0.25); background: rgba(7, 22, 51, 0.72); box-shadow: 0 14px 32px rgba(0, 0, 0, 0.18); }
+.next-session-card { padding: clamp(20px, 4vw, 30px); border-radius: 20px; }
+.dashboard-eyebrow { margin: 0 0 8px; color: #34ccef; font-family: Arial, sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; }
+.next-session-card h2 { margin: 0; font-size: clamp(1.5rem, 3vw, 2.1rem); }
+.next-session-card > p:not(.dashboard-eyebrow) { margin: 8px 0 22px; color: rgba(255, 255, 255, 0.72); }
+.home-primary-action, .home-quick-links a { display: inline-flex; align-items: center; gap: 10px; border-radius: 999px; font-family: Arial, sans-serif; font-weight: 700; text-decoration: none; }
+.home-primary-action { padding: 13px 20px; background: linear-gradient(135deg, #0874df 0%, #12a8ed 52%, #34ccef 100%); color: #ffffff; box-shadow: 0 10px 22px rgba(18, 168, 237, 0.3); }
+.home-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.home-summary-card { padding: 18px; border-radius: 16px; }
+.home-summary-card span { display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 1.45rem; font-weight: 700; }
+.home-summary-card p { margin: 5px 0 0; color: rgba(255, 255, 255, 0.68); font-family: Arial, sans-serif; font-size: 0.86rem; }
+.home-quick-links { display: flex; flex-wrap: wrap; gap: 12px; }
+.home-quick-links a { padding: 10px 15px; border: 1px solid rgba(255, 255, 255, 0.38); color: #ffffff; }
+
+.navbar a[data-disabled] {
+    cursor: not-allowed;
+    opacity: 0.38;
+    pointer-events: none;
+}
+
 #log_btn {
     padding: 6px 14px;
     border-radius: 8px;
@@ -558,6 +581,10 @@ img {
     .hero {
         padding-inline: 16px;
     }
+
+    .home-dashboard { gap: 12px; }
+    .home-summary-grid { grid-template-columns: 1fr; }
+    .home-primary-action, .home-quick-links a { justify-content: center; width: 100%; }
 
     .history-page {
         padding-top: 24px;
