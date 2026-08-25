@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Wellness | LiftMetrics</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" defer></script>
+  <script src="wellness.js" type="module"></script>
+  <script src="insights-link.js" defer></script>
+</head>
+<body>
+  <main class="wellness-page">
+    <a class="back-link" href="index.html">← Dashboard</a>
+    <p class="plan-eyebrow">DAILY WELLNESS</p>
+    <h1>How are you feeling today?</h1>
+    <p class="wellness-intro">A quick check-in helps you train with the right level of intensity.</p>
+    <section id="wellness-readiness" class="wellness-readiness" hidden aria-live="polite"></section>
+    <form id="wellness-form" class="wellness-form">
+      <div class="wellness-field sleep-hours-field">
+        <label for="sleep-hours">Sleep last night</label>
+        <div class="sleep-hours-control"><input id="sleep-hours" name="sleep_hours" type="number" min="0" max="24" step="0.5" required><span>hours</span></div>
+      </div>
+      <fieldset class="wellness-field"><legend>Sleep quality</legend><div class="score-options" data-score-group="sleep_quality"></div></fieldset>
+      <fieldset class="wellness-field"><legend>Energy</legend><div class="score-options" data-score-group="energy_score"></div></fieldset>
+      <fieldset class="wellness-field"><legend>Soreness</legend><div class="score-options" data-score-group="soreness_score"></div></fieldset>
+      <fieldset class="wellness-field"><legend>Stress</legend><div class="score-options" data-score-group="stress_score"></div></fieldset>
+      <label class="wellness-field" for="wellness-notes">Anything else to note? <span>Optional</span><textarea id="wellness-notes" name="notes" rows="3" maxlength="500" placeholder="e.g. Late night, tight calves"></textarea></label>
+      <button class="wellness-save" type="submit">Save today’s check-in</button>
+      <p id="wellness-status" role="status" aria-live="polite"></p>
+    </form>
+  </main>
+  <nav class="navbar">
+    <a href="index.html"><img src="img/home_icon.png" class="icon_img" alt="Home"></a>
+    <a href="lift.html"><img src="img/plus_icon.png" class="icon_img" alt="Log workout"></a>
+    <a data-insights-link href="http://localhost:8501" target="_blank" rel="noopener"><img src="img/workout_insights.jpg" class="icon_img" alt="LiftMetrics insights"></a>
+    <a class="wellness-nav-link" href="wellness.html" aria-current="page" aria-label="Wellness">♥</a>
+    <a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img" alt="Profile"></a>
+  </nav>
+</body>
+</html>

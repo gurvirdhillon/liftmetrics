@@ -81,6 +81,10 @@ body{
 .next-session-card > p:not(.dashboard-eyebrow) { margin: 8px 0 22px; color: rgba(255, 255, 255, 0.72); }
 .home-primary-action, .home-quick-links a { display: inline-flex; align-items: center; gap: 10px; border-radius: 999px; font-family: Arial, sans-serif; font-weight: 700; text-decoration: none; }
 .home-primary-action { padding: 13px 20px; background: linear-gradient(135deg, #0874df 0%, #12a8ed 52%, #34ccef 100%); color: #ffffff; box-shadow: 0 10px 22px rgba(18, 168, 237, 0.3); }
+.dashboard-wellness-card { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 20px 22px; border: 1px solid rgba(92, 222, 188, 0.34); border-radius: 18px; background: linear-gradient(135deg, rgba(12, 77, 85, 0.78), rgba(15, 39, 74, 0.84)); }
+.dashboard-wellness-card h2 { margin: 0; font-size: 1.35rem; }
+.dashboard-wellness-card > div > p:last-child { margin: 6px 0 0; color: rgba(255, 255, 255, 0.74); }
+.wellness-dashboard-action { flex: 0 0 auto; padding: 11px 15px; border-radius: 999px; color: #062c31; background: #8af0da; font-weight: 700; text-decoration: none; }
 .home-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .home-summary-card { padding: 18px; border-radius: 16px; }
 .home-summary-card span { display: block; color: #ffffff; font-family: Arial, sans-serif; font-size: 1.45rem; font-weight: 700; }
@@ -137,6 +141,18 @@ body{
 .navbar a {
     text-decoration: none;
 }
+.wellness-nav-link { color: #129c84; font-size: clamp(22px, 4vw, 29px); line-height: 1; }
+
+.wellness-page { width: min(680px, 100%); margin: 0 auto; padding: 36px 24px 105px; box-sizing: border-box; }
+.wellness-page h1 { margin: 7px 0; font-size: clamp(2rem, 7vw, 3.4rem); }
+.wellness-intro { margin: 0 0 24px; color: rgba(255, 255, 255, 0.76); font-size: 1.05rem; }
+.wellness-readiness { display: grid; gap: 3px; padding: 20px; margin: 0 0 18px; border: 1px solid rgba(138, 240, 218, 0.38); border-radius: 18px; background: rgba(12, 77, 85, 0.56); }
+.wellness-readiness p { margin: 0; color: #8af0da; font-size: .76rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; }
+.wellness-readiness strong { font-size: 1.75rem; }.wellness-readiness span { color: rgba(255,255,255,.78); }
+.wellness-form { display: grid; gap: 16px; }.wellness-field { display: grid; gap: 10px; padding: 18px; margin: 0; border: 1px solid rgba(255,255,255,.16); border-radius: 16px; background: rgba(255,255,255,.07); font-weight: 700; }.wellness-field span { color: rgba(255,255,255,.58); font-size: .8rem; font-weight: 400; }
+.wellness-field textarea, .sleep-hours-control input { box-sizing: border-box; width: 100%; border: 1px solid rgba(255,255,255,.26); border-radius: 10px; padding: 11px; background: rgba(5, 17, 39, .55); color: #fff; font: inherit; }.sleep-hours-control { display: flex; align-items: center; gap: 10px; }.sleep-hours-control input { width: 110px; }.sleep-hours-control span { color: rgba(255,255,255,.75); font-size: 1rem; }
+.score-options { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; }.score-options label { display: grid; gap: 4px; text-align: center; cursor: pointer; }.score-options input { position: absolute; opacity: 0; }.score-options span { padding: 9px 0; border: 1px solid rgba(255,255,255,.2); border-radius: 9px; background: rgba(5, 17, 39, .46); color: #fff; font-size: 1rem; font-weight: 700; }.score-options small { min-height: 24px; color: rgba(255,255,255,.56); font-size: .66rem; font-weight: 400; line-height: 1.05; }.score-options input:checked + span { border-color: #8af0da; background: #8af0da; color: #063036; }.score-options input:focus-visible + span { outline: 2px solid #fff; outline-offset: 2px; }
+.wellness-save { padding: 14px 18px; border: 0; border-radius: 999px; background: #8af0da; color: #063036; font: inherit; font-weight: 700; cursor: pointer; }.wellness-save:hover { background: #b7f9e9; }#wellness-status { min-height: 1.2em; margin: 0; color: #b7f9e9; }
 
 #welcomeSection{
     min-height: calc(100vh - 60px);
@@ -159,6 +175,8 @@ body{
     line-height: 1.5;
     text-shadow: 0 2px 12px rgba(0, 0, 0, 0.75);
 }
+
+@media (max-width: 480px) { .dashboard-wellness-card { align-items: flex-start; flex-direction: column; }.score-options { gap: 4px; }.wellness-field { padding: 15px; }.score-options small { font-size: .58rem; } }
 
 .form_container{
     display: flex;

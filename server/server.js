@@ -17,6 +17,7 @@ import { buildTrainingInsights } from "./training-insights.js";
 import { createCoachResponse } from "./ai-coach.js";
 import { applyInjurySafety } from "./injury-safety.js";
 import { comparePlanCompletion } from "./plan-completion.js";
+import { calculateReadiness, validateWellnessCheckin } from "./wellness.js";
 
 dotenv.config();
 
@@ -271,6 +272,34 @@ app.put("/api/usernames", async (req, res) => {
 
 // Static files
 app.use(express.static(path.join(__dirname, "../src")));
+
+function formatWellnessCheckin(row) {
+  if (!row) return null;
+  return { ...row, readiness_score: calculateReadiness(row) };
+}
+
+app.get("/api/wellness/today", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT TO_CHAR(checkin_date, 'YYYY-MM-DD') AS checkin_date, sleep_hours, sleep_quality, energy_score, soreness_score, stress_score, notes FROM daily_wellness_checkins WHERE user_id = $1 AND checkin_date = CURRENT_DATE", [req.auth.userId.trim()]);
+    res.json({ checkin: formatWellnessCheckin(result.rows[0]) });
+  } catch (error) { console.error("Wellness load error:", error); res.status(503).json({ error: "Wellness is not available yet. Run migration 008 first." }); }
+});
+
+app.put("/api/wellness/today", async (req, res) => {
+  if (!validateWellnessCheckin(req.body)) return res.status(400).json({ error: "Enter sleep from 0–24 hours and choose each score." });
+  const userId = req.auth.userId.trim();
+  try {
+    await ensureUserProfile(userId);
+    const result = await pool.query(
+      `INSERT INTO daily_wellness_checkins (user_id, checkin_date, sleep_hours, sleep_quality, energy_score, soreness_score, stress_score, notes)
+       VALUES ($1, CURRENT_DATE, $2, $3, $4, $5, $6, $7)
+       ON CONFLICT (user_id, checkin_date) DO UPDATE SET sleep_hours = EXCLUDED.sleep_hours, sleep_quality = EXCLUDED.sleep_quality, energy_score = EXCLUDED.energy_score, soreness_score = EXCLUDED.soreness_score, stress_score = EXCLUDED.stress_score, notes = EXCLUDED.notes, updated_at = CURRENT_TIMESTAMP
+       RETURNING TO_CHAR(checkin_date, 'YYYY-MM-DD') AS checkin_date, sleep_hours, sleep_quality, energy_score, soreness_score, stress_score, notes`,
+      [userId, Number(req.body.sleep_hours), Number(req.body.sleep_quality), Number(req.body.energy_score), Number(req.body.soreness_score), Number(req.body.stress_score), String(req.body.notes || "").trim() || null]
+    );
+    res.json({ checkin: formatWellnessCheckin(result.rows[0]) });
+  } catch (error) { console.error("Wellness save error:", error); res.status(503).json({ error: "Could not save your check-in. Run migration 008 if it has not been applied." }); }
+});
 
 // Your existing workout route can stay here
 app.post("/api/workouts", async (req, res) => {

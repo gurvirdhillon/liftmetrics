@@ -21,13 +21,16 @@ async function loadHomeDashboard(user) {
   const nextDetail = document.getElementById("next-session-detail");
   const weeklyCount = document.getElementById("weekly-workout-count");
   const latestWorkout = document.getElementById("latest-workout-label");
+  const readiness = document.getElementById("dashboard-readiness");
+  const wellnessDetail = document.getElementById("dashboard-wellness-detail");
   const name = (user?.name || user?.nickname || "there").split(" ")[0];
   greeting.textContent = `Welcome back, ${name}`;
 
   try {
-    const [planResponse, workoutsResponse] = await Promise.all([
+    const [planResponse, workoutsResponse, wellnessResponse] = await Promise.all([
       authenticatedFetch("/api/plans/latest"),
-      authenticatedFetch("/api/workouts?limit=25")
+      authenticatedFetch("/api/workouts?limit=25"),
+      authenticatedFetch("/api/wellness/today")
     ]);
     const planData = planResponse.status === 404 ? null : await planResponse.json();
     const workoutsData = await workoutsResponse.json();
@@ -48,6 +51,12 @@ async function loadHomeDashboard(user) {
     latestWorkout.textContent = workouts[0]
       ? new Date(`${workouts[0].session_date}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" })
       : "None yet";
+    const wellnessData = wellnessResponse.ok ? await wellnessResponse.json() : {};
+    const score = Number(wellnessData.checkin?.readiness_score);
+    if (Number.isFinite(score)) {
+      readiness.textContent = score >= 4 ? "Ready" : score >= 2.8 ? "Steady" : "Recover";
+      wellnessDetail.textContent = score >= 4 ? "You look set for your planned workout." : score >= 2.8 ? "A normal session is fine—listen to your body." : "Consider lighter activity or rest today.";
+    }
   } catch {
     nextTitle.textContent = "Ready when you are";
     nextDetail.textContent = "Start a workout or visit your profile to create a plan.";
