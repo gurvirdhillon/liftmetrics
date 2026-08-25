@@ -284,7 +284,7 @@ function parseFoodEntry(body) {
   const numericFields = ["quantity", "calories", "protein", "carbs", "fat"];
   const values = Object.fromEntries(numericFields.map((field) => [field, Number(body?.[field])]));
   if (!foodName || foodName.length > 200 || !/^\d{4}-\d{2}-\d{2}$/.test(loggedDate) || !Number.isFinite(values.quantity) || values.quantity <= 0 || numericFields.slice(1).some((field) => !Number.isFinite(values[field]) || values[field] < 0)) return null;
-  return { foodName, loggedDate, ...values, source: body?.source === "fatsecret" ? "fatsecret" : "manual", servingLabel: typeof body?.servingLabel === "string" && body.servingLabel.length <= 100 ? body.servingLabel : `${values.quantity} g`, sourceFoodId: typeof body?.sourceFoodId === "string" ? body.sourceFoodId.slice(0, 100) : null };
+  return { foodName, loggedDate, ...values, source: body?.source === "usda" ? "usda" : "manual", servingLabel: typeof body?.servingLabel === "string" && body.servingLabel.length <= 100 ? body.servingLabel : `${values.quantity} g`, sourceFoodId: typeof body?.sourceFoodId === "string" ? body.sourceFoodId.slice(0, 100) : null };
 }
 
 function nutrientValue(food, number, name) {
@@ -292,42 +292,19 @@ function nutrientValue(food, number, name) {
   return Number(nutrient?.value ?? 0);
 }
 
-let fatSecretToken;
-
-async function getFatSecretToken() {
-  if (fatSecretToken && fatSecretToken.expiresAt > Date.now()) return fatSecretToken.value;
-  const credentials = `${process.env.FATSECRET_CLIENT_ID}:${process.env.FATSECRET_CLIENT_SECRET}`;
-  const response = await fetch("https://oauth.fatsecret.com/connect/token", { method: "POST", headers: { Authorization: `Basic ${Buffer.from(credentials).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" }, body: "grant_type=client_credentials&scope=basic" });
-  if (!response.ok) throw new Error(`FatSecret authentication returned ${response.status}`);
-  const data = await response.json();
-  fatSecretToken = { value: data.access_token, expiresAt: Date.now() + (Number(data.expires_in || 3600) - 60) * 1000 };
-  return fatSecretToken.value;
-}
-
-function parseFatSecretDescription(description = "") {
-  const values = Object.fromEntries([...description.matchAll(/(Calories|Fat|Carbs|Protein):\s*([\d.]+)/gi)].map(([, key, value]) => [key.toLowerCase(), Number(value)]));
-  return { calories: values.calories || 0, protein: values.protein || 0, carbs: values.carbs || 0, fat: values.fat || 0 };
-}
-
-async function searchFatSecretFoods(query) {
-  const token = await getFatSecretToken();
-  const url = new URL("https://platform.fatsecret.com/rest/foods/search/v1");
-  url.searchParams.set("search_expression", query); url.searchParams.set("max_results", "8"); url.searchParams.set("format", "json");
-  const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
-  if (!response.ok) throw new Error(`FatSecret search returned ${response.status}`);
-  const data = await response.json();
-  if (data.error?.message) throw new Error(`FatSecret: ${data.error.message}`);
-  const foods = data.foods?.food || [];
-  return (Array.isArray(foods) ? foods : [foods]).map((food) => ({ id: String(food.food_id), name: food.food_name, brand: food.brand_name || "", quantity: 1, unit: "serving", servingLabel: "1 serving", ...parseFatSecretDescription(food.food_description) }));
-}
-
 app.get("/api/foods/search", async (req, res) => {
   const query = String(req.query.q || "").trim();
   if (query.length < 2 || query.length > 100) return res.status(400).json({ error: "Enter 2–100 characters to search." });
-  if (!process.env.FATSECRET_CLIENT_ID || !process.env.FATSECRET_CLIENT_SECRET) return res.status(503).json({ error: "Food search is not configured yet. Add FatSecret credentials to the API environment, or log food manually." });
+  if (!process.env.USDA_API_KEY) return res.status(503).json({ error: "Food search is not configured yet. Add USDA_API_KEY to the API environment, or log food manually." });
   try {
-    res.json({ foods: await searchFatSecretFoods(query) });
-  } catch (error) { console.error("Food search error", error); res.status(503).json({ error: error.message?.startsWith("FatSecret:") ? error.message : "Food search is temporarily unavailable. You can still add food manually." }); }
+    const url = new URL("https://api.nal.usda.gov/fdc/v1/foods/search");
+    url.searchParams.set("api_key", process.env.USDA_API_KEY); url.searchParams.set("query", query); url.searchParams.set("pageSize", "8");
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`USDA returned ${response.status}`);
+    const data = await response.json();
+    const foods = (data.foods || []).map((food) => ({ id: String(food.fdcId), name: food.description, brand: food.brandOwner || food.brandName || "", quantity: 100, unit: "g", servingLabel: "100 g", calories: nutrientValue(food, "208", "Energy"), protein: nutrientValue(food, "203", "Protein"), carbs: nutrientValue(food, "205", "Carbohydrate, by difference"), fat: nutrientValue(food, "204", "Total lipid (fat)") }));
+    res.json({ foods });
+  } catch (error) { console.error("Food search error", error); res.status(503).json({ error: "Food search is temporarily unavailable. You can still add food manually." }); }
 });
 
 app.get("/api/food-entries", async (req, res) => {

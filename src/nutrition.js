@@ -51,7 +51,7 @@ function editEntry(entry) {
 function fillFood(food) {
   $("#food-name").value = food.name; $("#food-quantity").value = food.quantity || 100; $("#food-unit").textContent = food.unit || "g";
   $("#food-calories").value = food.calories; $("#food-protein").value = food.protein; $("#food-carbs").value = food.carbs; $("#food-fat").value = food.fat;
-  state.selectedFood = food; $("#food-source").value = "fatsecret"; $("#food-source-id").value = food.id; $("#food-results").replaceChildren(); setStatus("Food selected. Adjust the serving or values if needed.");
+  state.selectedFood = food; $("#food-source").value = "usda"; $("#food-source-id").value = food.id; $("#food-results").replaceChildren(); setStatus("Food selected. Adjust the serving or values if needed.");
 }
 
 $("#food-quantity").addEventListener("input", () => {
