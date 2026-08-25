@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Food log | LiftMetrics</title>
+  <link rel="stylesheet" href="index.css">
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" defer></script>
+  <script src="nutrition.js" type="module"></script>
+</head>
+<body>
+  <main class="nutrition-page">
+    <a class="back-link" href="index.html">← Dashboard</a>
+    <p class="plan-eyebrow">NUTRITION</p>
+    <h1>Food log</h1>
+    <p class="nutrition-intro">Choose a day, then add what you ate. Your daily totals update as you log.</p>
+    <section class="nutrition-calendar-card" aria-labelledby="calendar-title">
+      <div class="calendar-heading"><button id="previous-month" type="button" aria-label="Previous month">←</button><h2 id="calendar-title"></h2><button id="next-month" type="button" aria-label="Next month">→</button></div>
+      <div class="calendar-weekdays" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+      <div id="nutrition-calendar" class="nutrition-calendar" aria-label="Food log calendar"></div>
+    </section>
+    <section class="nutrition-day" aria-labelledby="selected-date"><div><p class="plan-eyebrow">SELECTED DAY</p><h2 id="selected-date"></h2></div><div id="nutrition-totals" class="nutrition-totals" aria-live="polite"></div></section>
+    <section class="food-entry-panel" aria-labelledby="add-food-title">
+      <h2 id="add-food-title">Add food</h2>
+      <label for="food-search">Search a food <span>or add it manually</span></label>
+      <input id="food-search" type="search" autocomplete="off" placeholder="e.g. chicken breast, porridge">
+      <div id="food-results" class="food-results" aria-live="polite"></div>
+      <form id="food-entry-form" class="food-entry-form">
+        <label>Food name<input id="food-name" name="foodName" maxlength="200" required></label>
+        <div class="serving-field"><label for="food-quantity">Serving</label><div class="input-suffix"><input id="food-quantity" name="quantity" type="number" min="0.1" step="0.1" value="100" required><span id="food-unit">g</span></div></div>
+        <div class="macro-inputs"><label>Calories<input id="food-calories" name="calories" type="number" min="0" step="0.1" value="0" required></label><label>Protein (g)<input id="food-protein" name="protein" type="number" min="0" step="0.1" value="0" required></label><label>Carbs (g)<input id="food-carbs" name="carbs" type="number" min="0" step="0.1" value="0" required></label><label>Fat (g)<input id="food-fat" name="fat" type="number" min="0" step="0.1" value="0" required></label></div>
+        <input id="food-source" type="hidden" value="manual"><input id="food-source-id" type="hidden">
+        <button id="save-food-entry" class="wellness-save" type="submit">Add to this day</button><p id="food-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+    <section class="food-entry-panel" aria-labelledby="entries-title"><h2 id="entries-title">Logged food</h2><div id="food-entries" class="food-entries"></div></section>
+  </main>
+  <nav class="navbar"><a href="index.html"><img src="img/home_icon.png" class="icon_img" alt="Home"></a><a href="lift.html"><img src="img/plus_icon.png" class="icon_img" alt="Log workout"></a><a data-insights-link href="http://localhost:8501" target="_blank" rel="noopener"><img src="img/workout_insights.jpg" class="icon_img" alt="LiftMetrics insights"></a><a class="wellness-nav-link" href="wellness.html" aria-label="Wellness">♥</a><a href="profile.html"><img src="img/profile_icon.jpg" class="icon_img" alt="Profile"></a></nav>
+</body>
+</html>

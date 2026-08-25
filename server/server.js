@@ -278,6 +278,95 @@ function formatWellnessCheckin(row) {
   return { ...row, readiness_score: calculateReadiness(row) };
 }
 
+function parseFoodEntry(body) {
+  const foodName = typeof body?.foodName === "string" ? body.foodName.trim() : "";
+  const loggedDate = typeof body?.loggedDate === "string" ? body.loggedDate : "";
+  const numericFields = ["quantity", "calories", "protein", "carbs", "fat"];
+  const values = Object.fromEntries(numericFields.map((field) => [field, Number(body?.[field])]));
+  if (!foodName || foodName.length > 200 || !/^\d{4}-\d{2}-\d{2}$/.test(loggedDate) || !Number.isFinite(values.quantity) || values.quantity <= 0 || numericFields.slice(1).some((field) => !Number.isFinite(values[field]) || values[field] < 0)) return null;
+  return { foodName, loggedDate, ...values, source: body?.source === "fatsecret" ? "fatsecret" : "manual", servingLabel: typeof body?.servingLabel === "string" && body.servingLabel.length <= 100 ? body.servingLabel : `${values.quantity} g`, sourceFoodId: typeof body?.sourceFoodId === "string" ? body.sourceFoodId.slice(0, 100) : null };
+}
+
+function nutrientValue(food, number, name) {
+  const nutrient = food.foodNutrients?.find((item) => String(item.nutrientNumber) === number || item.nutrientName === name);
+  return Number(nutrient?.value ?? 0);
+}
+
+let fatSecretToken;
+
+async function getFatSecretToken() {
+  if (fatSecretToken && fatSecretToken.expiresAt > Date.now()) return fatSecretToken.value;
+  const credentials = `${process.env.FATSECRET_CLIENT_ID}:${process.env.FATSECRET_CLIENT_SECRET}`;
+  const response = await fetch("https://oauth.fatsecret.com/connect/token", { method: "POST", headers: { Authorization: `Basic ${Buffer.from(credentials).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" }, body: "grant_type=client_credentials&scope=basic" });
+  if (!response.ok) throw new Error(`FatSecret authentication returned ${response.status}`);
+  const data = await response.json();
+  fatSecretToken = { value: data.access_token, expiresAt: Date.now() + (Number(data.expires_in || 3600) - 60) * 1000 };
+  return fatSecretToken.value;
+}
+
+function parseFatSecretDescription(description = "") {
+  const values = Object.fromEntries([...description.matchAll(/(Calories|Fat|Carbs|Protein):\s*([\d.]+)/gi)].map(([, key, value]) => [key.toLowerCase(), Number(value)]));
+  return { calories: values.calories || 0, protein: values.protein || 0, carbs: values.carbs || 0, fat: values.fat || 0 };
+}
+
+async function searchFatSecretFoods(query) {
+  const token = await getFatSecretToken();
+  const url = new URL("https://platform.fatsecret.com/rest/foods/search/v1");
+  url.searchParams.set("search_expression", query); url.searchParams.set("max_results", "8"); url.searchParams.set("format", "json");
+  const response = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+  if (!response.ok) throw new Error(`FatSecret search returned ${response.status}`);
+  const data = await response.json();
+  if (data.error?.message) throw new Error(`FatSecret: ${data.error.message}`);
+  const foods = data.foods?.food || [];
+  return (Array.isArray(foods) ? foods : [foods]).map((food) => ({ id: String(food.food_id), name: food.food_name, brand: food.brand_name || "", quantity: 1, unit: "serving", servingLabel: "1 serving", ...parseFatSecretDescription(food.food_description) }));
+}
+
+app.get("/api/foods/search", async (req, res) => {
+  const query = String(req.query.q || "").trim();
+  if (query.length < 2 || query.length > 100) return res.status(400).json({ error: "Enter 2–100 characters to search." });
+  if (!process.env.FATSECRET_CLIENT_ID || !process.env.FATSECRET_CLIENT_SECRET) return res.status(503).json({ error: "Food search is not configured yet. Add FatSecret credentials to the API environment, or log food manually." });
+  try {
+    res.json({ foods: await searchFatSecretFoods(query) });
+  } catch (error) { console.error("Food search error", error); res.status(503).json({ error: error.message?.startsWith("FatSecret:") ? error.message : "Food search is temporarily unavailable. You can still add food manually." }); }
+});
+
+app.get("/api/food-entries", async (req, res) => {
+  const month = String(req.query.month || "");
+  if (!/^\d{4}-\d{2}$/.test(month)) return res.status(400).json({ error: "Use a month in YYYY-MM format." });
+  try {
+    const result = await pool.query("SELECT entry_id, TO_CHAR(logged_date, 'YYYY-MM-DD') AS logged_date, food_name, serving_label, quantity, calories, protein_g, carbs_g, fat_g, source FROM food_entries WHERE user_id = $1 AND logged_date >= $2::date AND logged_date < ($2::date + INTERVAL '1 month') ORDER BY logged_date DESC, created_at DESC", [req.auth.userId.trim(), `${month}-01`]);
+    res.json({ entries: result.rows });
+  } catch (error) { console.error("Food entry load error", error); res.status(503).json({ error: "Food logging is not available yet. Run migration 009 first." }); }
+});
+
+app.post("/api/food-entries", async (req, res) => {
+  const entry = parseFoodEntry(req.body);
+  if (!entry) return res.status(400).json({ error: "Enter a food, date, serving, and non-negative nutrition values." });
+  try {
+    await ensureUserProfile(req.auth.userId);
+    const result = await pool.query("INSERT INTO food_entries (entry_id, user_id, logged_date, food_name, serving_label, quantity, calories, protein_g, carbs_g, fat_g, source, source_food_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12) RETURNING entry_id, TO_CHAR(logged_date, 'YYYY-MM-DD') AS logged_date, food_name, serving_label, quantity, calories, protein_g, carbs_g, fat_g, source", [uuid(), req.auth.userId.trim(), entry.loggedDate, entry.foodName, entry.servingLabel, entry.quantity, entry.calories, entry.protein, entry.carbs, entry.fat, entry.source, entry.sourceFoodId]);
+    res.status(201).json({ entry: result.rows[0] });
+  } catch (error) { console.error("Food entry save error", error); res.status(503).json({ error: "Could not save the food entry. Run migration 009 if it has not been applied." }); }
+});
+
+app.put("/api/food-entries/:entryId", async (req, res) => {
+  const entry = parseFoodEntry(req.body);
+  if (!entry) return res.status(400).json({ error: "Enter a food, date, serving, and non-negative nutrition values." });
+  try {
+    const result = await pool.query("UPDATE food_entries SET logged_date = $1, food_name = $2, serving_label = $3, quantity = $4, calories = $5, protein_g = $6, carbs_g = $7, fat_g = $8, source = $9, source_food_id = $10 WHERE entry_id = $11 AND user_id = $12 RETURNING entry_id, TO_CHAR(logged_date, 'YYYY-MM-DD') AS logged_date, food_name, serving_label, quantity, calories, protein_g, carbs_g, fat_g, source", [entry.loggedDate, entry.foodName, entry.servingLabel, entry.quantity, entry.calories, entry.protein, entry.carbs, entry.fat, entry.source, entry.sourceFoodId, req.params.entryId, req.auth.userId.trim()]);
+    if (!result.rowCount) return res.status(404).json({ error: "Food entry not found." });
+    res.json({ entry: result.rows[0] });
+  } catch (error) { console.error("Food entry update error", error); res.status(500).json({ error: "Could not update the food entry." }); }
+});
+
+app.delete("/api/food-entries/:entryId", async (req, res) => {
+  try {
+    const result = await pool.query("DELETE FROM food_entries WHERE entry_id = $1 AND user_id = $2", [req.params.entryId, req.auth.userId.trim()]);
+    if (!result.rowCount) return res.status(404).json({ error: "Food entry not found." });
+    res.status(204).end();
+  } catch (error) { console.error("Food entry delete error", error); res.status(500).json({ error: "Could not delete the food entry." }); }
+});
+
 app.get("/api/wellness/today", async (req, res) => {
   try {
     const result = await pool.query("SELECT TO_CHAR(checkin_date, 'YYYY-MM-DD') AS checkin_date, sleep_hours, sleep_quality, energy_score, soreness_score, stress_score, notes FROM daily_wellness_checkins WHERE user_id = $1 AND checkin_date = CURRENT_DATE", [req.auth.userId.trim()]);
