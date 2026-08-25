@@ -27,10 +27,11 @@ async function loadHomeDashboard(user) {
   greeting.textContent = `Welcome back, ${name}`;
 
   try {
-    const [planResponse, workoutsResponse, wellnessResponse] = await Promise.all([
+    const [planResponse, workoutsResponse, wellnessResponse, goalsResponse] = await Promise.all([
       authenticatedFetch("/api/plans/latest"),
       authenticatedFetch("/api/workouts?limit=25"),
-      authenticatedFetch("/api/wellness/today")
+      authenticatedFetch("/api/wellness/today"),
+      authenticatedFetch("/api/goals")
     ]);
     const planData = planResponse.status === 404 ? null : await planResponse.json();
     const workoutsData = await workoutsResponse.json();
@@ -47,7 +48,8 @@ async function loadHomeDashboard(user) {
 
     const workouts = workoutsData.workouts || [];
     const weeklyWorkouts = workouts.filter((workout) => new Date(`${workout.session_date}T00:00:00`) >= startOfWeek());
-    weeklyCount.textContent = weeklyWorkouts.length;
+    const goalsData = goalsResponse.ok ? await goalsResponse.json() : { goals: { weekly_workouts: 3 } };
+    weeklyCount.textContent = `${weeklyWorkouts.length} / ${goalsData.goals.weekly_workouts}`;
     latestWorkout.textContent = workouts[0]
       ? new Date(`${workouts[0].session_date}T00:00:00`).toLocaleDateString(undefined, { month: "short", day: "numeric" })
       : "None yet";

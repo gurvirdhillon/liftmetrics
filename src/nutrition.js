@@ -1,6 +1,6 @@
 import { authenticatedFetch, getAuthenticatedUser, handleAuthRedirect } from "./auth.js";
 
-const state = { month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), selectedDate: localDate(new Date()), entries: [], selectedFood: null, editingEntryId: null };
+const state = { month: new Date(new Date().getFullYear(), new Date().getMonth(), 1), selectedDate: localDate(new Date()), entries: [], selectedFood: null, editingEntryId: null, goals: { daily_calories: 2000, daily_protein: 120 } };
 const $ = (selector) => document.querySelector(selector);
 
 function localDate(date) { const offset = date.getTimezoneOffset() * 60_000; return new Date(date - offset).toISOString().slice(0, 10); }
@@ -29,7 +29,7 @@ function renderCalendar() {
 function renderTotalsAndEntries() {
   $("#selected-date").textContent = formatDate(state.selectedDate);
   const dailyTotals = totals(selectedEntries());
-  $("#nutrition-totals").innerHTML = `<span><strong>${Math.round(dailyTotals.calories)}</strong> kcal</span><span><strong>${dailyTotals.protein.toFixed(1)}g</strong> protein</span><span><strong>${dailyTotals.carbs.toFixed(1)}g</strong> carbs</span><span><strong>${dailyTotals.fat.toFixed(1)}g</strong> fat</span>`;
+  $("#nutrition-totals").innerHTML = `<span><strong>${Math.round(dailyTotals.calories)} / ${state.goals.daily_calories}</strong> kcal</span><span><strong>${dailyTotals.protein.toFixed(1)} / ${state.goals.daily_protein}g</strong> protein</span><span><strong>${dailyTotals.carbs.toFixed(1)}g</strong> carbs</span><span><strong>${dailyTotals.fat.toFixed(1)}g</strong> fat</span>`;
   const list = $("#food-entries"); list.replaceChildren();
   if (!selectedEntries().length) { list.textContent = "No food logged for this day yet."; return; }
   selectedEntries().forEach((entry) => {
@@ -40,7 +40,7 @@ function renderTotalsAndEntries() {
 }
 
 function render() { renderCalendar(); renderTotalsAndEntries(); }
-async function loadEntries() { const response = await authenticatedFetch(`/api/food-entries?month=${monthKey()}`); const data = await response.json(); if (!response.ok) throw new Error(data.error); state.entries = data.entries; render(); }
+async function loadEntries() { const [entriesResponse, goalsResponse] = await Promise.all([authenticatedFetch(`/api/food-entries?month=${monthKey()}`), authenticatedFetch("/api/goals")]); const data = await entriesResponse.json(); if (!entriesResponse.ok) throw new Error(data.error); if (goalsResponse.ok) state.goals = (await goalsResponse.json()).goals; state.entries = data.entries; render(); }
 function setStatus(message) { $("#food-status").textContent = message; }
 
 function editEntry(entry) {

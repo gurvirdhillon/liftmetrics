@@ -270,6 +270,30 @@ app.put("/api/usernames", async (req, res) => {
   }
 });
 
+function parseGoals(body) {
+  const dailyCalories = Number(body?.dailyCalories); const dailyProtein = Number(body?.dailyProtein); const weeklyWorkouts = Number(body?.weeklyWorkouts);
+  if (!Number.isInteger(dailyCalories) || dailyCalories < 500 || dailyCalories > 10_000 || !Number.isInteger(dailyProtein) || dailyProtein < 10 || dailyProtein > 1_000 || !Number.isInteger(weeklyWorkouts) || weeklyWorkouts < 1 || weeklyWorkouts > 7) return null;
+  return { dailyCalories, dailyProtein, weeklyWorkouts };
+}
+
+app.get("/api/goals", async (req, res) => {
+  try {
+    await ensureUserProfile(req.auth.userId);
+    const result = await pool.query("SELECT daily_calorie_target AS daily_calories, daily_protein_target_g AS daily_protein, weekly_workout_target AS weekly_workouts FROM user_profiles WHERE user_id = $1", [req.auth.userId.trim()]);
+    res.json({ goals: result.rows[0] });
+  } catch (error) { console.error("Goals load error", error); res.status(503).json({ error: "Goals are not available yet. Run migration 010 first." }); }
+});
+
+app.put("/api/goals", async (req, res) => {
+  const goals = parseGoals(req.body);
+  if (!goals) return res.status(400).json({ error: "Enter goals within the supported ranges." });
+  try {
+    await ensureUserProfile(req.auth.userId);
+    const result = await pool.query("UPDATE user_profiles SET daily_calorie_target = $1, daily_protein_target_g = $2, weekly_workout_target = $3 WHERE user_id = $4 RETURNING daily_calorie_target AS daily_calories, daily_protein_target_g AS daily_protein, weekly_workout_target AS weekly_workouts", [goals.dailyCalories, goals.dailyProtein, goals.weeklyWorkouts, req.auth.userId.trim()]);
+    res.json({ goals: result.rows[0] });
+  } catch (error) { console.error("Goals save error", error); res.status(503).json({ error: "Could not save goals. Run migration 010 first." }); }
+});
+
 // Static files
 app.use(express.static(path.join(__dirname, "../src")));
 

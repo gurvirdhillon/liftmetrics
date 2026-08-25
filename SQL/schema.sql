@@ -13,7 +13,10 @@ CREATE TABLE user_profiles (
     weight_kg DECIMAL(5,2),
     experience_level VARCHAR(20),
     workout_frequency_days_week INTEGER,
-    fat_percentage DECIMAL(5,2)
+    fat_percentage DECIMAL(5,2),
+    daily_calorie_target INTEGER NOT NULL DEFAULT 2000 CHECK (daily_calorie_target BETWEEN 500 AND 10000),
+    daily_protein_target_g INTEGER NOT NULL DEFAULT 120 CHECK (daily_protein_target_g BETWEEN 10 AND 1000),
+    weekly_workout_target INTEGER NOT NULL DEFAULT 3 CHECK (weekly_workout_target BETWEEN 1 AND 7)
     ,account_role VARCHAR(20) NOT NULL DEFAULT 'client' CHECK (account_role IN ('client', 'trainer'))
 );
 

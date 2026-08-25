@@ -287,6 +287,7 @@ button:disabled {
 }
 
 .profile-details dd { margin: 0; font-weight: 700; color: #ffffff; line-height: 1.35; }
+.goals-form { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; margin-top: 22px; }.goals-form label { display: grid; gap: 7px; font-weight: 700; }.goals-form input { min-height: 44px; padding: 10px 12px; border: 1px solid rgba(255,255,255,.24); border-radius: 10px; background: rgba(255,255,255,.08); color: #fff; font: inherit; }.goals-form button { align-self: end; margin: 0; background: #8ebcff; color: #07142f; }.goals-form p { grid-column: 1 / -1; min-height: 1.2em; margin: 0; color: rgba(245,247,251,.8); }
 
 .username-card { display: flex; align-items: end; justify-content: space-between; gap: 24px; }
 .username-form { display: grid; grid-template-columns: auto minmax(180px, 260px) auto; align-items: center; gap: 10px; }
@@ -311,7 +312,7 @@ button:disabled {
   .profile-overview { align-items: flex-start; flex-direction: column; padding: 24px; }
   .username-card { align-items: flex-start; flex-direction: column; }
   .profile-actions { justify-content: flex-start; }
-  .profile-details, .workout-history-list, .trainer-client-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .profile-details, .workout-history-list, .trainer-client-list, .goals-form { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 480px) {
@@ -326,7 +327,7 @@ button:disabled {
   .username-form { width: 100%; grid-template-columns: 1fr; }
   .username-form #username-status { grid-column: auto; }
   .section-heading { flex-direction: column; }
-  .profile-details, .workout-history-list, .trainer-client-list, .client-metrics, .trainer-detail-grid { grid-template-columns: 1fr; }
+  .profile-details, .workout-history-list, .trainer-client-list, .client-metrics, .trainer-detail-grid, .goals-form { grid-template-columns: 1fr; }
   .trainer-invite-card { align-items: flex-start; flex-direction: column; }
   .trainer-invite-actions { width: 100%; }
 }

@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const usernameStatus = document.getElementById("username-status");
   const saveUsernameBtn = document.getElementById("save-username-btn");
   const accountRoleForm = document.getElementById("account-role-form");
+  const goalsForm = document.getElementById("goals-form");
   const settingsToggle = document.getElementById("settings-toggle");
   const settingsDrawer = document.getElementById("settings-drawer");
   const settingsOverlay = document.getElementById("settings-overlay");
@@ -303,6 +304,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.getElementById("summary-fitness").textContent = formatFitnessLevel(profile.fitness_level);
   }
 
+  async function loadGoals() {
+    try {
+      const response = await authenticatedFetch("/api/goals"); const data = await response.json();
+      if (!response.ok) throw new Error(data.error || "Could not load goals.");
+      document.getElementById("goal-calories").value = data.goals.daily_calories;
+      document.getElementById("goal-protein").value = data.goals.daily_protein;
+      document.getElementById("goal-workouts").value = data.goals.weekly_workouts;
+    } catch (error) { document.getElementById("goals-status").textContent = error.message; }
+  }
+
   async function loadUsername() {
     if (!currentUser?.sub || !usernameInput) return;
     try {
@@ -431,6 +442,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadInsights();
     loadInjuryRestrictions();
     loadUsername();
+    loadGoals();
 
     loadingState.style.display = "none";
     loggedOutView.style.display = "none";
@@ -575,6 +587,17 @@ document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById("injury-pain").value = 0;
       status.textContent = "Restrictions cleared. Refreshing your guidance…";
       await loadInsights();
+    } catch (error) { status.textContent = error.message; }
+  });
+
+  goalsForm?.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const status = document.getElementById("goals-status");
+    try {
+      status.textContent = "Saving…";
+      const response = await authenticatedFetch("/api/goals", { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ dailyCalories: Number(document.getElementById("goal-calories").value), dailyProtein: Number(document.getElementById("goal-protein").value), weeklyWorkouts: Number(document.getElementById("goal-workouts").value) }) });
+      const data = await response.json(); if (!response.ok) throw new Error(data.error || "Could not save goals.");
+      status.textContent = "Goals saved.";
     } catch (error) { status.textContent = error.message; }
   });
 
