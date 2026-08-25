@@ -141,7 +141,11 @@ body{
 .navbar a {
     text-decoration: none;
 }
-.wellness-nav-link { color: #129c84; font-size: clamp(22px, 4vw, 29px); line-height: 1; }
+.navbar-link { display: flex; flex: 1 1 0; min-width: 44px; min-height: 52px; align-items: center; justify-content: center; flex-direction: column; gap: 3px; color: #243046; font-family: Arial, sans-serif; font-size: clamp(.65rem, 1.8vw, .78rem); font-weight: 700; line-height: 1; }
+.navbar-link--active { color: #087d6e; }
+.navbar-link:focus-visible { outline: 3px solid #087d6e; outline-offset: -3px; border-radius: 8px; }
+.icon_img { width: clamp(20px, 3.5vw, 25px); }
+.wellness-nav-link b { color: currentColor; font-size: clamp(22px, 4vw, 29px); line-height: .9; }
 
 .wellness-page { width: min(680px, 100%); margin: 0 auto; padding: 36px 24px 105px; box-sizing: border-box; }
 .wellness-page h1 { margin: 7px 0; font-size: clamp(2rem, 7vw, 3.4rem); }
