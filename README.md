@@ -56,7 +56,7 @@ Required technologies
 - [ ] Git
 
 ```
-git clone https://github.com/gurvirdhillon/fitness-tracker.git
+git clone https://github.com/gurvirdhillon/liftmetrics.git
 ```
 
 ```
