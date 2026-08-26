@@ -18,8 +18,7 @@ function optionalNumber(selector) {
   return value === "" || value == null ? null : Number(value);
 }
 
-const exerciseOptions = {
-  Strength: [
+const strengthExerciseFallback = [
     "Bench Press",
     "Squat",
     "Deadlift",
@@ -33,55 +32,17 @@ const exerciseOptions = {
     "Leg Curl",
     "Leg Extension",
     "Calf Raise",
-    "Other"
-  ],
-  Cardio: [
-    "Treadmill",
-    "Running",
-    "Cycling",
-    "Rowing",
-    "Elliptical",
-    "Stairmaster",
-    "Walking",
-    "Swimming",
-    "Other"
-  ],
-  HIIT: [
-    "Burpees",
-    "Mountain Climbers",
-    "Jump Rope",
-    "Battle Ropes",
-    "Sprints",
-    "Circuit Training",
-    "Other"
-  ],
-  Mobility: [
-    "Stretching",
-    "Yoga",
-    "Foam Rolling",
-    "Dynamic Warmup",
-    "Mobility Flow",
-    "Other"
-  ],
-  Recovery: [
-    "Walking",
-    "Light Cycling",
-    "Stretching",
-    "Foam Rolling",
-    "Recovery Jog",
-    "Other"
-  ],
-  Sports: [
-    "Football",
-    "Basketball",
-    "Tennis",
-    "Boxing",
-    "Rugby",
-    "Cricket",
-    "Swimming",
-    "Other"
-  ]
-};
+  "Other"
+];
+
+function escapeHtml(value) {
+  return String(value ?? "").replace(/[&<>'"]/g, (character) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;" })[character]);
+}
+
+function localExerciseMatches(query) {
+  const normalised = query.toLowerCase();
+  return strengthExerciseFallback.filter((name) => name.toLowerCase().includes(normalised)).map((name) => ({ id: "", name, bodyPart: null, target: null, equipment: null }));
+}
 
 function toggleWorkoutFields() {
   const workoutType = document.querySelector('select[name="workout_type"]').value;
@@ -106,11 +67,10 @@ const workoutTypeSelect = document.querySelector('select[name="workout_type"]');
 function exerciseEntry(exercise = {}) {
   const row = document.createElement("div");
   row.className = "exercise-entry performance_row";
-  const names = exercise.exercise_name && !exerciseOptions.Strength.includes(exercise.exercise_name) ? [exercise.exercise_name, ...exerciseOptions.Strength] : exerciseOptions.Strength;
-  row.innerHTML = `<div class="input_group"><label>Exercise</label><select class="entry-exercise" required>${names.map((name) => `<option ${name === exercise.exercise_name ? "selected" : ""}>${name}</option>`).join("")}</select></div>
-    <div class="input_group"><label>Sets</label><input class="entry-sets" type="number" min="1" value="${exercise.sets ?? ""}" inputmode="numeric"></div>
-    <div class="input_group"><label>Reps</label><input class="entry-reps" type="number" min="1" value="${exercise.reps ?? ""}" inputmode="numeric"></div>
-    <div class="input_group weight-group"><label>Weight</label><div class="weight_row"><input class="entry-weight" type="number" min="0" step="0.5" value="${exercise.weight_value ?? ""}" inputmode="decimal"><select class="entry-unit"><option ${exercise.weight_unit === "lbs" ? "" : "selected"}>kg</option><option ${exercise.weight_unit === "lbs" ? "selected" : ""}>lbs</option></select></div></div>
+  row.innerHTML = `<div class="input_group exercise-picker"><label>Exercise</label><input class="entry-exercise" type="search" value="${escapeHtml(exercise.exercise_name || "")}" placeholder="Search exercises" autocomplete="off" required aria-autocomplete="list" aria-expanded="false"><input class="entry-exercise-id" type="hidden" value="${escapeHtml(exercise.exercise_external_id || "")}"><div class="exercise-suggestions" role="listbox" hidden></div><p class="exercise-help">Search the library, or type a custom exercise.</p></div>
+    <div class="input_group sets-group"><label>Sets</label><input class="entry-sets" type="number" min="1" value="${escapeHtml(exercise.sets ?? "")}" inputmode="numeric"></div>
+    <div class="input_group reps-group"><label>Reps</label><input class="entry-reps" type="number" min="1" value="${escapeHtml(exercise.reps ?? "")}" inputmode="numeric"></div>
+    <div class="input_group weight-group"><label>Weight</label><div class="weight_row"><input class="entry-weight" type="number" min="0" step="0.5" value="${escapeHtml(exercise.weight_value ?? "")}" inputmode="decimal"><select class="entry-unit"><option ${exercise.weight_unit === "lbs" ? "" : "selected"}>kg</option><option ${exercise.weight_unit === "lbs" ? "selected" : ""}>lbs</option></select></div></div>
     ${exercise.rest ? `<div class="entry-rest"><span>Rest: ${exercise.rest}</span><button type="button" class="start-rest">Start timer</button></div>` : ""}
     <button type="button" class="remove-exercise" aria-label="Remove exercise">×</button>`;
   row.querySelector(".remove-exercise").addEventListener("click", () => { if (document.querySelectorAll(".exercise-entry").length > 1) row.remove(); });
@@ -127,7 +87,63 @@ function exerciseEntry(exercise = {}) {
     const startedAt = Date.now();
     button.textContent = `${seconds}s remaining`;
   });
+  initialiseExerciseSearch(row);
   return row;
+}
+
+function initialiseExerciseSearch(row) {
+  const input = row.querySelector(".entry-exercise");
+  const idInput = row.querySelector(".entry-exercise-id");
+  const suggestions = row.querySelector(".exercise-suggestions");
+  let timer;
+
+  function selectExercise(exercise) {
+    input.value = exercise.name;
+    idInput.value = exercise.id || "";
+    suggestions.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+  }
+
+  function renderSuggestions(exercises, query) {
+    suggestions.replaceChildren();
+    const uniqueExercises = exercises.filter((exercise, index, all) => all.findIndex((item) => item.name.toLowerCase() === exercise.name.toLowerCase()) === index);
+    uniqueExercises.forEach((exercise) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "exercise-suggestion";
+      button.setAttribute("role", "option");
+      const details = [exercise.bodyPart, exercise.target, exercise.equipment].filter(Boolean).join(" · ");
+      button.innerHTML = `<strong>${escapeHtml(exercise.name)}</strong>${details ? `<small>${escapeHtml(details)}</small>` : ""}`;
+      button.addEventListener("mousedown", (event) => { event.preventDefault(); selectExercise(exercise); });
+      suggestions.append(button);
+    });
+    const custom = document.createElement("button");
+    custom.type = "button";
+    custom.className = "exercise-suggestion exercise-suggestion--custom";
+    custom.textContent = `Use “${query}” as a custom exercise`;
+    custom.addEventListener("mousedown", (event) => { event.preventDefault(); selectExercise({ id: "", name: query }); });
+    suggestions.append(custom);
+    suggestions.hidden = false;
+    input.setAttribute("aria-expanded", "true");
+  }
+
+  async function search(query) {
+    if (query.length < 2) { suggestions.hidden = true; input.setAttribute("aria-expanded", "false"); return; }
+    let exercises = localExerciseMatches(query);
+    try {
+      const response = await authenticatedFetch(`/api/exercises?q=${encodeURIComponent(query)}`);
+      if (response.ok) exercises = await response.json().then((data) => data.exercises || []);
+    } catch { /* Local matches and custom entry remain available offline. */ }
+    if (input.value.trim() === query) renderSuggestions(exercises, query);
+  }
+
+  input.addEventListener("input", () => {
+    idInput.value = "";
+    const query = input.value.trim();
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => search(query), 250);
+  });
+  input.addEventListener("blur", () => window.setTimeout(() => { suggestions.hidden = true; input.setAttribute("aria-expanded", "false"); }, 150));
 }
 
 function addExercise(exercise) { document.querySelector("#exercise-entries").append(exerciseEntry(exercise)); }
@@ -176,6 +192,7 @@ form.addEventListener("submit", async (e) => {
     avg_pace: optionalNumber('input[name="pace"]'),
     exercises: workoutTypeSelect.value === "Strength" ? [...document.querySelectorAll(".exercise-entry")].map((entry) => ({
       exercise_name: entry.querySelector(".entry-exercise").value,
+      exercise_external_id: entry.querySelector(".entry-exercise-id").value || null,
       sets: entry.querySelector(".entry-sets").value === "" ? null : Number(entry.querySelector(".entry-sets").value),
       reps: entry.querySelector(".entry-reps").value === "" ? null : Number(entry.querySelector(".entry-reps").value),
       weight_value: entry.querySelector(".entry-weight").value === "" ? null : Number(entry.querySelector(".entry-weight").value),

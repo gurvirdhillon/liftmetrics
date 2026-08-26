@@ -27,3 +27,8 @@ test("rejects invalid exercise values", () => {
   const workout = { ...validWorkout, exercises: [{ exercise_name: "Squat", sets: -1 }] };
   assert.match(validateWorkout(workout).join(" "), /sets/);
 });
+
+test("accepts an ExerciseDB identifier and rejects an oversized one", () => {
+  assert.deepEqual(validateWorkout({ ...validWorkout, exercises: [{ exercise_name: "Squat", exercise_external_id: "0001" }] }), []);
+  assert.match(validateWorkout({ ...validWorkout, exercises: [{ exercise_name: "Squat", exercise_external_id: "x".repeat(101) }] }).join(" "), /exercise_external_id/);
+});

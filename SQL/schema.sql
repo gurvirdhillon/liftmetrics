@@ -68,6 +68,7 @@ CREATE TABLE exercise_entries (
     entry_id SERIAL PRIMARY KEY,
     session_id INTEGER NOT NULL,
     exercise_name VARCHAR(100),
+    exercise_external_id VARCHAR(100),
     sets DECIMAL(5,2),
     reps DECIMAL(5,2),
     weight_value DECIMAL(6,2),

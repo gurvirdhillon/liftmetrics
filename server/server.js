@@ -18,6 +18,7 @@ import { createCoachResponse } from "./ai-coach.js";
 import { applyInjurySafety } from "./injury-safety.js";
 import { comparePlanCompletion } from "./plan-completion.js";
 import { calculateReadiness, validateWellnessCheckin } from "./wellness.js";
+import { searchExerciseDb } from "./exercise-db.js";
 
 dotenv.config();
 
@@ -63,6 +64,7 @@ app.use(express.json({ limit: "100kb" }));
 const apiRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 1_000, standardHeaders: "draft-8", legacyHeaders: false });
 app.use(["/api", "/messages"], apiRateLimit);
 const coachRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 20, standardHeaders: "draft-8", legacyHeaders: false });
+const exerciseSearchRateLimit = rateLimit({ windowMs: 15 * 60 * 1000, limit: 60, standardHeaders: "draft-8", legacyHeaders: false });
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -116,6 +118,20 @@ app.get("/readyz", async (req, res) => {
 });
 
 app.use(["/api", "/messages"], requireAuth);
+
+app.get("/api/exercises", exerciseSearchRateLimit, async (req, res) => {
+  const query = typeof req.query.q === "string" ? req.query.q.trim() : "";
+  if (query.length < 2 || query.length > 80) return res.status(400).json({ error: "Search using between 2 and 80 characters." });
+  try {
+    res.json({ exercises: await searchExerciseDb(query) });
+  } catch (error) {
+    if (error.code === "EXERCISE_DB_NOT_CONFIGURED") {
+      return res.status(503).json({ error: "Exercise search is not configured yet. You can still add a custom exercise." });
+    }
+    console.error("ExerciseDB search error:", error);
+    res.status(502).json({ error: "Exercise search is temporarily unavailable. You can still add a custom exercise." });
+  }
+});
 
 app.get("/messages", async (req, res) => {
   try {
@@ -501,16 +517,18 @@ app.post("/api/workouts", async (req, res) => {
           INSERT INTO exercise_entries (
             session_id,
             exercise_name,
+            exercise_external_id,
             sets,
             reps,
             weight_value,
             weight_unit
           )
-          VALUES ($1,$2,$3,$4,$5,$6)
+          VALUES ($1,$2,$3,$4,$5,$6,$7)
           `,
           [
             sessionId,
             exercise.exercise_name || null,
+            exercise.exercise_external_id || null,
             exercise.sets ?? null,
             exercise.reps ?? null,
             exercise.weight_value ?? null,
@@ -580,6 +598,7 @@ app.get("/api/workouts", async (req, res) => {
             json_build_object(
               'entry_id', ee.entry_id,
               'exercise_name', ee.exercise_name,
+              'exercise_external_id', ee.exercise_external_id,
               'sets', ee.sets,
               'reps', ee.reps,
               'weight_value', ee.weight_value,

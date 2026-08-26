@@ -47,6 +47,12 @@ export function validateWorkout(payload) {
   }
 
   for (const exercise of payload.exercises || []) {
+    if (typeof exercise.exercise_name !== "string" || !exercise.exercise_name.trim() || exercise.exercise_name.length > 100) {
+      errors.push("exercise_name must be between 1 and 100 characters.");
+    }
+    if (exercise.exercise_external_id != null && (typeof exercise.exercise_external_id !== "string" || exercise.exercise_external_id.length > 100)) {
+      errors.push("exercise_external_id must be no more than 100 characters.");
+    }
     for (const field of ["sets", "reps", "weight_value"]) {
       if (exercise[field] != null && (typeof exercise[field] !== "number" || !Number.isFinite(exercise[field]) || exercise[field] < 0)) {
         errors.push(`${field} must be a non-negative number.`);

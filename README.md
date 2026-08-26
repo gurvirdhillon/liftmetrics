@@ -87,6 +87,7 @@ psql "$DATABASE_URL" -f SQL/migrations/004_add_unique_usernames.sql
 psql "$DATABASE_URL" -f SQL/migrations/005_scale_and_messages.sql
 psql "$DATABASE_URL" -f SQL/migrations/006_create_trainer_portal.sql
 psql "$DATABASE_URL" -f SQL/migrations/007_link_workouts_to_plan_sessions.sql
+psql "$DATABASE_URL" -f SQL/migrations/011_add_exercise_external_id.sql
 ```
 
 ## Production configuration
@@ -94,6 +95,10 @@ psql "$DATABASE_URL" -f SQL/migrations/007_link_workouts_to_plan_sessions.sql
 The API requires Auth0 access tokens. Create an Auth0 API for LiftMetrics and configure its identifier as `AUTH0_AUDIENCE`; set `AUTH0_DOMAIN` and, optionally, `AUTH0_ISSUER_BASE_URL`. Configure `CORS_ORIGIN` as a comma-separated list of exact public frontend origins (required when `NODE_ENV=production`).
 
 Set `DB_POOL_MAX` to a conservative per-API-instance value (default `10`) and use your managed PostgreSQL provider's pooler when running multiple API instances. The API exposes `/healthz` for liveness and `/readyz` for database readiness.
+
+### Exercise search
+
+LiftMetrics can search ExerciseDB from the strength workout form. Add `EXERCISE_DB_API_KEY` to the API environment (a RapidAPI ExerciseDB key) and optionally set `EXERCISE_DB_BASE_URL` and `EXERCISE_DB_RAPIDAPI_HOST` if your provider uses different values. The key stays on the server; the browser uses `/api/exercises`. Without it, users can still choose from the built-in common exercises or create a custom exercise. Apply `SQL/migrations/011_add_exercise_external_id.sql` to persist the provider exercise ID.
 
 
 ## Usage
