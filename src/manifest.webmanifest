@@ -1,0 +1,14 @@
+{
+  "name": "LiftMetrics",
+  "short_name": "LiftMetrics",
+  "description": "Track your performance and build strength.",
+  "start_url": "/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07142f",
+  "theme_color": "#07142f",
+  "icons": [
+    { "src": "/img/pwa-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/img/pwa-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

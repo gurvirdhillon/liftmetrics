@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <title>Log your lift</title>
+    <meta name="theme-color" content="#07142f">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="apple-touch-icon" href="img/pwa-192.png">
+    <script src="pwa.js" defer></script>
     <link rel="stylesheet" href="index.css">
     <link rel="icon" type="image/png" href="img/logo.png">
     <script src="https://cdn.auth0.com/js/auth0-spa-js/1.13/auth0-spa-js.production.js" defer></script>
@@ -107,6 +111,8 @@
 
         </div>
         <input type="submit">
+        <button type="button" id="discard-workout-draft" class="secondary-btn" hidden>Discard saved draft</button>
+        <p id="workout-draft-status" class="workout-draft-status" role="status" hidden></p>
         <p id="workout-completion" class="workout-completion" role="status" hidden></p>
     </div>
         </form>

@@ -389,7 +389,9 @@ select {
 .entry-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 16px; }
 .remove-exercise { align-self: end; width: auto; padding: 10px 14px; background: #fee2e2; color: #991b1b; border: 0; border-radius: 8px; font-size: 1.2rem; }
 .form-hint { color: #475569; }
-.active-plan-session, .workout-completion { max-width: 620px; margin: 16px auto; padding: 12px 16px; border-radius: 10px; background: #dbeafe; color: #12306b; }
+.active-plan-session, .workout-completion, .workout-draft-status { max-width: 620px; margin: 16px auto; padding: 12px 16px; border-radius: 10px; background: #dbeafe; color: #12306b; }
+.pwa-install { position: fixed; right: 16px; bottom: 92px; z-index: 10; max-width: min(330px, calc(100vw - 32px)); padding: 12px; border-radius: 12px; background: #07142f; color: #fff; box-shadow: 0 8px 30px rgba(0, 0, 0, .3); }.pwa-install button { margin: 0; }.pwa-install p { margin: 0; font-size: .9rem; line-height: 1.4; }
+.offline-page { display: grid; place-items: center; align-content: center; min-height: 100vh; padding: 24px; box-sizing: border-box; text-align: center; background: #07142f; color: #fff; }.offline-page p { max-width: 440px; color: rgba(255, 255, 255, .8); }
 .entry-rest { display: flex; align-items: center; gap: 8px; align-self: end; font-size: 0.9rem; color: #334155; }
 .entry-rest button { width: auto; padding: 8px 10px; font-size: 0.85rem; }
 

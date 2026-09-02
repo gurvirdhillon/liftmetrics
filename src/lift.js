@@ -68,6 +68,108 @@ function toggleWorkoutFields() {
 
 const form = document.querySelector("#workoutForm");
 const workoutTypeSelect = document.querySelector('select[name="workout_type"]');
+const draftStatus = document.querySelector("#workout-draft-status");
+const discardDraftButton = document.querySelector("#discard-workout-draft");
+let workoutDraftKey = null;
+let draftSaveTimer = null;
+
+function draftValue(selector) {
+  return document.querySelector(selector)?.value || "";
+}
+
+function readWorkoutDraft() {
+  return {
+    sessionDate: draftValue("#DateInput"),
+    durationValue: draftValue('input[name="session_duration_hr"]'),
+    durationUnit: draftValue('select[name="duration_metric"]'),
+    workoutType: draftValue('select[name="workout_type"]'),
+    feelingScore: draftValue("#feelingRange"),
+    avgBpm: draftValue('input[name="avg_bpm"]'),
+    maxBpm: draftValue('input[name="max_bpm"]'),
+    waterIntake: draftValue('input[name="water_intake"]'),
+    distance: draftValue('input[name="distance"]'),
+    distanceUnit: draftValue('select[name="distance_unit"]'),
+    calories: draftValue('input[name="calories"]'),
+    pace: draftValue('input[name="pace"]'),
+    exercises: [...document.querySelectorAll(".exercise-entry")].map((entry) => ({
+      exerciseName: entry.querySelector(".entry-exercise").value,
+      exerciseExternalId: entry.querySelector(".entry-exercise-id").value,
+      sets: entry.querySelector(".entry-sets").value,
+      reps: entry.querySelector(".entry-reps").value,
+      weightValue: entry.querySelector(".entry-weight").value,
+      weightUnit: entry.querySelector(".entry-unit").value
+    }))
+  };
+}
+
+function updateDraftStatus(message) {
+  draftStatus.hidden = !message;
+  draftStatus.textContent = message || "";
+}
+
+function saveWorkoutDraft() {
+  if (!workoutDraftKey) return;
+  try {
+    sessionStorage.setItem(workoutDraftKey, JSON.stringify(readWorkoutDraft()));
+    discardDraftButton.hidden = false;
+  } catch (error) {
+    console.warn("Could not save workout draft:", error);
+  }
+}
+
+function scheduleDraftSave() {
+  if (!workoutDraftKey) return;
+  window.clearTimeout(draftSaveTimer);
+  draftSaveTimer = window.setTimeout(saveWorkoutDraft, 400);
+}
+
+function setDraftValue(selector, value) {
+  const field = document.querySelector(selector);
+  if (field && value != null) field.value = value;
+}
+
+function restoreWorkoutDraft() {
+  if (!workoutDraftKey) return false;
+  try {
+    const draft = JSON.parse(sessionStorage.getItem(workoutDraftKey) || "null");
+    if (!draft || typeof draft !== "object") return false;
+    setDraftValue("#DateInput", draft.sessionDate);
+    setDraftValue('input[name="session_duration_hr"]', draft.durationValue);
+    setDraftValue('select[name="duration_metric"]', draft.durationUnit);
+    setDraftValue('select[name="workout_type"]', draft.workoutType);
+    setDraftValue("#feelingRange", draft.feelingScore);
+    setDraftValue('input[name="avg_bpm"]', draft.avgBpm);
+    setDraftValue('input[name="max_bpm"]', draft.maxBpm);
+    setDraftValue('input[name="water_intake"]', draft.waterIntake);
+    setDraftValue('input[name="distance"]', draft.distance);
+    setDraftValue('select[name="distance_unit"]', draft.distanceUnit);
+    setDraftValue('input[name="calories"]', draft.calories);
+    setDraftValue('input[name="pace"]', draft.pace);
+    document.querySelector("#exercise-entries").replaceChildren();
+    (draft.exercises || []).forEach((exercise) => addExercise({
+      exercise_name: exercise.exerciseName,
+      exercise_external_id: exercise.exerciseExternalId,
+      sets: exercise.sets,
+      reps: exercise.reps,
+      weight_value: exercise.weightValue,
+      weight_unit: exercise.weightUnit
+    }));
+    if (!document.querySelector(".exercise-entry")) addExercise();
+    toggleWorkoutFields();
+    discardDraftButton.hidden = false;
+    updateDraftStatus("Your saved workout draft has been restored.");
+    return true;
+  } catch (error) {
+    console.warn("Could not restore workout draft:", error);
+    return false;
+  }
+}
+
+function clearWorkoutDraft() {
+  window.clearTimeout(draftSaveTimer);
+  if (workoutDraftKey) sessionStorage.removeItem(workoutDraftKey);
+  discardDraftButton.hidden = true;
+}
 
 function exerciseEntry(exercise = {}) {
   const row = document.createElement("div");
@@ -78,7 +180,12 @@ function exerciseEntry(exercise = {}) {
     <div class="input_group weight-group"><label>Weight</label><div class="weight_row"><input class="entry-weight" type="number" min="0" step="0.1" value="${escapeHtml(exercise.weight_value ?? "")}" inputmode="decimal"><select class="entry-unit"><option ${exercise.weight_unit === "lbs" ? "" : "selected"}>kg</option><option ${exercise.weight_unit === "lbs" ? "selected" : ""}>lbs</option></select></div></div>
     ${exercise.rest ? `<div class="entry-rest"><span>Rest: ${exercise.rest}</span><button type="button" class="start-rest">Start timer</button></div>` : ""}
     <button type="button" class="remove-exercise" aria-label="Remove exercise">×</button>`;
-  row.querySelector(".remove-exercise").addEventListener("click", () => { if (document.querySelectorAll(".exercise-entry").length > 1) row.remove(); });
+  row.querySelector(".remove-exercise").addEventListener("click", () => {
+    if (document.querySelectorAll(".exercise-entry").length > 1) {
+      row.remove();
+      scheduleDraftSave();
+    }
+  });
   row.querySelector(".start-rest")?.addEventListener("click", (event) => {
     const seconds = Number.parseInt(exercise.rest, 10);
     if (!Number.isFinite(seconds)) return;
@@ -107,6 +214,7 @@ function initialiseExerciseSearch(row) {
     idInput.value = exercise.id || "";
     suggestions.hidden = true;
     input.setAttribute("aria-expanded", "false");
+    scheduleDraftSave();
   }
 
   function renderSuggestions(exercises, query) {
@@ -151,7 +259,10 @@ function initialiseExerciseSearch(row) {
   input.addEventListener("blur", () => window.setTimeout(() => { suggestions.hidden = true; input.setAttribute("aria-expanded", "false"); }, 150));
 }
 
-function addExercise(exercise) { document.querySelector("#exercise-entries").append(exerciseEntry(exercise)); }
+function addExercise(exercise) {
+  document.querySelector("#exercise-entries").append(exerciseEntry(exercise));
+  scheduleDraftSave();
+}
 
 document.querySelector("#add-exercise")?.addEventListener("click", () => addExercise());
 document.querySelector("#repeat-workout")?.addEventListener("click", async () => {
@@ -165,11 +276,25 @@ document.querySelector("#repeat-workout")?.addEventListener("click", async () =>
     previous.exercises.forEach(addExercise);
     document.querySelector('select[name="workout_type"]').value = previous.workout_type || "Strength";
     toggleWorkoutFields();
+    scheduleDraftSave();
   } catch (error) { alert(error.message); }
 });
 
 workoutTypeSelect.addEventListener("change", () => {
   toggleWorkoutFields();
+  scheduleDraftSave();
+});
+
+form.addEventListener("input", scheduleDraftSave);
+form.addEventListener("change", scheduleDraftSave);
+
+discardDraftButton.addEventListener("click", () => {
+  form.reset();
+  document.querySelector("#exercise-entries").replaceChildren();
+  addExercise();
+  toggleWorkoutFields();
+  clearWorkoutDraft();
+  updateDraftStatus("Saved workout draft discarded.");
 });
 
 form.addEventListener("submit", async (e) => {
@@ -222,6 +347,8 @@ form.addEventListener("submit", async (e) => {
       const completion = document.querySelector("#workout-completion");
       completion.hidden = false;
       completion.textContent = data.completion?.summary || "Activity logged successfully — nice work!";
+      clearWorkoutDraft();
+      updateDraftStatus("");
       sessionStorage.removeItem("liftmetrics_active_plan_session");
       console.log(data);
       form.reset();
@@ -238,7 +365,7 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-function allFunctions() {
+async function allFunctions() {
   limitDate();
   toggleWorkoutFields();
   addExercise();
@@ -252,7 +379,13 @@ function allFunctions() {
       const match = exercise.prescription.match(/(\d+)\s*x\s*(\d+)/i);
       addExercise({ exercise_name: exercise.name, sets: match?.[1] || null, reps: match?.[2] || null, rest: exercise.rest });
     });
+    return;
   }
+
+  const user = await getAuthenticatedUser();
+  if (!user?.sub) return;
+  workoutDraftKey = `liftmetrics:workout-draft:${user.sub}`;
+  restoreWorkoutDraft();
 }
 
 window.addEventListener("load", allFunctions);
