@@ -23,9 +23,19 @@ test("rejects invalid numeric values", () => {
   assert.match(validateWorkout({ ...validWorkout, duration_value: 0 }).join(" "), /Duration/);
 });
 
+test("requires a feeling score from zero to ten", () => {
+  assert.match(validateWorkout({ ...validWorkout, feeling_score: null }).join(" "), /Feeling score/);
+  assert.match(validateWorkout({ ...validWorkout, feeling_score: 11 }).join(" "), /Feeling score/);
+});
+
 test("rejects invalid exercise values", () => {
   const workout = { ...validWorkout, exercises: [{ exercise_name: "Squat", sets: -1 }] };
   assert.match(validateWorkout(workout).join(" "), /sets/);
+});
+
+test("accepts decimal exercise weights", () => {
+  const workout = { ...validWorkout, exercises: [{ exercise_name: "Squat", weight_value: 72.5 }] };
+  assert.deepEqual(validateWorkout(workout), []);
 });
 
 test("accepts an ExerciseDB identifier and rejects an oversized one", () => {

@@ -52,7 +52,12 @@ function toggleWorkoutFields() {
 
   if (!strengthFields || !cardioFields) return;
 
-  if (workoutType === "Strength") {
+  const isStrengthWorkout = workoutType === "Strength";
+  strengthFields.querySelectorAll("input, select, textarea, button").forEach((field) => {
+    field.disabled = !isStrengthWorkout;
+  });
+
+  if (isStrengthWorkout) {
     strengthFields.style.display = "block";
     cardioFields.style.display = "none";
   } else {
@@ -70,7 +75,7 @@ function exerciseEntry(exercise = {}) {
   row.innerHTML = `<div class="input_group exercise-picker"><label>Exercise</label><input class="entry-exercise" type="search" value="${escapeHtml(exercise.exercise_name || "")}" placeholder="Search exercises" autocomplete="off" required aria-autocomplete="list" aria-expanded="false"><input class="entry-exercise-id" type="hidden" value="${escapeHtml(exercise.exercise_external_id || "")}"><div class="exercise-suggestions" role="listbox" hidden></div><p class="exercise-help">Search the library, or type a custom exercise.</p></div>
     <div class="input_group sets-group"><label>Sets</label><input class="entry-sets" type="number" min="1" value="${escapeHtml(exercise.sets ?? "")}" inputmode="numeric"></div>
     <div class="input_group reps-group"><label>Reps</label><input class="entry-reps" type="number" min="1" value="${escapeHtml(exercise.reps ?? "")}" inputmode="numeric"></div>
-    <div class="input_group weight-group"><label>Weight</label><div class="weight_row"><input class="entry-weight" type="number" min="0" step="0.5" value="${escapeHtml(exercise.weight_value ?? "")}" inputmode="decimal"><select class="entry-unit"><option ${exercise.weight_unit === "lbs" ? "" : "selected"}>kg</option><option ${exercise.weight_unit === "lbs" ? "selected" : ""}>lbs</option></select></div></div>
+    <div class="input_group weight-group"><label>Weight</label><div class="weight_row"><input class="entry-weight" type="number" min="0" step="0.1" value="${escapeHtml(exercise.weight_value ?? "")}" inputmode="decimal"><select class="entry-unit"><option ${exercise.weight_unit === "lbs" ? "" : "selected"}>kg</option><option ${exercise.weight_unit === "lbs" ? "selected" : ""}>lbs</option></select></div></div>
     ${exercise.rest ? `<div class="entry-rest"><span>Rest: ${exercise.rest}</span><button type="button" class="start-rest">Start timer</button></div>` : ""}
     <button type="button" class="remove-exercise" aria-label="Remove exercise">×</button>`;
   row.querySelector(".remove-exercise").addEventListener("click", () => { if (document.querySelectorAll(".exercise-entry").length > 1) row.remove(); });
@@ -215,8 +220,8 @@ form.addEventListener("submit", async (e) => {
 
     if (response.ok) {
       const completion = document.querySelector("#workout-completion");
-      completion.hidden = !data.completion;
-      completion.textContent = data.completion?.summary || "Workout saved successfully.";
+      completion.hidden = false;
+      completion.textContent = data.completion?.summary || "Activity logged successfully — nice work!";
       sessionStorage.removeItem("liftmetrics_active_plan_session");
       console.log(data);
       form.reset();

@@ -32,14 +32,14 @@ export function validateWorkout(payload) {
     errors.push("Duration must be a positive number.");
   }
 
-  for (const field of numericFields.filter((field) => field !== "duration_value")) {
+  if (typeof payload.feeling_score !== "number" || !Number.isFinite(payload.feeling_score) || payload.feeling_score < 0 || payload.feeling_score > 10) {
+    errors.push("Feeling score must be between 0 and 10.");
+  }
+
+  for (const field of numericFields.filter((field) => field !== "duration_value" && field !== "feeling_score")) {
     if (payload[field] != null && (typeof payload[field] !== "number" || !Number.isFinite(payload[field]) || payload[field] < 0)) {
       errors.push(`${field} must be a non-negative number.`);
     }
-  }
-
-  if (payload.feeling_score != null && payload.feeling_score > 10) {
-    errors.push("Feeling score cannot be greater than 10.");
   }
 
   if (!Array.isArray(payload.exercises) || payload.exercises.length === 0 || !payload.exercises[0]?.exercise_name?.trim()) {
