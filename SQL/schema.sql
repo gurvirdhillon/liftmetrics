@@ -58,6 +58,7 @@ CREATE TABLE workout_sessions (
     max_bpm INTEGER,
     water_intake_l DECIMAL(4,2),
     workout_category VARCHAR(20),
+    submission_id VARCHAR(36) NOT NULL,
     plan_id INTEGER,
     planned_session JSONB,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -78,6 +79,9 @@ CREATE TABLE exercise_entries (
 
 CREATE INDEX workout_sessions_user_date_idx
     ON workout_sessions (user_id, session_date DESC, created_at DESC);
+
+CREATE UNIQUE INDEX workout_sessions_user_submission_unique_idx
+    ON workout_sessions (user_id, submission_id);
 
 CREATE INDEX workout_sessions_plan_idx ON workout_sessions(plan_id);
 

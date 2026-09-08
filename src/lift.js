@@ -73,6 +73,8 @@ const discardDraftButton = document.querySelector("#discard-workout-draft");
 const validationFeedback = document.querySelector("#workout-validation");
 let workoutDraftKey = null;
 let draftSaveTimer = null;
+let workoutSubmissionId = null;
+const submitButton = form.querySelector('input[type="submit"]');
 
 function fieldLabel(field) {
   if (field.id === "DateInput") return "Date";
@@ -336,6 +338,7 @@ discardDraftButton.addEventListener("click", () => {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (submitButton.disabled) return;
   clearValidationFeedback();
 
   try {
@@ -346,6 +349,7 @@ form.addEventListener("submit", async (e) => {
   }
 
   const payload = {
+    submission_id: workoutSubmissionId || crypto.randomUUID(),
     session_date: document.getElementById("DateInput").value,
     duration_value: optionalNumber('input[name="session_duration_hr"]'),
     duration_unit: document.querySelector('select[name="duration_metric"]').value,
@@ -367,9 +371,12 @@ form.addEventListener("submit", async (e) => {
       weight_unit: entry.querySelector(".entry-unit").value
     })) : [{ exercise_name: `${workoutTypeSelect.value} session` }]
   };
+  workoutSubmissionId = payload.submission_id;
   const activeSession = JSON.parse(sessionStorage.getItem("liftmetrics_active_plan_session") || "null");
   if (activeSession?.planId != null) Object.assign(payload, { plan_id: activeSession.planId, plan_session_index: activeSession.sessionIndex });
 
+  submitButton.disabled = true;
+  submitButton.value = "Saving…";
   try {
     const response = await authenticatedFetch("/api/workouts", {
       method: "POST",
@@ -386,6 +393,7 @@ form.addEventListener("submit", async (e) => {
       completion.hidden = false;
       completion.textContent = data.completion?.summary || "Activity logged successfully — nice work!";
       clearWorkoutDraft();
+      workoutSubmissionId = null;
       updateDraftStatus("");
       sessionStorage.removeItem("liftmetrics_active_plan_session");
       console.log(data);
@@ -400,6 +408,9 @@ form.addEventListener("submit", async (e) => {
   } catch (error) {
     console.error("Error submitting workout:", error);
     alert("Server error. Could not save workout.");
+  } finally {
+    submitButton.disabled = false;
+    submitButton.value = "Submit";
   }
 });
 

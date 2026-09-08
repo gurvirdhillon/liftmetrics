@@ -8,11 +8,20 @@ const validWorkout = {
   duration_value: 45,
   workout_type: "Strength",
   feeling_score: 5,
+  submission_id: "550e8400-e29b-41d4-a716-446655440000",
   exercises: [{ exercise_name: "Squat" }]
 };
 
 test("accepts a complete workout", () => {
   assert.deepEqual(validateWorkout(validWorkout), []);
+});
+
+test("requires a UUID submission ID so retries can be deduplicated", () => {
+  const payload = { ...validWorkout };
+  payload.submission_id = "not-a-uuid";
+  assert.ok(validateWorkout(payload).includes("A valid workout submission ID is required."));
+  payload.submission_id = "550e8400-e29b-41d4-a716-446655440000";
+  assert.equal(validateWorkout(payload).includes("A valid workout submission ID is required."), false);
 });
 
 test("rejects a workout without authenticated identity", () => {

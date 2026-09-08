@@ -20,6 +20,10 @@ export function validateWorkout(payload) {
     errors.push("A valid authenticated user ID is required.");
   }
 
+  if (typeof payload.submission_id !== "string" || !/^[0-9a-f]{8}-[0-9a-f]{4}-[4-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(payload.submission_id)) {
+    errors.push("A valid workout submission ID is required.");
+  }
+
   if (!/^\d{4}-\d{2}-\d{2}$/.test(payload.session_date || "") || Number.isNaN(Date.parse(payload.session_date))) {
     errors.push("A valid workout date is required.");
   }

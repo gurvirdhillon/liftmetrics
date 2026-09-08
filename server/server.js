@@ -435,6 +435,7 @@ app.post("/api/workouts", async (req, res) => {
       calories_burned,
       avg_pace,
       exercises,
+      submission_id: submissionId,
       plan_id: planId,
       plan_session_index: planSessionIndex
     } = req.body;
@@ -468,6 +469,15 @@ app.post("/api/workouts", async (req, res) => {
       [user_id]
     );
 
+    const existingSubmission = await client.query(
+      "SELECT session_id FROM workout_sessions WHERE user_id = $1 AND submission_id = $2",
+      [user_id.trim(), submissionId]
+    );
+    if (existingSubmission.rowCount) {
+      await client.query("COMMIT");
+      return res.status(200).json({ message: "Workout was already saved", session_id: existingSubmission.rows[0].session_id, duplicate: true, completion: null });
+    }
+
     const sessionResult = await client.query(
       `
       INSERT INTO workout_sessions (
@@ -484,10 +494,12 @@ app.post("/api/workouts", async (req, res) => {
         distance_unit,
         calories_burned,
         avg_pace,
+        submission_id,
         plan_id,
         planned_session
       )
-      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+      VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
+      ON CONFLICT (user_id, submission_id) WHERE submission_id IS NOT NULL DO NOTHING
       RETURNING session_id
       `,
       [
@@ -504,10 +516,17 @@ app.post("/api/workouts", async (req, res) => {
         distance_unit || null,
         calories_burned ?? null,
         avg_pace ?? null,
+        submissionId,
         validPlanId,
         plannedSession
       ]
     );
+
+    if (!sessionResult.rowCount) {
+      const duplicate = await client.query("SELECT session_id FROM workout_sessions WHERE user_id = $1 AND submission_id = $2", [user_id.trim(), submissionId]);
+      await client.query("COMMIT");
+      return res.status(200).json({ message: "Workout was already saved", session_id: duplicate.rows[0].session_id, duplicate: true, completion: null });
+    }
 
     const sessionId = sessionResult.rows[0].session_id;
 
