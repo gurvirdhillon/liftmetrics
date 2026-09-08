@@ -70,8 +70,29 @@ const form = document.querySelector("#workoutForm");
 const workoutTypeSelect = document.querySelector('select[name="workout_type"]');
 const draftStatus = document.querySelector("#workout-draft-status");
 const discardDraftButton = document.querySelector("#discard-workout-draft");
+const validationFeedback = document.querySelector("#workout-validation");
 let workoutDraftKey = null;
 let draftSaveTimer = null;
+
+function fieldLabel(field) {
+  if (field.id === "DateInput") return "Date";
+  if (field.name === "session_duration_hr") return "Session duration";
+  if (field.classList.contains("entry-exercise")) {
+    const index = [...document.querySelectorAll(".entry-exercise")].indexOf(field) + 1;
+    return `Exercise ${index}`;
+  }
+  return field.closest(".input_group")?.querySelector("label")?.textContent.trim() || "This field";
+}
+
+function showValidationFeedback(messages) {
+  validationFeedback.hidden = false;
+  validationFeedback.innerHTML = `<strong>Please complete the following:</strong><ul>${messages.map((message) => `<li>${escapeHtml(message)}</li>`).join("")}</ul>`;
+}
+
+function clearValidationFeedback() {
+  validationFeedback.hidden = true;
+  validationFeedback.replaceChildren();
+}
 
 function draftValue(selector) {
   return document.querySelector(selector)?.value || "";
@@ -288,6 +309,22 @@ workoutTypeSelect.addEventListener("change", () => {
 form.addEventListener("input", scheduleDraftSave);
 form.addEventListener("change", scheduleDraftSave);
 
+form.addEventListener("invalid", (event) => {
+  const field = event.target;
+  field.setAttribute("aria-invalid", "true");
+  const invalidFields = [...form.querySelectorAll(":invalid")];
+  showValidationFeedback([...new Set(invalidFields.map(fieldLabel))]);
+}, true);
+
+form.addEventListener("input", (event) => {
+  if (event.target.validity.valid) {
+    event.target.removeAttribute("aria-invalid");
+    const invalidFields = [...form.querySelectorAll(":invalid")];
+    if (invalidFields.length) showValidationFeedback([...new Set(invalidFields.map(fieldLabel))]);
+    else clearValidationFeedback();
+  }
+});
+
 discardDraftButton.addEventListener("click", () => {
   form.reset();
   document.querySelector("#exercise-entries").replaceChildren();
@@ -299,6 +336,7 @@ discardDraftButton.addEventListener("click", () => {
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
+  clearValidationFeedback();
 
   try {
     await getAuthenticatedUserId();
@@ -356,7 +394,7 @@ form.addEventListener("submit", async (e) => {
       addExercise();
       toggleWorkoutFields();
     } else {
-      alert(data.errors?.join(" ") || data.error || "Failed to save workout");
+      showValidationFeedback(data.errors || [data.error || "Failed to save workout"]);
       console.error(data);
     }
   } catch (error) {

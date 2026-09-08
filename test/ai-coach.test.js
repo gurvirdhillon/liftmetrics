@@ -8,3 +8,8 @@ test("coach input includes only the compact training summary", () => {
   assert.equal(data.next_session_exercises[0].exercise, "Squat");
   assert.equal(data.user_id, undefined);
 });
+
+test("coach input includes compact wellness evidence when available", () => {
+  const data = JSON.parse(coachInput({ recommendation: {}, sessionsThisWeek: 0, averageEffort: null, qualityScore: 0, progressions: [], muscleBalance: [] }, {}, { mode: "recover", readiness_score: 2.4, signals: ["low energy"] }));
+  assert.deepEqual(data.wellness, { mode: "recover", readiness_score: 2.4, signals: ["low energy"] });
+});

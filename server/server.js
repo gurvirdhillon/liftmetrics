@@ -16,6 +16,7 @@ import { findRestrictedExercises, validateImportedPlan } from "./plan-import.js"
 import { buildTrainingInsights } from "./training-insights.js";
 import { createCoachResponse } from "./ai-coach.js";
 import { applyInjurySafety } from "./injury-safety.js";
+import { applyWellnessSafety } from "./wellness-safety.js";
 import { comparePlanCompletion } from "./plan-completion.js";
 import { calculateReadiness, validateWellnessCheckin } from "./wellness.js";
 import { searchExerciseDb } from "./exercise-db.js";
@@ -660,8 +661,10 @@ app.post("/api/coach", coachRateLimit, async (req, res) => {
       GROUP BY ws.session_id, ws.session_date, ws.feeling_score, ws.created_at
       ORDER BY ws.session_date DESC, ws.created_at DESC`, [userId]);
     const injuryResult = await pool.query("SELECT affected_area, status, pain_score, restricted_movements, clinician_guidance FROM user_injury_restrictions WHERE user_id = $1", [userId.trim()]);
-    const { insights, safety } = applyInjurySafety(buildTrainingInsights(result.rows), injuryResult.rows[0]);
-    const coach = await createCoachResponse(insights, safety);
+    const wellnessResult = await pool.query("SELECT sleep_hours, sleep_quality, energy_score, soreness_score, stress_score FROM daily_wellness_checkins WHERE user_id = $1 AND checkin_date = CURRENT_DATE", [userId.trim()]);
+    const wellnessApplied = applyWellnessSafety(buildTrainingInsights(result.rows), wellnessResult.rows[0]);
+    const { insights, safety } = applyInjurySafety(wellnessApplied.insights, injuryResult.rows[0]);
+    const coach = await createCoachResponse(insights, safety, wellnessApplied.wellness);
     res.json({ coach });
   } catch (error) {
     console.error("AI coach error:", error.message);
